@@ -1,0 +1,281 @@
+<resources>
+
+  <style name="ButtonStyle">
+    <item name="android:layout_width">266dp</item>
+    <item name="android:layout_height">50dp</item>
+    <item name="android:textColor">#ffffff</item>
+    <item name="android:layout_gravity">center_horizontal</item>
+  </style>
+
+  <style name="LinearLayoutStyle">
+    <item name="android:layout_width">266dp</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">center_horizontal</item>
+    <item name="android:layout_marginTop">25dp</item>
+    <item name="android:orientation">horizontal</item>
+  </style>
+
+  <style name="LinearLayoutEditTextStyle">
+    <item name="android:layout_marginLeft">12dp</item>
+    <item name="android:orientation">vertical</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:focusable">true</item>
+    <item name="android:focusableInTouchMode">true</item>
+  </style>
+
+  <style name="ImageViewPicStyle">
+    <item name="android:layout_width">15dp</item>
+    <item name="android:layout_height">26dp</item>
+    <item name="android:layout_marginLeft">8dp</item>
+  </style>
+
+  <style name="TextViewXingStyle">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">center_vertical</item>
+    <item name="android:text">*</item>
+    <item name="android:textColor">@android:color/holo_red_dark</item>
+  </style>
+
+  <style name="TaskTextViewStyle">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textSize">@dimen/font_12</item>
+    <item name="android:textColor">@color/main_color2</item>
+  </style>
+
+  <style name="TaskButtonStyle">
+    <item name="android:layout_width">72dp</item>
+    <item name="android:layout_height">22dp</item>
+    <item name="android:textSize">@dimen/font_12</item>
+    <item name="android:textColor">@color/main_color</item>
+    <item name="android:background">@drawable/corner_task_bt_bg</item>
+  </style>
+
+  <style name="BusinessRuleGroupStyle">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginLeft">@dimen/margin_16</item>
+    <item name="android:layout_marginRight">@dimen/margin_16</item>
+  </style>
+
+  <style name="BusinessRuleViewStyle">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textSize">@dimen/font_14</item>
+    <item name="android:textColor">@color/main_color2</item>
+  </style>
+
+  <style name="MyViewStyle">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textSize">@dimen/font_14</item>
+    <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="BillCenterAdapterItemStyle">
+    <item name="android:layout_width">0dp</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:gravity">center</item>
+    <item name="android:layout_gravity">center</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textSize">@dimen/font_14</item>
+    <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="BillCenterViewStyle">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textSize">@dimen/font_10</item>
+    <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="BangdingTaobaoTextView" parent="MyViewStyle">
+    <!--<item name="android:textColor">@color/color_e5e5e5</item>-->
+    <item name="android:textColor">@color/main_color2</item>
+  </style>
+
+  <style name="HelpTextView" parent="MyViewStyle">
+    <item name="android:textColor">@color/main_color2</item>
+  </style>
+
+  <style name="BusinessRuleViewStyle2">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginTop">@dimen/margin_16</item>
+    <item name="android:layout_marginLeft">@dimen/margin_16</item>
+    <item name="android:layout_marginRight">@dimen/margin_16</item>
+    <item name="android:textSize">@dimen/font_14</item>
+    <item name="android:textColor">@color/main_color2</item>
+  </style>
+
+  <style name="ScanGoodsGroupStyle">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">@dimen/margin_46</item>
+    <item name="android:layout_marginLeft">@dimen/margin_38</item>
+    <item name="android:layout_marginRight">@dimen/margin_46</item>
+  </style>
+
+  <style name="PaymentAmountGroupStyle">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">@dimen/margin_46</item>
+    <item name="android:layout_marginTop">@dimen/margin_5</item>
+    <item name="android:background">@color/white</item>
+    <item name="android:paddingLeft">@dimen/margin_38</item>
+    <item name="android:paddingRight">@dimen/margin_46</item>
+  </style>
+
+  <style name="EvaluateGroupStyle">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:paddingLeft">@dimen/margin_48</item>
+    <item name="android:paddingRight">@dimen/margin_48</item>
+    <item name="android:layout_marginBottom">@dimen/margin_18</item>
+    <item name="android:background">@color/white</item>
+    <item name="android:orientation">vertical</item>
+  </style>
+
+  <style name="EvaluateItemStyle">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginTop">@dimen/margin_18</item>
+    <item name="android:layout_marginBottom">@dimen/margin_18</item>
+  </style>
+
+  <style name="EvaluateImage1Style">
+    <item name="android:layout_width">@dimen/margin_80</item>
+    <item name="android:layout_height">@dimen/margin_90</item>
+  </style>
+
+
+  <style name="MyViewGroupStyle">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">120dp</item>
+    <item name="android:layout_marginTop">@dimen/margin_5</item>
+    <item name="android:paddingLeft">@dimen/margin_38</item>
+    <item name="android:paddingRight">@dimen/margin_38</item>
+    <item name="android:background">@color/white</item>
+  </style>
+
+  <style name="BangdingBankButtonStyle">
+    <item name="android:layout_width">112dp</item>
+    <item name="android:layout_height">30dp</item>
+    <item name="android:background">@drawable/corner_bangding_cancel_bt_bg</item>
+    <item name="android:textSize">@dimen/font_16</item>
+    <item name="android:gravity">center</item>
+  </style>
+
+  <style name="BangdingBankViewStyle">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textSize">@dimen/font_14</item>
+    <item name="android:textColor">@color/main_color2</item>
+  </style>
+
+  <style name="BangdingTaoBaoEditStyle">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textSize">@dimen/font_14</item>
+    <item name="android:textColor">@color/main_color2</item>
+    <item name="android:textColorHint">@color/color_e5e5e5</item>
+    <item name="android:background">@null</item>
+  </style>
+
+  <style name="BangdingTaobaoLinearLayout">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">@dimen/margin_52</item>
+    <item name="android:background">@color/white</item>
+    <item name="android:paddingLeft">@dimen/margin_38</item>
+    <item name="android:paddingRight">@dimen/margin_38</item>
+    <item name="android:layout_marginTop">@dimen/margin_5</item>
+  </style>
+
+  <style name="BangdingTaobaoChildLinearLayout" parent="BangdingTaobaoLinearLayout">
+    <item name="android:paddingLeft">0dp</item>
+    <item name="android:paddingRight">0dp</item>
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:layout_marginTop">0dp</item>
+  </style>
+
+  <style name="SettingLinearLayout">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">@dimen/margin_52</item>
+    <item name="android:background">@color/white</item>
+    <item name="android:paddingLeft">@dimen/margin_38</item>
+    <item name="android:paddingRight">@dimen/margin_38</item>
+    <item name="android:layout_marginTop">@dimen/margin_5</item>
+  </style>
+
+  <style name="Setting2LinearLayout">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@color/white</item>
+    <item name="android:paddingLeft">@dimen/margin_38</item>
+    <item name="android:paddingRight">@dimen/margin_38</item>
+    <item name="android:layout_marginTop">@dimen/margin_16</item>
+  </style>
+
+  // -------refreshListview-----
+
+  <style name="refreshlistview_container">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
+
+  <style name="refreshlistview_arrow">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginLeft">25dp</item>
+    <item name="android:src">@drawable/refreshlistview_arrow</item>
+  </style>
+
+  <style name="refreshlistview_progress">
+    <item name="android:layout_width">20dp</item>
+    <item name="android:layout_height">20dp</item>
+    <item name="android:layout_centerVertical">true</item>
+    <item name="android:layout_marginLeft">25dp</item>
+  </style>
+
+  <style name="refreshlistview_comment">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:gravity">center</item>
+    <item name="android:textSize">14sp</item>
+  </style>
+
+  <style name="refreshlistview_date">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:gravity">center</item>
+    <item name="android:textSize">12sp</item>
+  </style>
+
+  <style name="refreshlistview_header">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:padding">5dp</item>
+  </style>
+  // -------refreshListview-----
+
+  <style name="BangdingTaoBaoPicStyle">
+    <item name="android:layout_width">@dimen/margin_90</item>
+    <item name="android:layout_height">@dimen/margin_90</item>
+    <item name="android:layout_marginLeft">@dimen/margin_7</item>
+  </style>
+
+  <style name="WheelDialog" parent="@android:style/Theme.Translucent">
+    <!-- 有无边框 -->
+    <item name="android:windowFrame">@null</item>
+    <!-- 是否浮现在activity之上 -->
+    <item name="android:windowIsFloating">true</item>
+    <!-- 是否透明 -->
+    <item name="android:windowIsTranslucent">true</item>
+    <!-- 模糊 -->
+    <item name="android:backgroundDimEnabled">true</item>
+    <!--无标题 -->
+    <item name="android:windowNoTitle">true</item>
+
+  </style>
+
+</resources>
