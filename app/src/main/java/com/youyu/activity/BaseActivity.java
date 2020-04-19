@@ -37,7 +37,7 @@ public class BaseActivity extends Activity {
   private final Object mTag = new Object();
 
   private OkHttpClient mHttpClient;
-  private NetInterface.RequestResponse mNetInteface;
+  private NetInterface.RequestResponse mNetInterface;
   protected CusHandler mCusHandler;
 
   @Override
@@ -52,8 +52,8 @@ public class BaseActivity extends Activity {
     mCusHandler = new CusHandler(this);
   }
 
-  protected void setNetLisenter(NetInterface.RequestResponse requestResponse) {
-    mNetInteface = requestResponse;
+  protected void setNetListener(NetInterface.RequestResponse requestResponse) {
+    mNetInterface = requestResponse;
   }
 
   private void initNet() {
@@ -184,7 +184,7 @@ public class BaseActivity extends Activity {
         + "\n msg.obj = " + msg.obj);
     switch (msg.what) {
       case 1: // post 请求失败的情况
-        mNetInteface.failure((Exception) msg.obj);
+        mNetInterface.failure((Exception) msg.obj);
         break;
       case 2: // post 请求成功的情况
         String resposeStr = (String) msg.obj;
@@ -197,7 +197,7 @@ public class BaseActivity extends Activity {
               String msgPost = Utils.jsonObjectStringGetValue(jsonObject, "msg");
               Utils.show(msgPost);
               if (Contants.NetStatus.OK.equals(state)) {
-                mNetInteface.success(resposeStr);
+                mNetInterface.success(resposeStr);
               }
             } catch (JSONException e) {
               LogUtil.showELog(TAG, "cusHandleMessage post JSONException:" + e.toString());
@@ -208,7 +208,7 @@ public class BaseActivity extends Activity {
         }
         break;
       case 3:// get请求失败的情况
-        mNetInteface.failure((Exception) msg.obj);
+        mNetInterface.failure((Exception) msg.obj);
         break;
       case 4: // get请求成功的情况
         String sdata = (String) msg.obj;
@@ -221,7 +221,7 @@ public class BaseActivity extends Activity {
               String msgGet = jsonObject.getString("msg");
               Utils.show(msgGet);
               if (Contants.NetStatus.OK.equals(state)) {
-                mNetInteface.success(sdata);
+                mNetInterface.success(sdata);
               }
             } catch (JSONException e) {
               LogUtil.showELog(TAG, "get JSONException:" + e.toString());

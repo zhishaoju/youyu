@@ -1,3 +1,32 @@
 <resources>
   <string name="app_name">Youyu</string>
+
+  <string name="pull_down_has_data">刷新有数据</string>
+  <string name="pull_down_has_no_data">刷新无数据</string>
+  <string name="pull_up_has_data">上拉加载有更多数据</string>
+  <string name="pull_up_has_no_data">上拉加载无更多数据</string>
+
+  <string name="bind_bank">已绑定</string>
+  <string name="no_bind_bank">未绑定</string>
+
+
+  <string name="refreshlistview_arrow">Content Description Arrow</string>
+  <string name="refreshlistview_updating">Updating…</string>
+  <string name="refreshlistview_release">Release to refresh…</string>
+  <string name="refreshlistview_pulldown">Pull down to refresh…</string>
+  <string name="refreshlistview_no_update">"No past update"</string>
+
+  <string name="head">这里是HeadView</string>
+  <string name="pull_to_refresh">下拉刷新</string>
+  <string name="release_to_refresh">释放立即刷新</string>
+  <string name="refreshing">正在刷新...</string>
+  <string name="refresh_succeed">刷新成功</string>
+  <string name="refresh_fail">刷新失败</string>
+  <string name="pullup_to_load">上拉加载更多</string>
+  <string name="release_to_load">释放立即加载</string>
+  <string name="loading">正在加载...</string>
+  <string name="load_succeed">加载成功</string>
+  <string name="load_fail">加载失败</string>
+
+  <string name="title">测试</string>
 </resources>

@@ -8,14 +8,20 @@
   <color name="goods_compare">#FFE5E5E5</color>
   <color name="main_color3">#f6f6f6</color>
   <color name="color_e5e5e5">#e5e5e5</color>
-  <color name="my">#6873fa</color>
   <color name="main_line">#FFC4C0C0</color>
   <color name="main_color_red">#e0382f</color>
   <color name="white">#ffffff</color>
 
   <color name="light_blue">#6593cb</color>
-  <color name="gray">#f2f1ef</color>
+  <color name="gray">#4A4A4A</color>
   <color name="gray_deep">#404548</color>
   <color name="haha">#C4BFCD</color>
   <color name="black">#ff000000</color>
+  <color name="be">#BEBEBE</color>
+  <color name="my_bg">#FAFAFC</color>
+  <color name="my_head">#383838</color>
+  <color name="incoming_bg">#F8C26F</color>
+  <color name="yellow">#FCAD14</color>
+  <color name="green">#5FDDAD</color>
+  <color name="gray2">#C9C9C9</color>
 </resources>

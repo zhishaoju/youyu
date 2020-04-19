@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@mipmap/login_register_bg"
+  android:orientation="vertical"
+  android:paddingLeft="60dp"
+  android:paddingRight="60dp">
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="100dp"
+    android:text="注册账号"
+    android:textColor="@color/black"
+    android:textSize="30sp" />
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Registered"
+    android:textColor="#BEBEBE"
+    android:textSize="12sp" />
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="50dp"
+    android:text="输入验证码"
+    android:textColor="@color/black"
+    android:textSize="12sp" />
+
+  <EditText
+    android:id="@+id/et_phone"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:layout_marginTop="16dp"
+    android:background="@drawable/corner_login_bg"
+    android:gravity="center_vertical"
+    android:hint="请输入正确的验证码"
+    android:inputType="number"
+    android:paddingLeft="20dp"
+    android:textColorHint="#cececb"
+    android:textCursorDrawable="@null"
+    android:textSize="@dimen/font_14" />
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:text="输入验证码"
+    android:textColor="@color/black"
+    android:textSize="12sp" />
+
+  <EditText
+    android:id="@+id/et_password"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:layout_marginTop="16dp"
+    android:background="@drawable/corner_login_bg"
+    android:gravity="center_vertical"
+    android:hint="请输入正确的密码"
+    android:inputType="number"
+    android:paddingLeft="20dp"
+    android:textColorHint="#cececb"
+    android:textCursorDrawable="@null"
+    android:textSize="@dimen/font_14" />
+
+
+  <Button
+    android:id="@+id/bt_login"
+    style="@style/ButtonStyle"
+    android:layout_marginTop="38dp"
+    android:background="@drawable/corner_bg"
+    android:text="登录" />
+
+</LinearLayout>
