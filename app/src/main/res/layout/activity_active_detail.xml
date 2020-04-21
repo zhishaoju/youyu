@@ -58,7 +58,93 @@
       android:text="要求：连续三天观看3个视频"
       android:textColor="@color/gray2"
       android:textSize="@dimen/font_14" />
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@mipmap/huodong"
+      android:orientation="vertical">
+      <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="57dp"
+        android:layout_marginTop="40dp">
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="已参与人数："
+          android:textColor="@color/white"
+          android:textSize="@dimen/font_14" />
+
+        <TextView
+          android:id="@+id/tv_join_num"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="123456"
+          android:textColor="@color/white"
+          android:textSize="@dimen/font_20" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="57dp"
+        android:layout_marginTop="10dp">
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="活动倒计时："
+          android:textColor="@color/white"
+          android:textSize="@dimen/font_14" />
+
+        <TextView
+          android:id="@+id/tv_active_count_down"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="48:00:00"
+          android:textColor="@color/white"
+          android:textSize="@dimen/font_20" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="57dp"
+        android:layout_marginTop="10dp">
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="活动奖金池："
+          android:textColor="@color/white"
+          android:textSize="@dimen/font_14" />
+
+        <TextView
+          android:id="@+id/tv_active_money"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="123456"
+          android:textColor="@color/white"
+          android:textSize="@dimen/font_20" />
+      </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="@dimen/margin_16"
+      android:orientation="horizontal">
+      <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@mipmap/huodong2" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_10"
+        android:text="完成任务者"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_20" />
+    </LinearLayout>
   </LinearLayout>
+
   <com.youyu.cusListview.PullToRefreshLayout
     android:id="@+id/refresh_view"
     android:layout_width="match_parent"
