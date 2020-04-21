@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.youyu.R;
+import com.youyu.activity.InComeActivity;
 import com.youyu.net.NetInterface;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.LogUtil;
@@ -142,6 +143,7 @@ public class ThirdFragment extends BaseFragment {
   public void onViewClicked(View view) {
     switch (view.getId()) {
       case R.id.ll_incoming_detail:
+        startActivity(new Intent(getActivity(), InComeActivity.class));
         break;
       case R.id.ll_collect:
         break;
