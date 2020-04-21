@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/my_bg"
+  android:orientation="vertical">
+
+  <include layout="@layout/include_title" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="40dp"
+    android:orientation="vertical">
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="@dimen/margin_16"
+      android:orientation="horizontal">
+      <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@mipmap/huodong1" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_10"
+        android:text="名称："
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_20" />
+
+      <TextView
+        android:id="@+id/tv_active_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_5"
+        android:text="第六期连续三天观看视频"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_20" />
+    </LinearLayout>
+    <TextView
+      android:id="@+id/tv_time"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="57dp"
+      android:layout_marginTop="@dimen/margin_5"
+      android:text="日期：2020.1.2-2020.3.1"
+      android:textColor="@color/gray2"
+      android:textSize="@dimen/font_14" />
+
+    <TextView
+      android:id="@+id/tv_require"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="57dp"
+      android:layout_marginTop="@dimen/margin_5"
+      android:text="要求：连续三天观看3个视频"
+      android:textColor="@color/gray2"
+      android:textSize="@dimen/font_14" />
+  </LinearLayout>
+  <com.youyu.cusListview.PullToRefreshLayout
+    android:id="@+id/refresh_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="60dp">
+
+    <include layout="@layout/refresh_head" />
+
+    <com.youyu.cusListview.CusRecycleView
+      android:id="@+id/finish_task_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:listSelector="@android:color/transparent"
+      android:scrollbars="none" />
+
+    <include layout="@layout/load_more" />
+
+  </com.youyu.cusListview.PullToRefreshLayout>
+
+</LinearLayout>
