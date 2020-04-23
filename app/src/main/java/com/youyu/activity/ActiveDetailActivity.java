@@ -10,6 +10,8 @@ import butterknife.ButterKnife;
 import com.youyu.R;
 import com.youyu.cusListview.CusRecycleView;
 import com.youyu.cusListview.PullToRefreshLayout;
+import com.youyu.net.NetInterface.RequestResponse;
+import com.youyu.utils.LogUtil;
 
 /**
  * @Author zhisiyi
@@ -18,6 +20,7 @@ import com.youyu.cusListview.PullToRefreshLayout;
  */
 public class ActiveDetailActivity extends BaseActivity {
 
+    private static final String TAG = ActiveDetailActivity.class.getSimpleName();
     @BindView(R.id.fl_back)
     FrameLayout flBack;
     @BindView(R.id.tv_title)
@@ -65,9 +68,42 @@ public class ActiveDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_active_detail);
         ButterKnife.bind(this);
         initValue();
+        initListener();
     }
 
     private void initValue() {
-        
+        tvTitle.setText("活动详情");
+    }
+
+    private void initListener() {
+        refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+                refresh();
+            }
+
+            @Override
+            public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+//                mPageNumer += 1;
+//                loadMore(mPageNumer);
+            }
+        });
+        setNetListener(new RequestResponse() {
+            @Override
+            public void failure(Exception e) {
+                LogUtil.showELog(TAG, "failure e : " + e.getStackTrace());
+            }
+
+            @Override
+            public void success(String data) {
+
+            }
+        });
+    }
+
+    private void refresh() {
+        LogUtil.showDLog(TAG, "refresh()");
+//    post(url, jsonObject.toString());
     }
 }

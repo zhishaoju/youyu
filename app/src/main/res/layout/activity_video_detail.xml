@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@color/white"
+  android:orientation="vertical">
+
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageView
+      android:id="@+id/iv_bg"
+      android:layout_width="match_parent"
+      android:layout_height="350dp"
+      android:scaleType="centerCrop"
+      android:src="@mipmap/beautiful"
+      android:visibility="visible" />
+
+    <com.youyu.view.VideoPlayer
+      android:id="@+id/videoPlayer"
+      android:layout_width="match_parent"
+      android:layout_height="350dp"
+      android:visibility="visible" />
+
+    <include layout="@layout/include_title" />
+
+  </FrameLayout>
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <com.youyu.view.CircleImageView
+      android:id="@+id/civ_head_pic"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:layout_marginLeft="@dimen/margin_16"
+      android:layout_marginTop="@dimen/margin_10"
+      android:src="@mipmap/huodong2" />
+    <TextView
+      android:id="@+id/tv_user_name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="@dimen/margin_10"
+      android:layout_marginTop="@dimen/margin_10"
+      android:layout_toRightOf="@id/civ_head_pic"
+      android:text="张三"
+      android:textColor="@color/black"
+      android:textSize="@dimen/font_16" />
+
+    <TextView
+      android:id="@+id/tv_time_num"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/tv_user_name"
+      android:layout_marginLeft="@dimen/margin_10"
+      android:layout_toRightOf="@id/civ_head_pic"
+      android:text="01-01 231.5万次观看"
+      android:textColor="@color/gray2"
+      android:textSize="@dimen/font_12" />
+    <LinearLayout
+      android:id="@+id/ll_attention"
+      android:layout_width="70dp"
+      android:layout_height="30dp"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:layout_marginTop="3dp"
+      android:layout_marginRight="@dimen/margin_16"
+      android:background="@drawable/video_detail_bg"
+      android:gravity="center">
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_user_name"
+        android:layout_toRightOf="@id/civ_head_pic"
+        android:text="关注"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_14" />
+    </LinearLayout>
+  </RelativeLayout>
+
+  <TextView
+    android:id="@+id/tv_content_desc"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/margin_16"
+    android:layout_marginTop="@dimen/margin_6"
+    android:layout_marginRight="@dimen/margin_16"
+    android:text="多少人曾爱慕你多少人曾爱慕你多少人曾爱慕你多少人曾爱慕你多少人曾爱慕你多少人曾爱慕你"
+    android:textColor="@color/black"
+    android:textSize="@dimen/font_16" />
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="4dp"
+    android:background="#FAFAFC" />
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.youyu.cusListview.PullToRefreshLayout
+      android:id="@+id/refresh_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+      <include layout="@layout/refresh_head" />
+
+      <com.youyu.cusListview.CusRecycleView
+        android:id="@+id/content_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:listSelector="@android:color/transparent"
+        android:scrollbars="none" />
+
+      <include layout="@layout/load_more" />
+
+    </com.youyu.cusListview.PullToRefreshLayout>
+
+    <LinearLayout
+      android:id="@+id/ll_comment"
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:layout_alignParentBottom="true"
+      android:background="@color/white"
+      android:gravity="center_vertical"
+      android:orientation="horizontal">
+      <EditText
+        android:id="@+id/et_comment_content"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1" />
+
+      <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <LinearLayout style="@style/VideoDetailLLStyle">
+          <ImageView
+            android:id="@+id/iv_video_zan"
+            style="@style/VideoDetailIvStyle"
+            android:src="@mipmap/zan1" />
+          <TextView
+            android:id="@+id/tv_video_zan"
+            style="@style/VideoDetailTvStyle"
+            android:text="7万" />
+        </LinearLayout>
+        <LinearLayout style="@style/VideoDetailLLStyle">
+          <ImageView
+            android:id="@+id/iv_video_pinglun"
+            style="@style/VideoDetailIvStyle"
+            android:src="@mipmap/pinglu" />
+          <TextView
+            android:id="@+id/tv_video_pinglun"
+            style="@style/VideoDetailTvStyle"
+            android:text="5808" />
+        </LinearLayout>
+        <LinearLayout style="@style/VideoDetailLLStyle">
+          <ImageView
+            android:id="@+id/iv_video_shoucang"
+            style="@style/VideoDetailIvStyle"
+            android:src="@mipmap/shoucang1" />
+          <TextView
+            android:id="@+id/tv_video_shoucang"
+            style="@style/VideoDetailTvStyle"
+            android:text="收藏" />
+        </LinearLayout>
+        <LinearLayout style="@style/VideoDetailLLStyle">
+          <ImageView
+            android:id="@+id/iv_video_share"
+            style="@style/VideoDetailIvStyle"
+            android:src="@mipmap/zhuanfa" />
+          <TextView
+            android:id="@+id/tv_video_share"
+            style="@style/VideoDetailTvStyle"
+            android:text="分享" />
+        </LinearLayout>
+      </LinearLayout>
+    </LinearLayout>
+  </RelativeLayout>
+
+</LinearLayout>
