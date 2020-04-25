@@ -4,7 +4,10 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <include layout="@layout/include_title" />
+  <androidx.viewpager.widget.ViewPager
+    android:id="@+id/viewPager"
+    android:layout_width="match_parent"
+    android:layout_height="158dp" />
 
   <com.youyu.cusListview.PullToRefreshLayout
     android:id="@+id/refresh_view"

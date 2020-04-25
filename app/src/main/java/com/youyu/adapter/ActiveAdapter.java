@@ -43,9 +43,10 @@ public class ActiveAdapter extends Adapter {
     //获取到条目对应的数据
     ActiveModel activeModel = mData.get(position);
     viewHolder.tvActiveName.setText(activeModel.title);
-    viewHolder.tvTimeScope.setText(activeModel.beginTime+"-"+activeModel.endTime);
-    viewHolder.tvCanYuRen
-
+    viewHolder.tvTimeScope.setText(activeModel.beginTime + "-" + activeModel.endTime);
+    viewHolder.tvCanYuRen.setText(activeModel.count);
+    viewHolder.tvActiveNoStart.setText(activeModel.status);
+    viewHolder.tvJoin.setText(activeModel.endTime);
   }
 
   @Override
@@ -70,5 +71,16 @@ public class ActiveAdapter extends Adapter {
       super(view);
       ButterKnife.bind(this, view);
     }
+  }
+
+  public void setData(ArrayList<ActiveModel> data) {
+    mData.clear();
+    mData.addAll(data);
+    notifyDataSetChanged();
+  }
+
+  public void appendData(ArrayList<ActiveModel> data) {
+    mData.addAll(data);
+    notifyDataSetChanged();
   }
 }
