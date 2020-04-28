@@ -107,4 +107,8 @@ public class VideoPlayListAdatper extends Adapter {
       ButterKnife.bind(this, view);
     }
   }
+
+  public Context getContext() {
+      return context;
+  }
 }

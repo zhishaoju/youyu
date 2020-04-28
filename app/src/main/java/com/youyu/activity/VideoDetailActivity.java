@@ -30,8 +30,6 @@ public class VideoDetailActivity extends BaseActivity {
     VideoPlayer videoPlayer;
     @BindView(R.id.fl_back)
     FrameLayout flBack;
-    @BindView(R.id.tv_title)
-    TextView tvTitle;
     @BindView(R.id.civ_head_pic)
     CircleImageView civHeadPic;
     @BindView(R.id.tv_user_name)
@@ -108,6 +106,7 @@ public class VideoDetailActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fl_back:
+                finish();
                 break;
             case R.id.ll_attention:
                 break;
@@ -127,4 +126,5 @@ public class VideoDetailActivity extends BaseActivity {
                 break;
         }
     }
+
 }

@@ -21,6 +21,9 @@ import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.LogUtil;
 import java.util.ArrayList;
 
+/**
+ * @author zhishaoju
+ */
 public class IndexFragment extends BaseFragment {
 
   private static final String TAG = IndexFragment.class.getSimpleName();

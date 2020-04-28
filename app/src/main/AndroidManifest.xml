@@ -31,6 +31,7 @@
 
     <activity android:name=".activity.InComeActivity" />
     <activity android:name=".activity.RegisterSetPassActivity" />
+    <activity android:name=".activity.VideoDetailActivity" />
   </application>
 
 </manifest>

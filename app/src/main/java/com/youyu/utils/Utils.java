@@ -16,7 +16,9 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.Toast;
+import com.youyu.R;
 import com.youyu.applicatioin.MainApplication;
+import com.youyu.bean.ActiveItemUi;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -461,6 +463,27 @@ public class Utils {
             return manager.getDeviceId();
         }
         return "";
+    }
+
+    public static ActiveItemUi transform(int status) {
+        ActiveItemUi activeItemUi = new ActiveItemUi();
+        switch (status) {
+            case 1:
+                activeItemUi.stateName = "未开始";
+                activeItemUi.bgValue = R.drawable.corner_second_no_start_bg;
+                break;
+            case 2:
+                activeItemUi.stateName = "进行中";
+                activeItemUi.bgValue = R.drawable.corner_second_hava_in_hand_bg;
+                break;
+            case 3:
+                activeItemUi.stateName = "已结束";
+                activeItemUi.bgValue = R.drawable.corner_second_finish_bg;
+                break;
+            default:
+                break;
+        }
+        return activeItemUi;
     }
 
 }
