@@ -31,7 +31,7 @@
     android:textSize="12sp" />
 
   <EditText
-    android:id="@+id/et_phone"
+    android:id="@+id/et_code"
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:layout_marginTop="16dp"

@@ -231,6 +231,8 @@ public class BaseActivity extends Activity {
           LogUtil.showELog(TAG, "get e:" + e.toString());
         }
         break;
+      default:
+        break;
     }
   }
 }

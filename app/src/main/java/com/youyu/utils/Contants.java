@@ -6,16 +6,15 @@ public interface Contants {
 
   interface Net {
 
-    String BASE_URL = "https://paidan2018.cn/";
-    String SEND_MSG = "buyer/regist/sendMsg";
-    String SEND_RESET_MSG = "buyer/regist/sendRetsetMsg";
-    String REGISTER = "buyer/regist/regist";
-    String LOGIN = "buyer/login/login";
+    String BASE_URL = "https://paidan2018.cn";
+    String REGISTER = "/youyu/api/user/register";
+    String CODE = "/youyu/api/user/code";
+    String LOGIN = "/youyu/api/user/login";
     String LOGOUT = "buyer/login/logout";
-    String RESET_PASS = "buyer/regist/resetPwd";
-    String PERSON_INFO = "buyer/person/info";
-    String MODIFY_PASSWORD = "buyer/regist/modifyPassword";
-    String SAVE_BANK = "buyer/bank/saveBank";
+    String POST_COMMENT_LIST = "/youyu/api/post/list";
+    String COMMENT_DETAIL = "/youyu/api/post/info";
+    String COMMENT_LIST = "/youyu/api/comment/list";
+    String POST_COMMENT = "/youyu/api/post/info";
     String BUYER = "buyer";
     String SAVE_ACCOUNT = "buyer/account/saveAccount";
     String TASK_DETAIL = "buyer/task/detail";
