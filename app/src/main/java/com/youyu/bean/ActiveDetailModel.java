@@ -1,5 +1,6 @@
 package com.youyu.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  * @Date 2020.04.22 21:50
  * @Comment
  */
-public class ActiveDetailModel {
+public class ActiveDetailModel implements Serializable {
 
     public String activeTitle;
     public String activeBeginTime;

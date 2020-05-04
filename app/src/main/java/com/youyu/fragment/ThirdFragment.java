@@ -13,8 +13,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.youyu.R;
+import com.youyu.activity.CollectActivity;
 import com.youyu.activity.InComeActivity;
-import com.youyu.net.NetInterface;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.LogUtil;
 import com.youyu.view.CircleImageView;
@@ -146,6 +146,7 @@ public class ThirdFragment extends BaseFragment {
         startActivity(new Intent(getActivity(), InComeActivity.class));
         break;
       case R.id.ll_collect:
+        startActivity(new Intent(getActivity(), CollectActivity.class));
         break;
       case R.id.ll_active:
         break;

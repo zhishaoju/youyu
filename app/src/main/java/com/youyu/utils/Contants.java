@@ -10,7 +10,7 @@ public interface Contants {
     String REGISTER = "/youyu/api/user/register";
     String CODE = "/youyu/api/user/code";
     String LOGIN = "/youyu/api/user/login";
-    String LOGOUT = "buyer/login/logout";
+    String ACTIVE_DETAIL = "youyu/api/activity/info";
     String POST_COMMENT_LIST = "/youyu/api/post/list";
     String COMMENT_DETAIL = "/youyu/api/post/info";
     String COMMENT_LIST = "/youyu/api/comment/list";
@@ -85,5 +85,7 @@ public interface Contants {
   int CONTINUE_TASK = 2;
   int CANCEL_TASK = 1;
   int NET_REQUEST_TASK = 3;
+
+  String USER_ID = "userId";
 
 }

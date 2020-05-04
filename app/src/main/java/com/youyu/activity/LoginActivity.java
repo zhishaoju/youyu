@@ -1,5 +1,7 @@
 package com.youyu.activity;
 
+import static com.youyu.utils.Contants.USER_ID;
+
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -15,6 +17,7 @@ import butterknife.OnClick;
 import com.youyu.R;
 import com.youyu.net.NetInterface;
 import com.youyu.utils.LogUtil;
+import com.youyu.utils.SharedPrefsUtil;
 
 /**
  * @Author zhisiyi
@@ -64,6 +67,9 @@ public class LoginActivity extends BaseActivity {
 
       @Override
       public void success(String data) {
+        // 登录成功之后，把userId保存起来
+        String userId = "";
+        SharedPrefsUtil.put(USER_ID, userId);
         if (1 == mNetClick) {
         } else if ((2 == mNetClick)) {
         }
