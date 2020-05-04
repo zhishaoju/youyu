@@ -13,3 +13,6 @@
 /captures
 .externalNativeBuild
 .cxx
+/app/build/
+/app/lib
+/app/app.iml
