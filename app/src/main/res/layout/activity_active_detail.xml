@@ -5,12 +5,10 @@
   android:background="@color/my_bg"
   android:orientation="vertical">
 
-  <include layout="@layout/include_title" />
-
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="40dp"
+    android:layout_marginTop="@dimen/margin_16"
     android:orientation="vertical">
     <LinearLayout
       android:layout_width="match_parent"
@@ -148,7 +146,7 @@
   <com.youyu.cusListview.PullToRefreshLayout
     android:id="@+id/refresh_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="60dp">
 
     <include layout="@layout/refresh_head" />

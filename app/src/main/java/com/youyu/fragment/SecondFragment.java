@@ -7,16 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.youyu.R;
-import com.youyu.activity.ActiveActivity;
 import com.youyu.activity.ActiveDetailActivity;
 import com.youyu.adapter.ActiveAdapter;
 import com.youyu.adapter.ActiveAdapter.OnItemClickListener;
+import com.youyu.adapter.SecondFragmentAdapter;
+import com.youyu.adapter.SecondFragmentAdapter.ItemClickListener;
 import com.youyu.adapter.SecondPagerAdapter;
 import com.youyu.bean.ActiveModel;
 import com.youyu.bean.SecondViewPagerModel;
@@ -37,7 +36,7 @@ public class SecondFragment extends BaseFragment {
 
   private SecondPagerAdapter mSecondPagerAdapter;
 
-  private ActiveAdapter mActiveAdapter;
+  private SecondFragmentAdapter mActiveAdapter;
 
   private ArrayList<SecondViewPagerModel> mData;
   private ArrayList<ActiveModel> mActiveModelList;
@@ -57,7 +56,7 @@ public class SecondFragment extends BaseFragment {
     mData = new ArrayList<>();
     mActiveModelList = new ArrayList<>();
     mSecondPagerAdapter = new SecondPagerAdapter(getActivity());
-    mActiveAdapter = new ActiveAdapter(getActivity());
+    mActiveAdapter = new SecondFragmentAdapter(getActivity());
     contentView.setLayoutManager(new LinearLayoutManager(getActivity()));
     contentView.setAdapter(mActiveAdapter);
     viewPager.setAdapter(mSecondPagerAdapter);
@@ -95,33 +94,10 @@ public class SecondFragment extends BaseFragment {
   }
 
   private void initListener() {
-    viewPager.addOnPageChangeListener(new OnPageChangeListener() {
+    mActiveAdapter.setOnClickListener(new ItemClickListener() {
       @Override
-      public void onPageScrolled(int position, float positionOffset,
-          int positionOffsetPixels) {
-
-      }
-
-      @Override
-      public void onPageSelected(int position) {
-
-      }
-
-      @Override
-      public void onPageScrollStateChanged(int state) {
-//        if (state == 1) {
-//          refreshView.setEnabled(false);//设置不可触发
-//        } else if (state == 2) {
-//          refreshView.setEnabled(true);//设置可触发
-//        }
-      }
-    });
-    mActiveAdapter.setOnItemClickListener(new OnItemClickListener() {
-      @Override
-      public void onItemClick(ActiveModel activeModel) {
-        Intent intent = new Intent(getActivity(), ActiveDetailActivity.class);
-        intent.putExtra("activityId", activeModel.activeId);
-        startActivity(intent);
+      public void OnItemClickListener(ActiveModel activeModel) {
+        startActivity(new Intent(getActivity(), ActiveDetailActivity.class));
       }
     });
   }
@@ -137,11 +113,4 @@ public class SecondFragment extends BaseFragment {
     super.onDestroyView();
     mUnBinder.unbind();
   }
-
-  @OnClick({})
-  public void onViewClicked(View view) {
-    switch (view.getId()) {
-    }
-  }
-
 }

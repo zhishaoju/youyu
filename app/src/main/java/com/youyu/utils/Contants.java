@@ -6,7 +6,7 @@ public interface Contants {
 
   interface Net {
 
-    String BASE_URL = "https://paidan2018.cn";
+    String BASE_URL = "http://118.31.224.13:81";
     String REGISTER = "/youyu/api/user/register";
     String CODE = "/youyu/api/user/code";
     String LOGIN = "/youyu/api/user/login";

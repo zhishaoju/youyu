@@ -12,6 +12,7 @@ import com.youyu.applicatioin.MainApplication;
 public class SharedPrefsUtil {
 
     public final static String SETTING = "project_cache";
+    public final static String LOGIN = "login";
 
     public static void put(String key, int value) {
         MainApplication.getInstance().getSharedPreferences(SETTING, Context.MODE_PRIVATE).edit().putInt(key, value).commit();

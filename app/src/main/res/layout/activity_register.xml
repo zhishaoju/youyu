@@ -132,16 +132,15 @@
 
     <CheckBox
       android:id="@+id/cb_protocol"
-      android:scaleX="0.8"
-      android:scaleY="0.8"
+      android:scaleX="0.6"
+      android:scaleY="0.6"
       android:gravity="center_vertical"
-      android:layout_width="20dp"
-      android:layout_height="20dp" />
+      android:layout_width="34dp"
+      android:layout_height="34dp" />
 
     <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="20dp"
       android:text="同意《服务协议》和《隐私协议》"
       android:textColor="#BEBEBE"
       android:textSize="12sp" />

@@ -72,6 +72,7 @@ public class RegisterActivity extends BaseActivity {
                     String url = BASE_URL + CODE;
                     JSONObject jsonObject = new JSONObject();
                     try {
+                        LogUtil.showDLog(TAG, "R.id.bt_login code :" +  Utils.getIMEI());
                         jsonObject.put("mobile", etPhone.getText().toString());
                         jsonObject.put("imei", Utils.getIMEI());
                     } catch (JSONException e) {

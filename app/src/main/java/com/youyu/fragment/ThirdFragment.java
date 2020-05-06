@@ -13,10 +13,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.youyu.R;
+import com.youyu.activity.ActiveListActivity;
 import com.youyu.activity.CollectActivity;
 import com.youyu.activity.InComeActivity;
+import com.youyu.activity.RegisterActivity;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.LogUtil;
+import com.youyu.utils.SharedPrefsUtil;
 import com.youyu.view.CircleImageView;
 
 public class ThirdFragment extends BaseFragment {
@@ -42,6 +45,10 @@ public class ThirdFragment extends BaseFragment {
   LinearLayout llCollect;
   @BindView(R.id.ll_active)
   LinearLayout llActive;
+  @BindView(R.id.tv_login)
+  TextView tvLogin;
+  @BindView(R.id.ll_my_view)
+  LinearLayout llMyView;
 
   private Unbinder mUnbinder;
 
@@ -63,6 +70,14 @@ public class ThirdFragment extends BaseFragment {
   }
 
   private void initValue() {
+    boolean isLogin = SharedPrefsUtil.get(SharedPrefsUtil.LOGIN, false);
+    if (isLogin) {
+      tvLogin.setVisibility(View.GONE);
+      llMyView.setVisibility(View.VISIBLE);
+    } else {
+      tvLogin.setVisibility(View.VISIBLE);
+      llMyView.setVisibility(View.GONE);
+    }
   }
 
   @Override
@@ -139,7 +154,7 @@ public class ThirdFragment extends BaseFragment {
     });
   }
 
-  @OnClick({R.id.ll_incoming_detail, R.id.ll_collect, R.id.ll_active})
+  @OnClick({R.id.ll_incoming_detail, R.id.ll_collect, R.id.ll_active, R.id.tv_login})
   public void onViewClicked(View view) {
     switch (view.getId()) {
       case R.id.ll_incoming_detail:
@@ -149,6 +164,10 @@ public class ThirdFragment extends BaseFragment {
         startActivity(new Intent(getActivity(), CollectActivity.class));
         break;
       case R.id.ll_active:
+        startActivity(new Intent(getActivity(), ActiveListActivity.class));
+        break;
+      case R.id.tv_login:
+        startActivity(new Intent(getActivity(), RegisterActivity.class));
         break;
       default:
         break;

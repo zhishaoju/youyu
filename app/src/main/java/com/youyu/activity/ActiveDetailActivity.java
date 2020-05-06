@@ -6,6 +6,7 @@ import static com.youyu.utils.Contants.USER_ID;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -13,10 +14,12 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.google.gson.Gson;
+import butterknife.OnClick;
 import com.youyu.R;
 import com.youyu.bean.ActiveBean;
 import com.youyu.cusListview.CusRecycleView;
 import com.youyu.cusListview.PullToRefreshLayout;
+import com.youyu.cusListview.PullToRefreshLayout.OnRefreshListener;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.JsonUtils;
 import com.youyu.utils.LogUtil;
@@ -111,7 +114,7 @@ public class ActiveDetailActivity extends BaseActivity {
   }
 
   private void initListener() {
-    refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+    refreshView.setOnRefreshListener(new OnRefreshListener() {
 
       @Override
       public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
@@ -149,6 +152,8 @@ public class ActiveDetailActivity extends BaseActivity {
       }
     });
   }
+
+
 
   private void refresh() {
     LogUtil.showDLog(TAG, "refresh()");
