@@ -48,7 +48,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
-    android:text="输入验证码"
+    android:text="设定密码"
     android:textColor="@color/black"
     android:textSize="12sp" />
 
