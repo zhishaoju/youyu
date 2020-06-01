@@ -87,5 +87,7 @@ public interface Contants {
   int NET_REQUEST_TASK = 3;
 
   String USER_ID = "userId";
+  String USER_PHONE = "user_phone";
+  String USER_PASSWORD = "password";
 
 }

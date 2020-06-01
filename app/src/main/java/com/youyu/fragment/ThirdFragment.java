@@ -1,7 +1,10 @@
 package com.youyu.fragment;
 
+import static com.youyu.utils.Contants.USER_PHONE;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +73,7 @@ public class ThirdFragment extends BaseFragment {
   }
 
   private void initValue() {
-    boolean isLogin = SharedPrefsUtil.get(SharedPrefsUtil.LOGIN, false);
+    boolean isLogin = !TextUtils.isEmpty(SharedPrefsUtil.get(USER_PHONE, ""));
     if (isLogin) {
       tvLogin.setVisibility(View.GONE);
       llMyView.setVisibility(View.VISIBLE);
@@ -94,8 +97,11 @@ public class ThirdFragment extends BaseFragment {
     super.onHiddenChanged(hidden);
     LogUtil.showELog(TAG, "hidden = " + hidden);
     if (!hidden) {
-      // 请求网络展示界面
-      netRequest();
+      if (!TextUtils.isEmpty(SharedPrefsUtil.get(USER_PHONE, ""))) {
+        // 请求网络展示界面
+        netRequest();
+      } else {
+      }
     }
   }
 
@@ -131,7 +137,9 @@ public class ThirdFragment extends BaseFragment {
     LogUtil.showELog(TAG, "onResume");
     // 第一次进来的时候，会走到这里而不走onHiddenChanged
     // 请求网络展示界面
-    netRequest();
+    if (!TextUtils.isEmpty(SharedPrefsUtil.get(USER_PHONE, ""))) {
+      netRequest();
+    }
   }
 
   @Override

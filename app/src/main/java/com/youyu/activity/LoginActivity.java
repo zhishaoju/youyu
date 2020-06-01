@@ -1,7 +1,10 @@
 package com.youyu.activity;
 
 import static com.youyu.utils.Contants.USER_ID;
+import static com.youyu.utils.Contants.USER_PASSWORD;
+import static com.youyu.utils.Contants.USER_PHONE;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -70,10 +73,12 @@ public class LoginActivity extends BaseActivity {
         // 登录成功之后，把userId保存起来
         String userId = "";
         SharedPrefsUtil.put(USER_ID, userId);
+        SharedPrefsUtil.put(USER_PHONE, etPhone.getText().toString());
+        SharedPrefsUtil.put(USER_PASSWORD, etPassword.getText().toString());
+
         if (1 == mNetClick) {
         } else if ((2 == mNetClick)) {
         }
-
       }
     });
   }
@@ -91,6 +96,9 @@ public class LoginActivity extends BaseActivity {
         String phone = etPhone.getText().toString();
         String pass = etPassword.getText().toString();
         LogUtil.showDLog(TAG, "bt_login()");
+        break;
+      case R.id.bt_register:
+        startActivity(new Intent(this, RegisterActivity.class));
         break;
       case R.id.fl_chat:
         break;
