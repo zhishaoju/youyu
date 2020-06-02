@@ -60,7 +60,7 @@
     android:background="@drawable/corner_login_bg"
     android:gravity="center_vertical"
     android:hint="请输入正确的密码"
-    android:inputType="number"
+    android:inputType="textPassword"
     android:paddingLeft="20dp"
     android:textColorHint="#cececb"
     android:textCursorDrawable="@null"
@@ -72,6 +72,6 @@
     style="@style/ButtonStyle"
     android:layout_marginTop="38dp"
     android:background="@drawable/corner_bg"
-    android:text="登录" />
+    android:text="注册" />
 
 </LinearLayout>

@@ -1,8 +1,11 @@
 package com.youyu.activity;
 
+import static com.youyu.utils.Contants.Net.BASE_URL;
+import static com.youyu.utils.Contants.Net.LOGIN;
 import static com.youyu.utils.Contants.USER_ID;
 import static com.youyu.utils.Contants.USER_PASSWORD;
 import static com.youyu.utils.Contants.USER_PHONE;
+import static com.youyu.utils.Utils.fromPropertiesGetValue;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +24,9 @@ import com.youyu.R;
 import com.youyu.net.NetInterface;
 import com.youyu.utils.LogUtil;
 import com.youyu.utils.SharedPrefsUtil;
+import com.youyu.utils.Utils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @Author zhisiyi
@@ -93,8 +99,18 @@ public class LoginActivity extends BaseActivity {
         LogUtil.showDLog(TAG, "tv_forget_password()");
         break;
       case R.id.bt_login:
-        String phone = etPhone.getText().toString();
-        String pass = etPassword.getText().toString();
+        String url = BASE_URL + LOGIN;
+        JSONObject jsonObject = new JSONObject();
+        try {
+          jsonObject.put("mobile", etPhone.getText().toString());
+          jsonObject.put("imei", Utils.getIMEI());
+          jsonObject.put("channelId", fromPropertiesGetValue("channelId"));
+          jsonObject.put("password", etPassword.getText().toString());
+        } catch (JSONException e) {
+          LogUtil.showELog(TAG, "R.id.bt_login e :" + e.getLocalizedMessage());
+        }
+        String param = jsonObject.toString();
+        post(url, param);
         LogUtil.showDLog(TAG, "bt_login()");
         break;
       case R.id.bt_register:

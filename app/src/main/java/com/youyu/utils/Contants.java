@@ -41,8 +41,7 @@ public interface Contants {
 
   interface NetStatus {
 
-    String OK = "ok";
-    String FAIL = "fail";
+    int OK = 0;
   }
 
   String TOKEN = "token";

@@ -2,6 +2,7 @@ package com.youyu.activity;
 
 import static com.youyu.utils.Contants.Net.BASE_URL;
 import static com.youyu.utils.Contants.Net.CODE;
+import static com.youyu.utils.Contants.Net.REGISTER;
 import static com.youyu.utils.Contants.USER_PASSWORD;
 import static com.youyu.utils.Contants.USER_PHONE;
 
@@ -49,7 +50,7 @@ public class RegisterSetPassActivity extends BaseActivity {
 
   @OnClick(R.id.bt_login)
   public void onViewClicked() {
-    String url = BASE_URL + CODE;
+    String url = BASE_URL + REGISTER;
     JSONObject jsonObject = new JSONObject();
     try {
       if (mIntent != null) {

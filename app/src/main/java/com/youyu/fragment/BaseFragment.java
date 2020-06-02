@@ -1,6 +1,8 @@
 package com.youyu.fragment;
 
 
+import static com.youyu.utils.Utils.jsonObjectIntGetValue;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -188,10 +190,10 @@ public class BaseFragment extends Fragment {
             JSONObject jsonObject = null;
             try {
               jsonObject = new JSONObject(resposeStr);
-              String state = Utils.jsonObjectStringGetValue(jsonObject, "state");
+              int state = jsonObjectIntGetValue(jsonObject, "state");
               String msgPost = Utils.jsonObjectStringGetValue(jsonObject, "msg");
               Utils.show(msgPost);
-              if (Contants.NetStatus.OK.equals(state)) {
+              if (Contants.NetStatus.OK == state) {
                 mNetInteface.success(resposeStr);
               }
             } catch (JSONException e) {
@@ -212,10 +214,10 @@ public class BaseFragment extends Fragment {
             JSONObject jsonObject = null;
             try {
               jsonObject = new JSONObject(sdata);
-              String state = Utils.jsonObjectStringGetValue(jsonObject, "state");
+              int state = jsonObjectIntGetValue(jsonObject, "state");
               String msgGet = Utils.jsonObjectStringGetValue(jsonObject, "msg");
               Utils.show(msgGet);
-              if (Contants.NetStatus.OK.equals(state)) {
+              if (Contants.NetStatus.OK == state) {
                 mNetInteface.success(sdata);
               }
             } catch (JSONException e) {
