@@ -215,9 +215,9 @@ public class BaseActivity extends Activity {
               int state = jsonObjectIntGetValue(jsonObject, "state");
               String msgPost = Utils.jsonObjectStringGetValue(jsonObject, "msg");
               Utils.show(msgPost);
-              if (Contants.NetStatus.OK == state) {
+//              if (Contants.NetStatus.OK == state) {
                 mNetInterface.success(resposeStr);
-              }
+//              }
             } catch (JSONException e) {
               LogUtil.showELog(TAG,
                   "cusHandleMessage post JSONException:" + e.toString());
@@ -240,9 +240,9 @@ public class BaseActivity extends Activity {
               int state = jsonObjectIntGetValue(jsonObject, "state");
               String msgGet = jsonObject.getString("msg");
               Utils.show(msgGet);
-              if (Contants.NetStatus.OK == state) {
+//              if (Contants.NetStatus.OK == state) {
                 mNetInterface.success(sdata);
-              }
+//              }
             } catch (JSONException e) {
               LogUtil.showELog(TAG, "get JSONException:" + e.toString());
             }

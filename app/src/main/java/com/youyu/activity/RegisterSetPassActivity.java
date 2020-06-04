@@ -1,10 +1,11 @@
 package com.youyu.activity;
 
 import static com.youyu.utils.Contants.Net.BASE_URL;
-import static com.youyu.utils.Contants.Net.CODE;
 import static com.youyu.utils.Contants.Net.REGISTER;
+import static com.youyu.utils.Contants.NetStatus.USER_EXIST;
 import static com.youyu.utils.Contants.USER_PASSWORD;
 import static com.youyu.utils.Contants.USER_PHONE;
+import static com.youyu.utils.Utils.jsonObjectIntGetValue;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.youyu.R;
 import com.youyu.net.NetInterface.RequestResponse;
+import com.youyu.utils.Contants;
 import com.youyu.utils.LogUtil;
 import com.youyu.utils.SharedPrefsUtil;
 import com.youyu.utils.Utils;
@@ -76,11 +78,23 @@ public class RegisterSetPassActivity extends BaseActivity {
 
       @Override
       public void success(String data) {
-        if (mIntent != null) {
-          SharedPrefsUtil.put(USER_PHONE, mIntent.getStringExtra("mobile"));
+        JSONObject jsonObject = null;
+        try {
+          jsonObject = new JSONObject(data);
+          int state = jsonObjectIntGetValue(jsonObject, "state");
+          if (Contants.NetStatus.OK == state) {
+            if (mIntent != null) {
+              SharedPrefsUtil.put(USER_PHONE, mIntent.getStringExtra("mobile"));
+            }
+            SharedPrefsUtil.put(USER_PASSWORD, etPassword.getText().toString());
+            finish();
+          } else if (USER_EXIST == state) {
+            startActivity(new Intent(RegisterSetPassActivity.this, LoginActivity.class));
+          }
+        } catch (JSONException e) {
+          e.printStackTrace();
         }
-        SharedPrefsUtil.put(USER_PASSWORD, etPassword.getText().toString());
-        finish();
+
       }
     });
   }

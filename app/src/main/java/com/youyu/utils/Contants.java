@@ -41,7 +41,8 @@ public interface Contants {
 
   interface NetStatus {
 
-    int OK = 0;
+    int OK = 0;         // 操作成功
+    int USER_EXIST = 1; // 用户已经存在
   }
 
   String TOKEN = "token";
