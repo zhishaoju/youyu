@@ -89,13 +89,13 @@ public class CollectActivity extends BaseActivity {
     String url = "http://ips.ifeng.com/video19.ifeng.com/video09/2017/05/24/4664192-102-008-1012.mp4";
 
     //数据的初始化
-    ArrayList data = new ArrayList<VideoPlayerItemInfo>();
-    for (int i = 0; i < 20; i++) {
-      data.add(new VideoPlayerItemInfo(i, url));
-    }
+//    ArrayList data = new ArrayList<VideoPlayerItemInfo>();
+//    for (int i = 0; i < 20; i++) {
+//      data.add(new VideoPlayerItemInfo(i, url));
+//    }
 
 //    mIndexShowAdapter.setData(data);
-    mIndexShowAdapter = new VideoPlayListAdatper(this, data);
+    mIndexShowAdapter = new VideoPlayListAdatper(this);
     contentView.setAdapter(mIndexShowAdapter);
   }
 

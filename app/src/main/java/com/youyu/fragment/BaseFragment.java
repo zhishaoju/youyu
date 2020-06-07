@@ -9,17 +9,16 @@ import android.os.Message;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.youyu.net.NetInterface;
-import com.youyu.utils.Contants;
 import com.youyu.utils.JsonUtils;
 import com.youyu.utils.LogUtil;
 import com.youyu.utils.Utils;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.Iterator;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Dispatcher;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -65,14 +64,16 @@ public class BaseFragment extends Fragment {
     if (JsonUtils.isJsonObject(params)) {
       FormBody.Builder body = new FormBody.Builder();
       try {
-        JSONObject jsonObject = new JSONObject(params);
-        Iterator<String> keys = jsonObject.keys();
-        while (keys.hasNext()) {
-          String key = keys.next();
-          String value = jsonObject.getString(key);
-          body.add(key, value);
-        }
-        RequestBody requestBody = body.build();
+//        JSONObject jsonObject = new JSONObject(params);
+//        Iterator<String> keys = jsonObject.keys();
+//        while (keys.hasNext()) {
+//          String key = keys.next();
+//          String value = jsonObject.getString(key);
+//          body.add(key, value);
+//        }
+//        RequestBody requestBody = body.build();
+        RequestBody requestBody = RequestBody
+            .create(MediaType.parse("application/json;charset=utf-8"), params);
         Request request = new Request.Builder()
             .post(requestBody)
             .url(url)
@@ -95,14 +96,14 @@ public class BaseFragment extends Fragment {
             LogUtil.showELog(TAG, "post(String url, String params) "
                 + "onResponse(Call call, Response response) "
                 + "success: " + resposeStr);
-            Message mSucces = new Message();
-            mSucces.obj = resposeStr;
-            mSucces.what = 2;
-            mCusHandler.sendMessage(mSucces);
+            Message mSuccess = new Message();
+            mSuccess.obj = resposeStr;
+            mSuccess.what = 2;
+            mCusHandler.sendMessage(mSuccess);
           }
         });
 
-      } catch (JSONException e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }
@@ -190,12 +191,12 @@ public class BaseFragment extends Fragment {
             JSONObject jsonObject = null;
             try {
               jsonObject = new JSONObject(resposeStr);
-              int state = jsonObjectIntGetValue(jsonObject, "state");
+              int state = jsonObjectIntGetValue(jsonObject, "code");
               String msgPost = Utils.jsonObjectStringGetValue(jsonObject, "msg");
               Utils.show(msgPost);
-              if (Contants.NetStatus.OK == state) {
-                mNetInteface.success(resposeStr);
-              }
+//              if (Contants.NetStatus.OK == state) {
+              mNetInteface.success(resposeStr);
+//              }
             } catch (JSONException e) {
               LogUtil.showELog(TAG, "cusHandleMessage case 2 post JSONException:" + e.toString());
             }
@@ -214,12 +215,12 @@ public class BaseFragment extends Fragment {
             JSONObject jsonObject = null;
             try {
               jsonObject = new JSONObject(sdata);
-              int state = jsonObjectIntGetValue(jsonObject, "state");
+              int state = jsonObjectIntGetValue(jsonObject, "code");
               String msgGet = Utils.jsonObjectStringGetValue(jsonObject, "msg");
               Utils.show(msgGet);
-              if (Contants.NetStatus.OK == state) {
-                mNetInteface.success(sdata);
-              }
+//              if (Contants.NetStatus.OK == state) {
+              mNetInteface.success(sdata);
+//              }
             } catch (JSONException e) {
               LogUtil.showELog(TAG, "cusHandleMessage case 4 get JSONException:" + e.getMessage());
             }

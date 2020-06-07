@@ -13,8 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.google.gson.Gson;
 import butterknife.OnClick;
+import com.google.gson.Gson;
 import com.youyu.R;
 import com.youyu.bean.ActiveBean;
 import com.youyu.cusListview.CusRecycleView;
@@ -154,9 +154,19 @@ public class ActiveDetailActivity extends BaseActivity {
   }
 
 
-
   private void refresh() {
     LogUtil.showDLog(TAG, "refresh()");
 //    post(url, jsonObject.toString());
+  }
+
+  @OnClick({R.id.fl_back, R.id.tv_title})
+  public void onViewClicked(View view) {
+    switch (view.getId()) {
+      case R.id.fl_back:
+        finish();
+        break;
+      case R.id.tv_title:
+        break;
+    }
   }
 }

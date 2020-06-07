@@ -2,10 +2,13 @@ package com.youyu.activity;
 
 import static com.youyu.utils.Contants.Net.BASE_URL;
 import static com.youyu.utils.Contants.Net.REGISTER;
+import static com.youyu.utils.Contants.NetStatus.OK;
 import static com.youyu.utils.Contants.NetStatus.USER_EXIST;
+import static com.youyu.utils.Contants.USER_ID;
 import static com.youyu.utils.Contants.USER_PASSWORD;
 import static com.youyu.utils.Contants.USER_PHONE;
 import static com.youyu.utils.Utils.jsonObjectIntGetValue;
+import static com.youyu.utils.Utils.jsonObjectStringGetValue;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -81,12 +84,16 @@ public class RegisterSetPassActivity extends BaseActivity {
         JSONObject jsonObject = null;
         try {
           jsonObject = new JSONObject(data);
-          int state = jsonObjectIntGetValue(jsonObject, "state");
+          int state = jsonObjectIntGetValue(jsonObject, "code");
+          String userId = jsonObjectStringGetValue(jsonObject, "id");
+
           if (Contants.NetStatus.OK == state) {
             if (mIntent != null) {
               SharedPrefsUtil.put(USER_PHONE, mIntent.getStringExtra("mobile"));
             }
             SharedPrefsUtil.put(USER_PASSWORD, etPassword.getText().toString());
+            SharedPrefsUtil.put(USER_ID, userId);
+            setResult(-1);
             finish();
           } else if (USER_EXIST == state) {
             startActivity(new Intent(RegisterSetPassActivity.this, LoginActivity.class));

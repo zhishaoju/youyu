@@ -5,16 +5,20 @@
   android:background="@color/my_bg"
   android:orientation="vertical">
 
+  <include layout="@layout/include_title" />
+
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/margin_16"
     android:orientation="vertical">
+
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginLeft="@dimen/margin_16"
       android:orientation="horizontal">
+
       <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -37,6 +41,7 @@
         android:textColor="@color/black"
         android:textSize="@dimen/font_20" />
     </LinearLayout>
+
     <TextView
       android:id="@+id/tv_time"
       android:layout_width="wrap_content"
@@ -62,11 +67,13 @@
       android:layout_height="wrap_content"
       android:background="@mipmap/huodong"
       android:orientation="vertical">
+
       <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="57dp"
         android:layout_marginTop="40dp">
+
         <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -82,11 +89,13 @@
           android:textColor="@color/white"
           android:textSize="@dimen/font_20" />
       </LinearLayout>
+
       <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="57dp"
         android:layout_marginTop="10dp">
+
         <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -102,11 +111,13 @@
           android:textColor="@color/white"
           android:textSize="@dimen/font_20" />
       </LinearLayout>
+
       <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="57dp"
         android:layout_marginTop="10dp">
+
         <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -123,11 +134,13 @@
           android:textSize="@dimen/font_20" />
       </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginLeft="@dimen/margin_16"
       android:orientation="horizontal">
+
       <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"

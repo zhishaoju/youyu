@@ -58,7 +58,7 @@
           <TextView
             style="@style/MyHeadTvStyle"
             android:layout_marginLeft="0dp"
-            android:text="关注" />
+            android:text="发帖" />
 
           <TextView
             android:id="@+id/tv_guanzhu_num"

@@ -22,6 +22,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.youyu.R;
 import com.youyu.net.NetInterface;
+import com.youyu.utils.Contants.NetStatus;
+import com.youyu.utils.JsonUtils;
 import com.youyu.utils.LogUtil;
 import com.youyu.utils.SharedPrefsUtil;
 import com.youyu.utils.Utils;
@@ -54,7 +56,7 @@ public class LoginActivity extends BaseActivity {
   FrameLayout flQq;
 
   /**
-   * =1, 登录； =2, 忘记密码；=3
+   * =1, 登录； =2, 忘记密码；=3, 注册
    */
   private int mNetClick;
 
@@ -76,13 +78,25 @@ public class LoginActivity extends BaseActivity {
 
       @Override
       public void success(String data) {
-        // 登录成功之后，把userId保存起来
-        String userId = "";
-        SharedPrefsUtil.put(USER_ID, userId);
+
         SharedPrefsUtil.put(USER_PHONE, etPhone.getText().toString());
         SharedPrefsUtil.put(USER_PASSWORD, etPassword.getText().toString());
 
         if (1 == mNetClick) {
+          if (JsonUtils.isJsonObject(data)) {
+            try {
+              JSONObject jsonObject1 = new JSONObject(data);
+              int code = Utils.jsonObjectIntGetValue(jsonObject1, "code");
+              if (NetStatus.OK == code) {
+                JSONObject jsonObject = jsonObject1.getJSONObject("data");
+                SharedPrefsUtil.put(USER_ID, jsonObject.getString("id"));
+                finish();
+              }
+            } catch (JSONException e) {
+              LogUtil.showELog(TAG, "1 == mNetClick e : " + e.getLocalizedMessage());
+            }
+          }
+
         } else if ((2 == mNetClick)) {
         }
       }
@@ -99,6 +113,7 @@ public class LoginActivity extends BaseActivity {
         LogUtil.showDLog(TAG, "tv_forget_password()");
         break;
       case R.id.bt_login:
+        mNetClick = 1;
         String url = BASE_URL + LOGIN;
         JSONObject jsonObject = new JSONObject();
         try {

@@ -469,15 +469,15 @@ public class Utils {
   public static ActiveItemUi transform(int status) {
     ActiveItemUi activeItemUi = new ActiveItemUi();
     switch (status) {
-      case 1:
+      case 0:
         activeItemUi.stateName = "未开始";
         activeItemUi.bgValue = R.drawable.corner_second_no_start_bg;
         break;
-      case 2:
+      case 1:
         activeItemUi.stateName = "进行中";
         activeItemUi.bgValue = R.drawable.corner_second_hava_in_hand_bg;
         break;
-      case 3:
+      case 2:
         activeItemUi.stateName = "已结束";
         activeItemUi.bgValue = R.drawable.corner_second_finish_bg;
         break;

@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.youyu.fragment.IndexFragment;
 import com.youyu.fragment.SecondFragment;
 import com.youyu.fragment.ThirdFragment;

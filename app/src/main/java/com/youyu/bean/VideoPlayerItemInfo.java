@@ -7,11 +7,22 @@ package com.youyu.bean;
  */
 public class VideoPlayerItemInfo {
 
-  public int id;
-  public String url;
+  public String id;
+  public int agreeTotal;
+  public int commentTotal;
+  public String content;
+  public String coverImage;
+  public String description;
+  public int duration;
+  public int footTotal;
+  public String playUrl;
+  public int readTotal;
+  public String title;
+  public int type;
+  public String postId;
 
-  public VideoPlayerItemInfo(int id, String url) {
-    this.id = id;
-    this.url = url;
-  }
+//  public VideoPlayerItemInfo(int id, String coverImage) {
+//    this.id = id;
+//    this.coverImage = coverImage;
+//  }
 }

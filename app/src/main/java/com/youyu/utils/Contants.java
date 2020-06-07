@@ -14,9 +14,9 @@ public interface Contants {
     String POST_COMMENT_LIST = "/youyu/api/post/list";
     String COMMENT_DETAIL = "/youyu/api/post/info";
     String COMMENT_LIST = "/youyu/api/comment/list";
-    String POST_COMMENT = "/youyu/api/post/info";
-    String BUYER = "buyer";
-    String SAVE_ACCOUNT = "buyer/account/saveAccount";
+    String SEND_COMMENT = "/youyu/api/comment/save";
+    String ACTIVITY_LIST = "/youyu/api/activity/list";
+    String USER_INFO = "/youyu/api/user/info";
     String TASK_DETAIL = "buyer/task/detail";
     String TASK_MANAGER = "buyer/task/manager";
     String MONEY_BILLLIST = "buyer/money/billList";
@@ -42,7 +42,8 @@ public interface Contants {
   interface NetStatus {
 
     int OK = 0;         // 操作成功
-    int USER_EXIST = 1; // 用户已经存在
+    int USER_NOT_EXIST = 1; // 用户不存在
+    int USER_EXIST = 2; // 用户已经存在
   }
 
   String TOKEN = "token";

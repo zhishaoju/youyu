@@ -6,14 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.bumptech.glide.Glide;
 import com.youyu.R;
 import com.youyu.bean.VideoPlayerItemInfo;
 import com.youyu.view.VideoPlayer;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ import java.util.List;
 public class VideoPlayListAdatper extends Adapter {
 
   private Context context;
-  private List<VideoPlayerItemInfo> videoPlayerItemInfoList;
+  private List<VideoPlayerItemInfo> videoPlayerItemInfoList = new ArrayList<>();
 
   //记录之前播放的条目下标
   public int currentPosition = -1;
@@ -38,6 +39,10 @@ public class VideoPlayListAdatper extends Adapter {
   public VideoPlayListAdatper(Context context, List<VideoPlayerItemInfo> videoPlayerItemInfoList) {
     this.context = context;
     this.videoPlayerItemInfoList = videoPlayerItemInfoList;
+  }
+
+  public VideoPlayListAdatper(Context context) {
+    this.context = context;
   }
 
   @Override
@@ -61,8 +66,15 @@ public class VideoPlayListAdatper extends Adapter {
     viewHolder.videoPlayer.mediaController.setAdapter(this);
     if (position != currentPosition) {
       //设置为初始化状态
-      viewHolder.videoPlayer.initViewDisplay();
+      viewHolder.videoPlayer.initViewDisplay(info.duration);
     }
+    viewHolder.tvZan.setText(info.agreeTotal + "");
+    viewHolder.tvComment.setText(info.commentTotal + "");
+    viewHolder.tvCai.setText(info.footTotal + "");
+    viewHolder.tvTitle.setText(info.title);
+    Glide.with(context)
+        .load(info.coverImage)
+        .into(viewHolder.ivBg);
   }
 
   @Override
@@ -77,30 +89,32 @@ public class VideoPlayListAdatper extends Adapter {
 
   static class ListViewHolder extends ViewHolder {
 
-      @BindView(R.id.iv_author)
-      ImageView ivAuthor;
-      @BindView(R.id.tv_author_name)
-      TextView tvAuthorName;
-      @BindView(R.id.iv_comment_more)
-      ImageView ivCommentMore;
-      @BindView(R.id.iv_bg)
-      ImageView ivBg;
-      @BindView(R.id.videoPlayer)
-      VideoPlayer videoPlayer;
-      @BindView(R.id.iv_zan)
-      ImageView ivZan;
-      @BindView(R.id.tv_zan)
-      TextView tvZan;
-      @BindView(R.id.iv_cai)
-      ImageView ivCai;
-      @BindView(R.id.tv_cai)
-      TextView tvCai;
-      @BindView(R.id.iv_comment)
-      ImageView ivComment;
-      @BindView(R.id.tv_comment)
-      TextView tvComment;
-      @BindView(R.id.tv_fenxiang)
-      TextView tvFenxiang;
+    @BindView(R.id.iv_author)
+    ImageView ivAuthor;
+    @BindView(R.id.tv_author_name)
+    TextView tvAuthorName;
+    @BindView(R.id.iv_comment_more)
+    ImageView ivCommentMore;
+    @BindView(R.id.iv_bg)
+    ImageView ivBg;
+    @BindView(R.id.videoPlayer)
+    VideoPlayer videoPlayer;
+    @BindView(R.id.iv_zan)
+    ImageView ivZan;
+    @BindView(R.id.tv_zan)
+    TextView tvZan;
+    @BindView(R.id.iv_cai)
+    ImageView ivCai;
+    @BindView(R.id.tv_cai)
+    TextView tvCai;
+    @BindView(R.id.iv_comment)
+    ImageView ivComment;
+    @BindView(R.id.tv_comment)
+    TextView tvComment;
+    @BindView(R.id.tv_fenxiang)
+    TextView tvFenxiang;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
 
     ListViewHolder(View view) {
       super(view);
@@ -109,6 +123,17 @@ public class VideoPlayListAdatper extends Adapter {
   }
 
   public Context getContext() {
-      return context;
+    return context;
+  }
+
+  public void updateData(ArrayList<VideoPlayerItemInfo> data) {
+    videoPlayerItemInfoList.clear();
+    videoPlayerItemInfoList.addAll(data);
+    notifyDataSetChanged();
+  }
+
+  public void appendData(ArrayList<VideoPlayerItemInfo> data) {
+    videoPlayerItemInfoList.addAll(data);
+    notifyDataSetChanged();
   }
 }

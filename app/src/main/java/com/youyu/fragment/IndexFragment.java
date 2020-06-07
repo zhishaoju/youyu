@@ -1,6 +1,10 @@
 package com.youyu.fragment;
 
 
+import static com.youyu.utils.Contants.Net.BASE_URL;
+import static com.youyu.utils.Contants.Net.POST_COMMENT_LIST;
+import static com.youyu.utils.Contants.USER_ID;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.google.gson.Gson;
 import com.youyu.R;
 import com.youyu.adapter.VideoPlayListAdatper;
 import com.youyu.bean.VideoPlayerItemInfo;
@@ -19,7 +24,12 @@ import com.youyu.cusListview.CusRecycleView;
 import com.youyu.cusListview.PullToRefreshLayout;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.LogUtil;
+import com.youyu.utils.SharedPrefsUtil;
+import com.youyu.utils.Utils;
 import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @author zhishaoju
@@ -56,11 +66,13 @@ public class IndexFragment extends BaseFragment {
 
   private int mPageNumer = 1;
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
+  private int pageSize = 10;
 
   private Unbinder mUnbinder;
 
   private VideoPlayListAdatper mIndexShowAdapter;
   private LinearLayoutManager lm;
+  private ArrayList<VideoPlayerItemInfo> mData = new ArrayList<>();
 
 //  private GridView gridView;
 //  private CusRecycleView cusRecycleView;
@@ -90,6 +102,7 @@ public class IndexFragment extends BaseFragment {
 //    //设置滑动监听
 //    rv.addOnScrollListener(onScrollListener);
   }
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -99,16 +112,16 @@ public class IndexFragment extends BaseFragment {
 //    mIndexShowAdapter = new IndexShowAdapter(getActivity());
 
     //网络视频路径
-    String url = "http://ips.ifeng.com/video19.ifeng.com/video09/2017/05/24/4664192-102-008-1012.mp4";
-
-    //数据的初始化
-    ArrayList data = new ArrayList<VideoPlayerItemInfo>();
-    for (int i = 0; i < 20; i++) {
-      data.add(new VideoPlayerItemInfo(i, url));
-    }
+//    String url = "http://ips.ifeng.com/video19.ifeng.com/video09/2017/05/24/4664192-102-008-1012.mp4";
+//
+//    //数据的初始化
+//    ArrayList data = new ArrayList<VideoPlayerItemInfo>();
+//    for (int i = 0; i < 20; i++) {
+//      data.add(new VideoPlayerItemInfo(i, url));
+//    }
 
 //    mIndexShowAdapter.setData(data);
-    mIndexShowAdapter = new VideoPlayListAdatper(getActivity(), data);
+    mIndexShowAdapter = new VideoPlayListAdatper(getActivity());
     contentView.setAdapter(mIndexShowAdapter);
   }
 
@@ -141,30 +154,35 @@ public class IndexFragment extends BaseFragment {
   }
 
   private void refresh() {
+    mRefresh = 1;
     LogUtil.showDLog(TAG, "refresh()");
-//    post(url, jsonObject.toString());
+    String url = BASE_URL + POST_COMMENT_LIST;
+    JSONObject jsonObject = new JSONObject();
+    try {
+      jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+      jsonObject.put("pageNum", mPageNumer);
+      jsonObject.put("pageSize", pageSize);
+    } catch (JSONException e) {
+      LogUtil.showELog(TAG, "indexFragment refresh e :" + e.getLocalizedMessage());
+    }
+    String param = jsonObject.toString();
+    post(url, param);
   }
 
   private void loadMore(int pageNum) {
     LogUtil.showDLog(TAG, "loadMore(int pageNum) pageNum = " + pageNum);
-//    mRefresh = 2;
-//    String buyerCode = SharedPrefsUtil.get(Contants.PHONE, "");
-//    String buyerId = SharedPrefsUtil.get(Contants.BUYER_ID, "");
-//    String token = SharedPrefsUtil.get(Contants.TOKEN, "");
-//    JSONObject jsonObject = new JSONObject();
-//    try {
-//      jsonObject.put("buyerCode", buyerCode);
-//      jsonObject.put("buyerId", buyerId);
-//      jsonObject.put("token", token);
-//      jsonObject.put("pageNumber", pageNum);
-//      jsonObject.put("pageSize", PER_PAGE_NUM);
-//
-//    } catch (Exception e) {
-//      LogUtil.showELog(TAG, "loadMore e:" + e.toString());
-//    }
-//
-//    String url = Contants.Net.BASE_URL + BUYER;
-//    post(url, jsonObject.toString());
+    mRefresh = 2;
+    String url = BASE_URL + POST_COMMENT_LIST;
+    JSONObject jsonObject = new JSONObject();
+    try {
+      jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+      jsonObject.put("pageNum", pageNum);
+      jsonObject.put("pageSize", pageSize);
+    } catch (JSONException e) {
+      LogUtil.showELog(TAG, "indexFragment refresh e :" + e.getLocalizedMessage());
+    }
+    String param = jsonObject.toString();
+    post(url, param);
   }
 
 
@@ -199,6 +217,35 @@ public class IndexFragment extends BaseFragment {
 
   private void parseData(String data) {
     LogUtil.showELog(TAG, "parseData(String data) 解析数据data：" + data);
+    mData.clear();
+    try {
+      JSONObject jsonObject = new JSONObject(data);
+      int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
+      if (code == 0) {
+        JSONArray ja = jsonObject.getJSONArray("rows");
+        if (ja != null) {
+          int size = ja.length();
+          for (int i = 0; i < size; i++) {
+            String vpii = ja.getJSONObject(i).toString();
+            VideoPlayerItemInfo videoPlayerItemInfo = new Gson()
+                .fromJson(vpii, VideoPlayerItemInfo.class);
+            mData.add(videoPlayerItemInfo);
+          }
+        }
+        if (mRefresh == 1) {
+          mIndexShowAdapter.updateData(mData);
+          refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);
+        } else if (mRefresh == 2) {
+          mIndexShowAdapter.appendData(mData);
+          refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+        }
+      }
+    } catch (Exception e) {
+      LogUtil.showELog(TAG, "parseData(String data) catch (JSONException e)"
+          + " 异常：" + e.toString());
+      Utils.show("解析数据失败");
+    }
+
 //    mPayTaskModels.clear();
 //    try {
 //      JSONObject jsonObject = new JSONObject(data);

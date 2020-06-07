@@ -77,7 +77,8 @@
     android:gravity="center"
     android:text="@string/title"
     android:textColor="#fff"
-    android:textSize="14sp" />
+    android:textSize="14sp"
+    android:visibility="gone" />
 
   <ImageView
     android:id="@+id/iv_play"

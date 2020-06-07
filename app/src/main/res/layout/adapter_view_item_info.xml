@@ -37,6 +37,15 @@
       android:background="@mipmap/xia" />
   </LinearLayout>
 
+  <TextView
+    android:id="@+id/tv_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="13dp"
+    android:text="dssd"
+    android:textColor="@color/black"
+    android:textSize="@dimen/font_18" />
+
   <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content">

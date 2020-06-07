@@ -3,6 +3,7 @@ package com.youyu.applicatioin;
 import android.Manifest;
 import android.Manifest.permission;
 import android.app.Application;
+import com.tencent.bugly.crashreport.CrashReport;
 
 /**
  * @Author zsj
@@ -25,7 +26,7 @@ public class MainApplication extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
-//    CrashReport.initCrashReport(this, "1110b3458d", false);
+    CrashReport.initCrashReport(this, "70454defe9", true);
     mInstance = this;
 //    grantUriPermission(getCallingPackage(),
 //        contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);

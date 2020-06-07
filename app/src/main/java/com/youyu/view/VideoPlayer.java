@@ -59,7 +59,7 @@ public class VideoPlayer extends RelativeLayout {
     View view = View.inflate(getContext(), R.layout.video_play, this);
     ButterKnife.bind(this, view);
 
-    initViewDisplay();
+    initViewDisplay(0);
     //把VideoPlayer对象传递给VideoMediaController
     mediaController.setVideoPlayer(this);
 
@@ -76,7 +76,7 @@ public class VideoPlayer extends RelativeLayout {
       mSurface = new Surface(surface);//连接对象（MediaPlayer和TextureView）
 //      mSurfaceHolder = mSurface.
       LogUtil.showDLog(TAG, "onSurfaceTextureAvailable");
-      play(info.url);
+      play(info.playUrl);
     }
 
     @Override
@@ -168,9 +168,9 @@ public class VideoPlayer extends RelativeLayout {
 
 
   //初始化控件的显示状态
-  public void initViewDisplay() {
+  public void initViewDisplay(int time) {
     videoView.setVisibility(View.GONE);
-    mediaController.initViewDisplay();
+    mediaController.initViewDisplay(time);
   }
 
   //设置视频播放界面的显示
@@ -178,7 +178,7 @@ public class VideoPlayer extends RelativeLayout {
     videoView.setVisibility(View.VISIBLE);
   }
 
-  private VideoPlayerItemInfo info;
+  public VideoPlayerItemInfo info;
 
   public void setPlayData(VideoPlayerItemInfo info) {
     this.info = info;

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@color/white">
+
+  <com.youyu.view.CircleImageView
+    android:id="@+id/civ_head_pic"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_marginLeft="@dimen/margin_16"
+    android:layout_marginTop="@dimen/margin_10"
+    android:src="@mipmap/huodong2" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_10"
+    android:layout_toRightOf="@id/civ_head_pic"
+    android:orientation="vertical">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+      <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:text="爱尔兰"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_14" />
+
+      <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:text="2020.3.4 21:16:52"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_14" />
+
+      <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1" />
+
+      <ImageView
+        android:id="@+id/iv_zan"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginRight="2dp"
+        android:background="@mipmap/zan1" />
+
+      <TextView
+        android:id="@+id/tv_zan"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:text="362"
+        android:textColor="#8b8787" />
+
+      <ImageView
+        android:id="@+id/iv_cai"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginRight="2dp"
+        android:background="@mipmap/cai1" />
+
+      <TextView
+        android:id="@+id/tv_cai"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:text="362"
+        android:textColor="#8b8787" />
+
+    </LinearLayout>
+
+    <TextView
+      android:id="@+id/tv_comment"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="@dimen/margin_16"
+      android:layout_marginTop="@dimen/margin_8"
+      android:layout_marginRight="@dimen/margin_8"
+      android:text="sdsddsds"
+      android:textColor="@color/black"
+      android:textSize="@dimen/font_16" />
+
+  </LinearLayout>
+
+</RelativeLayout>
