@@ -2,6 +2,7 @@ package com.youyu.activity;
 
 import static android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE;
 import static com.youyu.utils.Contants.Net.BASE_URL;
+import static com.youyu.utils.Contants.Net.COLLECTION_ADD;
 import static com.youyu.utils.Contants.Net.COMMENT_DETAIL;
 import static com.youyu.utils.Contants.Net.COMMENT_LIST;
 import static com.youyu.utils.Contants.Net.SEND_COMMENT;
@@ -392,7 +393,7 @@ public class VideoDetailActivity extends BaseActivity {
   private void shouCang() {
     LogUtil.showDLog(TAG, "shouCang()");
     flag = 4;
-    String url = BASE_URL + SEND_COMMENT;
+    String url = BASE_URL + COLLECTION_ADD;
     String params = "";
     try {
       JSONObject jsonObject = new JSONObject();

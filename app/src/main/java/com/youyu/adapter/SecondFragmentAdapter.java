@@ -87,7 +87,7 @@ public class SecondFragmentAdapter extends Adapter {
     }
   }
 
-  public void setData(ArrayList<ActiveModel> data) {
+  public void updateData(ArrayList<ActiveModel> data) {
     mData.clear();
     mData.addAll(data);
     notifyDataSetChanged();

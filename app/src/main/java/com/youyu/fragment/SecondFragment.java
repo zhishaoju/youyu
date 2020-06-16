@@ -1,5 +1,9 @@
 package com.youyu.fragment;
 
+import static com.youyu.utils.Contants.Net.BASE_URL;
+import static com.youyu.utils.Contants.Net.POST_COMMENT_LIST;
+import static com.youyu.utils.Contants.USER_ID;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,10 +14,9 @@ import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.google.gson.Gson;
 import com.youyu.R;
 import com.youyu.activity.ActiveDetailActivity;
-import com.youyu.adapter.ActiveAdapter;
-import com.youyu.adapter.ActiveAdapter.OnItemClickListener;
 import com.youyu.adapter.SecondFragmentAdapter;
 import com.youyu.adapter.SecondFragmentAdapter.ItemClickListener;
 import com.youyu.adapter.SecondPagerAdapter;
@@ -21,7 +24,14 @@ import com.youyu.bean.ActiveModel;
 import com.youyu.bean.SecondViewPagerModel;
 import com.youyu.cusListview.CusRecycleView;
 import com.youyu.cusListview.PullToRefreshLayout;
+import com.youyu.net.NetInterface.RequestResponse;
+import com.youyu.utils.LogUtil;
+import com.youyu.utils.SharedPrefsUtil;
+import com.youyu.utils.Utils;
 import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SecondFragment extends BaseFragment {
 
@@ -42,6 +52,10 @@ public class SecondFragment extends BaseFragment {
   private ArrayList<ActiveModel> mActiveModelList;
   private Unbinder mUnBinder;
 
+  private int mPageNumer = 1;
+  private int mRefresh; // =1 代表刷新；=2 代表加载更多
+  private int pageSize = 10;
+
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -50,6 +64,34 @@ public class SecondFragment extends BaseFragment {
     initValue();
     initListener();
     return view;
+  }
+
+  @Override
+  public void setUserVisibleHint(boolean isVisibleToUser) {
+    super.setUserVisibleHint(isVisibleToUser);
+    if (isVisibleToUser) {
+      // 请求网络
+      refresh();
+    }
+  }
+
+  @Override
+  public void onHiddenChanged(boolean hidden) {
+    super.onHiddenChanged(hidden);
+    LogUtil.showELog(TAG, "hidden = " + hidden);
+    if (!hidden) {
+      // 请求网络展示界面
+      refresh();
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    LogUtil.showELog(TAG, "onResume");
+    // 第一次进来的时候，会走到这里而不走onHiddenChanged
+    // 请求网络展示界面
+    refresh();
   }
 
   private void initValue() {
@@ -63,33 +105,31 @@ public class SecondFragment extends BaseFragment {
 
     SecondViewPagerModel secondViewPagerModel1 = new SecondViewPagerModel();
     secondViewPagerModel1.picUrl =
-        "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1587785579&di=bbf01fe8138ca1a06072dfef7c065ab8&src=http://a3.att.hudong.com/14/75/01300000164186121366756803686.jpg";
+        "http://youimg1.c-ctrip.com/target/tg/618/480/977/c8339992a8ef4df7b9520ef28ec5c856.jpg";
 
     SecondViewPagerModel secondViewPagerModel2 = new SecondViewPagerModel();
-    secondViewPagerModel2.picUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587795671000&di=3fdc39d8af33f1065ea3531e12dd9207&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fd009b3de9c82d1587e249850820a19d8bd3e42a9.jpg";
+    secondViewPagerModel2.picUrl = "http://img1.imgtn.bdimg.com/it/u=3961931988,142045105&fm=26&gp=0.jpg";
     mData.add(secondViewPagerModel1);
     mData.add(secondViewPagerModel2);
-
     mSecondPagerAdapter.setData(mData);
-
-    ActiveModel activeModel = new ActiveModel();
-    activeModel.title = "test1";
-    activeModel.beginTime = "20200425";
-    activeModel.endTime = "20200609";
-    activeModel.count = "2131";
-    activeModel.status = 1;
-
-    ActiveModel activeModel1 = new ActiveModel();
-    activeModel1.title = "test2";
-    activeModel1.beginTime = "20200426";
-    activeModel1.endTime = "20200612";
-    activeModel1.count = "213166";
-    activeModel1.status = 2;
-
-    mActiveModelList.add(activeModel);
-    mActiveModelList.add(activeModel1);
-
-    mActiveAdapter.setData(mActiveModelList);
+//    ActiveModel activeModel = new ActiveModel();
+//    activeModel.title = "test1";
+//    activeModel.beginTime = "20200425";
+//    activeModel.endTime = "20200609";
+//    activeModel.count = "2131";
+//    activeModel.status = 1;
+//
+//    ActiveModel activeModel1 = new ActiveModel();
+//    activeModel1.title = "test2";
+//    activeModel1.beginTime = "20200426";
+//    activeModel1.endTime = "20200612";
+//    activeModel1.count = "213166";
+//    activeModel1.status = 2;
+//
+//    mActiveModelList.add(activeModel);
+//    mActiveModelList.add(activeModel1);
+//
+//    mActiveAdapter.updateData(mActiveModelList);
 
   }
 
@@ -97,9 +137,38 @@ public class SecondFragment extends BaseFragment {
     mActiveAdapter.setOnClickListener(new ItemClickListener() {
       @Override
       public void OnItemClickListener(ActiveModel activeModel) {
-        startActivity(new Intent(getActivity(), ActiveDetailActivity.class));
+        Intent intent = new Intent(getActivity(), ActiveDetailActivity.class);
+        intent.putExtra("activityId", activeModel.id);
+        startActivity(intent);
       }
     });
+
+    refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+
+      @Override
+      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+        refresh();
+      }
+
+      @Override
+      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+        mPageNumer += 1;
+        loadMore(mPageNumer);
+      }
+    });
+    setNetLisenter(new RequestResponse() {
+      @Override
+      public void failure(Exception e) {
+        LogUtil.showELog(TAG, "failure(Exception e) e:" + e.toString());
+        refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+      }
+
+      @Override
+      public void success(String data) {
+        parseData(data);
+      }
+    });
+
   }
 
   @Override
@@ -113,4 +182,70 @@ public class SecondFragment extends BaseFragment {
     super.onDestroyView();
     mUnBinder.unbind();
   }
+
+  private void parseData(String data) {
+    LogUtil.showELog(TAG, "parseData(String data) 解析数据data：" + data);
+    mData.clear();
+    try {
+      JSONObject jsonObject = new JSONObject(data);
+      int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
+      if (code == 0) {
+        JSONArray ja = jsonObject.getJSONArray("rows");
+        if (ja != null) {
+          int size = ja.length();
+          for (int i = 0; i < size; i++) {
+            String vpii = ja.getJSONObject(i).toString();
+            ActiveModel activeModel = new Gson()
+                .fromJson(vpii, ActiveModel.class);
+            mActiveModelList.add(activeModel);
+          }
+        }
+        if (mRefresh == 1) {
+          mActiveAdapter.updateData(mActiveModelList);
+          refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);
+        } else if (mRefresh == 2) {
+          mActiveAdapter.appendData(mActiveModelList);
+          refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+        }
+      }
+    } catch (Exception e) {
+      LogUtil.showELog(TAG, "parseData(String data) catch (JSONException e)"
+          + " 异常：" + e.toString());
+      Utils.show("解析数据失败");
+    }
+  }
+
+  private void refresh() {
+    mRefresh = 1;
+    LogUtil.showDLog(TAG, "refresh()");
+    String url = BASE_URL + POST_COMMENT_LIST;
+    JSONObject jsonObject = new JSONObject();
+    try {
+      jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+      jsonObject.put("pageNum", mPageNumer);
+      jsonObject.put("pageSize", pageSize);
+    } catch (JSONException e) {
+      LogUtil.showELog(TAG, "indexFragment refresh e :" + e.getLocalizedMessage());
+    }
+    String param = jsonObject.toString();
+    post(url, param);
+  }
+
+  private void loadMore(int pageNum) {
+    LogUtil.showDLog(TAG, "loadMore(int pageNum) pageNum = " + pageNum);
+    mRefresh = 2;
+    String url = BASE_URL + POST_COMMENT_LIST;
+    JSONObject jsonObject = new JSONObject();
+    try {
+      jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+      jsonObject.put("pageNum", pageNum);
+      jsonObject.put("pageSize", pageSize);
+    } catch (JSONException e) {
+      LogUtil.showELog(TAG, "indexFragment refresh e :" + e.getLocalizedMessage());
+    }
+    String param = jsonObject.toString();
+    post(url, param);
+  }
+
+
 }

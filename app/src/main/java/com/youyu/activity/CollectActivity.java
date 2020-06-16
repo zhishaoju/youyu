@@ -2,6 +2,7 @@ package com.youyu.activity;
 
 import static com.youyu.utils.Contants.Net.BASE_URL;
 import static com.youyu.utils.Contants.Net.COLLECTION_LIST;
+import static com.youyu.utils.Contants.Net.POST_UPDATE;
 import static com.youyu.utils.Contants.USER_ID;
 
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import butterknife.Unbinder;
 import com.google.gson.Gson;
 import com.youyu.R;
 import com.youyu.adapter.VideoPlayListAdatper;
+import com.youyu.adapter.VideoPlayListAdatper.OnClickListener;
 import com.youyu.bean.VideoPlayerItemInfo;
 import com.youyu.cusListview.CusRecycleView;
 import com.youyu.cusListview.PullToRefreshLayout;
@@ -56,6 +58,8 @@ public class CollectActivity extends BaseActivity {
   private int pageSize = 10;
   private ArrayList<VideoPlayerItemInfo> mData = new ArrayList<>();
 
+  private int mNetRequestFlag = -1;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -68,6 +72,30 @@ public class CollectActivity extends BaseActivity {
   }
 
   private void initListener() {
+    mIndexShowAdapter.setOnViewClick(new OnClickListener() {
+
+      @Override
+      public void onViewClick(int flag, String postId) {
+        mNetRequestFlag = 2;
+        String url = BASE_URL + POST_UPDATE;
+        JSONObject jsonObject = new JSONObject();
+        try {
+          jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+          jsonObject.put("id", postId);
+          if (flag == 1) {
+            jsonObject.put("agreeTotal", 1);
+            jsonObject.put("footTotal", 0);
+          } else {
+            jsonObject.put("agreeTotal", 0);
+            jsonObject.put("footTotal", 1);
+          }
+        } catch (JSONException e) {
+          LogUtil.showELog(TAG, "indexFragment refresh e :" + e.getLocalizedMessage());
+        }
+        String param = jsonObject.toString();
+        post(url, param);
+      }
+    });
     refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
 
       @Override
@@ -89,7 +117,9 @@ public class CollectActivity extends BaseActivity {
 
       @Override
       public void success(String data) {
-        parseData(data);
+        if (mNetRequestFlag == 1) {
+          parseData(data);
+        }
       }
     });
   }
@@ -113,6 +143,12 @@ public class CollectActivity extends BaseActivity {
   private void initRecyclerView() {
     lm = new LinearLayoutManager(this);
     contentView.setLayoutManager(lm);
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    refresh();
   }
 
   @Override
@@ -160,6 +196,7 @@ public class CollectActivity extends BaseActivity {
 
   private void refresh() {
     mRefresh = 1;
+    mNetRequestFlag = 1;
     LogUtil.showDLog(TAG, "refresh()");
     String url = BASE_URL + COLLECTION_LIST;
     JSONObject jsonObject = new JSONObject();
@@ -175,6 +212,7 @@ public class CollectActivity extends BaseActivity {
   }
 
   private void loadMore(int pageNum) {
+    mNetRequestFlag = 1;
     LogUtil.showDLog(TAG, "loadMore(int pageNum) pageNum = " + pageNum);
     mRefresh = 2;
     String url = BASE_URL + COLLECTION_LIST;

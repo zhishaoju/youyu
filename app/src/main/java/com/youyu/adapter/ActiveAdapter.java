@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class ActiveAdapter extends Adapter {
 
   private Context mCtx;
-  private ArrayList<ActiveBean> mData = new ArrayList<>();
+  private ArrayList<ActiveModel> mData = new ArrayList<>();
 
   //私有属性
   private OnItemClickListener onItemClickListener;
@@ -48,7 +48,7 @@ public class ActiveAdapter extends Adapter {
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     final ActiveViewHolder viewHolder = (ActiveViewHolder) holder;
     //获取到条目对应的数据
-    ActiveBean activeModel = mData.get(position);
+    ActiveModel activeModel = mData.get(position);
     viewHolder.tvActiveName.setText(activeModel.title);
     viewHolder.tvTimeScope.setText(activeModel.beginTime + "-" + activeModel.endTime);
     viewHolder.tvCanYuRen.setText(activeModel.haveJoin + "");
@@ -90,13 +90,13 @@ public class ActiveAdapter extends Adapter {
     }
   }
 
-  public void setData(ArrayList<ActiveBean> data) {
+  public void setData(ArrayList<ActiveModel> data) {
     mData.clear();
     mData.addAll(data);
     notifyDataSetChanged();
   }
 
-  public void appendData(ArrayList<ActiveBean> data) {
+  public void appendData(ArrayList<ActiveModel> data) {
     mData.addAll(data);
     notifyDataSetChanged();
   }
@@ -109,6 +109,6 @@ public class ActiveAdapter extends Adapter {
   //回调接口
   public interface OnItemClickListener {
 
-    void onItemClick(ActiveBean activeModel);
+    void onItemClick(ActiveModel activeModel);
   }
 }

@@ -78,7 +78,7 @@ public class ActiveListActivity extends BaseActivity {
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
   private int pageSize = 10;
 
-  private ArrayList<ActiveBean> mData = new ArrayList<>();
+  private ArrayList<ActiveModel> mData = new ArrayList<>();
 
 
   @Override
@@ -134,7 +134,7 @@ public class ActiveListActivity extends BaseActivity {
 
     mActiveAdapter.setOnItemClickListener(new OnItemClickListener() {
       @Override
-      public void onItemClick(ActiveBean activeModel) {
+      public void onItemClick(ActiveModel activeModel) {
         Intent intent = new Intent(ActiveListActivity.this, ActiveDetailActivity.class);
         intent.putExtra("activityId", activeModel.id);
         startActivity(intent);
@@ -217,8 +217,8 @@ public class ActiveListActivity extends BaseActivity {
           int size = ja.length();
           for (int i = 0; i < size; i++) {
             String vpii = ja.getJSONObject(i).toString();
-            ActiveBean activeBean = new Gson()
-                .fromJson(vpii, ActiveBean.class);
+            ActiveModel activeBean = new Gson()
+                .fromJson(vpii, ActiveModel.class);
             mData.add(activeBean);
           }
         }

@@ -195,14 +195,6 @@ public class IndexFragment extends BaseFragment {
       @Override
       public void onViewClick(int flag, String postId) {
         mNetRequestFlag = 2;
-        /**
-         * {
-         * 	"id":"06c2b619a2eb11eaa305c8d9d298c8bf",
-         * 	"userId":"2c2848816c096563016c097af7930004",
-         * 	"agreeTotal":1,
-         * 	"footTotal":0
-         * }
-         */
         String url = BASE_URL + POST_UPDATE;
         JSONObject jsonObject = new JSONObject();
         try {

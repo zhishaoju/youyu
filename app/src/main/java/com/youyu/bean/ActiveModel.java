@@ -9,11 +9,14 @@ import java.io.Serializable;
  */
 public class ActiveModel implements Serializable {
 
-  public String activeId;
+  public String id;
   public String title;
   public String beginTime;
   public String endTime;
   public String count;
   public int status;
+  public int haveJoin;
+  public int requireJoin;
+  public float totalMoney;
 
 }

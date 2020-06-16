@@ -92,17 +92,7 @@ public class ActiveDetailActivity extends BaseActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    String url = BASE_URL + ACTIVE_DETAIL;
-    String params = "";
-    try {
-      JSONObject jsonObject = new JSONObject();
-      jsonObject.put("activityId", activeId);
-      jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
-      params = jsonObject.toString();
-    } catch (Exception e) {
-      LogUtil.showELog(TAG, "params e :" + e.getLocalizedMessage());
-    }
-    post(url, params);
+    refresh();
   }
 
   private void initValue() {
@@ -123,8 +113,8 @@ public class ActiveDetailActivity extends BaseActivity {
 
       @Override
       public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-//                mPageNumer += 1;
-//                loadMore(mPageNumer);
+//        mPageNumer += 1;
+//        loadMore(mPageNumer);
       }
     });
     setNetListener(new RequestResponse() {
@@ -156,7 +146,18 @@ public class ActiveDetailActivity extends BaseActivity {
 
   private void refresh() {
     LogUtil.showDLog(TAG, "refresh()");
-//    post(url, jsonObject.toString());
+
+    String url = BASE_URL + ACTIVE_DETAIL;
+    String params = "";
+    try {
+      JSONObject jsonObject = new JSONObject();
+      jsonObject.put("activityId", activeId);
+      jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+      params = jsonObject.toString();
+    } catch (Exception e) {
+      LogUtil.showELog(TAG, "params e :" + e.getLocalizedMessage());
+    }
+    post(url, params);
   }
 
   @OnClick({R.id.fl_back, R.id.tv_title})
