@@ -18,8 +18,8 @@ public interface Contants {
     String ACTIVITY_LIST = "/youyu/api/activity/list";
     String USER_INFO = "/youyu/api/user/info";
     String POST_UPDATE = "/youyu/api/post/update";
-    String TASK_DETAIL = "buyer/task/detail";
-    String TASK_MANAGER = "buyer/task/manager";
+    String COLLECTION_LIST = "/youyu/api/collection/list";
+    String COLLECTION_ADD = "/api/collection/add";
     String MONEY_BILLLIST = "buyer/money/billList";
     String TASK_CANCLETASK = "buyer/task/cancleTask";
     String TASK_CONTINUETASK = "buyer/task/continueTask";

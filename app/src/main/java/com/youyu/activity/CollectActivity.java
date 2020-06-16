@@ -1,5 +1,9 @@
 package com.youyu.activity;
 
+import static com.youyu.utils.Contants.Net.BASE_URL;
+import static com.youyu.utils.Contants.Net.COLLECTION_LIST;
+import static com.youyu.utils.Contants.USER_ID;
+
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -9,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import com.google.gson.Gson;
 import com.youyu.R;
 import com.youyu.adapter.VideoPlayListAdatper;
 import com.youyu.bean.VideoPlayerItemInfo;
@@ -16,7 +21,12 @@ import com.youyu.cusListview.CusRecycleView;
 import com.youyu.cusListview.PullToRefreshLayout;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.LogUtil;
+import com.youyu.utils.SharedPrefsUtil;
+import com.youyu.utils.Utils;
 import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @Author zhisiyi
@@ -43,6 +53,8 @@ public class CollectActivity extends BaseActivity {
   private LinearLayoutManager lm;
   private int mPageNumer = 1;
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
+  private int pageSize = 10;
+  private ArrayList<VideoPlayerItemInfo> mData = new ArrayList<>();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +85,6 @@ public class CollectActivity extends BaseActivity {
       @Override
       public void failure(Exception e) {
         LogUtil.showELog(TAG, "failure(Exception e) e:" + e.toString());
-//        pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
       }
 
       @Override
@@ -117,14 +128,65 @@ public class CollectActivity extends BaseActivity {
 
   private void parseData(String data) {
     LogUtil.showELog(TAG, "parseData(String data) 解析数据data：" + data);
+    mData.clear();
+    try {
+      JSONObject jsonObject = new JSONObject(data);
+      int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
+      if (code == 0) {
+        JSONArray ja = jsonObject.getJSONArray("rows");
+        if (ja != null) {
+          int size = ja.length();
+          for (int i = 0; i < size; i++) {
+            String vpii = ja.getJSONObject(i).toString();
+            VideoPlayerItemInfo videoPlayerItemInfo = new Gson()
+                .fromJson(vpii, VideoPlayerItemInfo.class);
+            mData.add(videoPlayerItemInfo);
+          }
+        }
+        if (mRefresh == 1) {
+          mIndexShowAdapter.updateData(mData);
+          refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);
+        } else if (mRefresh == 2) {
+          mIndexShowAdapter.appendData(mData);
+          refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+        }
+      }
+    } catch (Exception e) {
+      LogUtil.showELog(TAG, "parseData(String data) catch (JSONException e)"
+          + " 异常：" + e.toString());
+      Utils.show("解析数据失败");
+    }
   }
 
   private void refresh() {
+    mRefresh = 1;
     LogUtil.showDLog(TAG, "refresh()");
-//    post(url, jsonObject.toString());
+    String url = BASE_URL + COLLECTION_LIST;
+    JSONObject jsonObject = new JSONObject();
+    try {
+      jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+      jsonObject.put("pageNum", mPageNumer);
+      jsonObject.put("pageSize", pageSize);
+    } catch (JSONException e) {
+      LogUtil.showELog(TAG, "active list refresh e :" + e.getLocalizedMessage());
+    }
+    String param = jsonObject.toString();
+    post(url, param);
   }
 
   private void loadMore(int pageNum) {
     LogUtil.showDLog(TAG, "loadMore(int pageNum) pageNum = " + pageNum);
+    mRefresh = 2;
+    String url = BASE_URL + COLLECTION_LIST;
+    JSONObject jsonObject = new JSONObject();
+    try {
+      jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+      jsonObject.put("pageNum", pageNum);
+      jsonObject.put("pageSize", pageSize);
+    } catch (JSONException e) {
+      LogUtil.showELog(TAG, "active list refresh e :" + e.getLocalizedMessage());
+    }
+    String param = jsonObject.toString();
+    post(url, param);
   }
 }
