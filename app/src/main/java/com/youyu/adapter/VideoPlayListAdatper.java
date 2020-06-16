@@ -45,6 +45,12 @@ public class VideoPlayListAdatper extends Adapter {
     this.context = context;
   }
 
+  private OnClickListener mOnClickListener;
+
+  public void setOnViewClick(OnClickListener l) {
+    mOnClickListener = l;
+  }
+
   @Override
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(context)
@@ -75,6 +81,20 @@ public class VideoPlayListAdatper extends Adapter {
     Glide.with(context)
         .load(info.coverImage)
         .into(viewHolder.ivBg);
+
+    viewHolder.ivZan.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        mOnClickListener.onViewClick(1, info.id);
+      }
+    });
+
+    viewHolder.ivCai.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        mOnClickListener.onViewClick(2, info.id);
+      }
+    });
   }
 
   @Override
@@ -135,5 +155,12 @@ public class VideoPlayListAdatper extends Adapter {
   public void appendData(ArrayList<VideoPlayerItemInfo> data) {
     videoPlayerItemInfoList.addAll(data);
     notifyDataSetChanged();
+  }
+
+  //回调接口
+  public interface OnClickListener {
+
+    // flag = 1 赞； flag = 2 踩
+    void onViewClick(int flag, String postId);
   }
 }

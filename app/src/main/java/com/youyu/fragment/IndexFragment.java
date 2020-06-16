@@ -3,6 +3,7 @@ package com.youyu.fragment;
 
 import static com.youyu.utils.Contants.Net.BASE_URL;
 import static com.youyu.utils.Contants.Net.POST_COMMENT_LIST;
+import static com.youyu.utils.Contants.Net.POST_UPDATE;
 import static com.youyu.utils.Contants.USER_ID;
 
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import butterknife.Unbinder;
 import com.google.gson.Gson;
 import com.youyu.R;
 import com.youyu.adapter.VideoPlayListAdatper;
+import com.youyu.adapter.VideoPlayListAdatper.OnClickListener;
 import com.youyu.bean.VideoPlayerItemInfo;
 import com.youyu.cusListview.CusRecycleView;
 import com.youyu.cusListview.PullToRefreshLayout;
@@ -74,8 +76,7 @@ public class IndexFragment extends BaseFragment {
   private LinearLayoutManager lm;
   private ArrayList<VideoPlayerItemInfo> mData = new ArrayList<>();
 
-//  private GridView gridView;
-//  private CusRecycleView cusRecycleView;
+  private int mNetRequestFlag = -1;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -154,6 +155,7 @@ public class IndexFragment extends BaseFragment {
   }
 
   private void refresh() {
+    mNetRequestFlag = 1;
     mRefresh = 1;
     LogUtil.showDLog(TAG, "refresh()");
     String url = BASE_URL + POST_COMMENT_LIST;
@@ -170,6 +172,7 @@ public class IndexFragment extends BaseFragment {
   }
 
   private void loadMore(int pageNum) {
+    mNetRequestFlag = 1;
     LogUtil.showDLog(TAG, "loadMore(int pageNum) pageNum = " + pageNum);
     mRefresh = 2;
     String url = BASE_URL + POST_COMMENT_LIST;
@@ -187,6 +190,38 @@ public class IndexFragment extends BaseFragment {
 
 
   private void initListener() {
+
+    mIndexShowAdapter.setOnViewClick(new OnClickListener() {
+      @Override
+      public void onViewClick(int flag, String postId) {
+        mNetRequestFlag = 2;
+        /**
+         * {
+         * 	"id":"06c2b619a2eb11eaa305c8d9d298c8bf",
+         * 	"userId":"2c2848816c096563016c097af7930004",
+         * 	"agreeTotal":1,
+         * 	"footTotal":0
+         * }
+         */
+        String url = BASE_URL + POST_UPDATE;
+        JSONObject jsonObject = new JSONObject();
+        try {
+          jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+          jsonObject.put("id", postId);
+          if (flag == 1) {
+            jsonObject.put("agreeTotal", 1);
+            jsonObject.put("footTotal", 0);
+          } else {
+            jsonObject.put("agreeTotal", 0);
+            jsonObject.put("footTotal", 1);
+          }
+        } catch (JSONException e) {
+          LogUtil.showELog(TAG, "indexFragment refresh e :" + e.getLocalizedMessage());
+        }
+        String param = jsonObject.toString();
+        post(url, param);
+      }
+    });
 
     refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
 
@@ -210,7 +245,11 @@ public class IndexFragment extends BaseFragment {
 
       @Override
       public void success(String data) {
-        parseData(data);
+        if (mNetRequestFlag == 2) {
+
+        } else {
+          parseData(data);
+        }
       }
     });
   }

@@ -17,6 +17,7 @@ public interface Contants {
     String SEND_COMMENT = "/youyu/api/comment/save";
     String ACTIVITY_LIST = "/youyu/api/activity/list";
     String USER_INFO = "/youyu/api/user/info";
+    String POST_UPDATE = "/youyu/api/post/update";
     String TASK_DETAIL = "buyer/task/detail";
     String TASK_MANAGER = "buyer/task/manager";
     String MONEY_BILLLIST = "buyer/money/billList";
