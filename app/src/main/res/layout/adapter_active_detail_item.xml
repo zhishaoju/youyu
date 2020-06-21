@@ -2,39 +2,56 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:background="@color/white">
-  <ImageView
-    android:layout_width="20dp"
-    android:layout_height="20dp"
-    android:layout_marginLeft="30dp"
-    android:src="@mipmap/zan2" />
-  <TextView
-    android:id="@+id/tv_user_name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/margin_16"
-    android:text="爱尔兰"
-    android:textColor="@color/black"
-    android:textSize="@dimen/font_14" />
-  <TextView
-    android:id="@+id/tv_time"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/margin_16"
-    android:text="2020.3.4 21:16:52"
-    android:textColor="@color/black"
-    android:textSize="@dimen/font_14" />
-  <View
-    android:layout_width="0dp"
-    android:layout_height="1dp"
-    android:layout_weight="1" />
-  <TextView
-    android:id="@+id/tv_money"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginRight="@dimen/margin_16"
-    android:text="+16.00元"
-    android:textColor="@color/green"
-    android:textSize="@dimen/font_14" />
+  android:background="@color/white"
+  android:orientation="vertical">
 
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <com.youyu.view.CircleImageView
+      android:id="@+id/civ_head_pic"
+      android:layout_width="20dp"
+      android:layout_height="20dp"
+      android:layout_marginLeft="30dp"
+      android:src="@mipmap/huodong2" />
+
+    <TextView
+      android:id="@+id/tv_user_name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="@dimen/margin_16"
+      android:text="爱尔兰"
+      android:textColor="@color/black"
+      android:textSize="@dimen/font_14" />
+    <TextView
+      android:id="@+id/tv_time"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="@dimen/margin_16"
+      android:text="2020.3.4 21:16:52"
+      android:textColor="@color/black"
+      android:textSize="@dimen/font_14" />
+    <View
+      android:layout_width="0dp"
+      android:layout_height="1dp"
+      android:layout_weight="1" />
+    <TextView
+      android:id="@+id/tv_money"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="@dimen/margin_16"
+      android:text="+16.00元"
+      android:textColor="@color/green"
+      android:textSize="@dimen/font_14" />
+  </LinearLayout>
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="1.5dp"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="@dimen/margin_16"
+    android:background="#FAFAFC" />
 </LinearLayout>

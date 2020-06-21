@@ -93,4 +93,9 @@ public interface Contants {
   String USER_PHONE = "user_phone";
   String USER_PASSWORD = "password";
 
+  interface BroadcastConst {
+    String RECORD_ACTION = "record_action";
+    String RECORD_STATUS = "recordStatus";
+  }
+
 }

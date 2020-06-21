@@ -1,5 +1,8 @@
 package com.youyu.view;
 
+import static com.youyu.utils.Contants.BroadcastConst.RECORD_ACTION;
+import static com.youyu.utils.Contants.BroadcastConst.RECORD_STATUS;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -21,7 +24,6 @@ import butterknife.OnClick;
 import com.youyu.R;
 import com.youyu.activity.VideoDetailActivity;
 import com.youyu.adapter.VideoPlayListAdatper;
-import com.youyu.utils.LogUtil;
 import com.youyu.utils.MediaHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,6 +72,7 @@ public class VideoMediaController extends RelativeLayout {
   private static final int MSG_HIDE_TITLE = 0;
   private static final int MSG_UPDATE_TIME_PROGRESS = 1;
   private static final int MSG_HIDE_CONTROLLER = 2;
+
   //消息处理器
   private Handler mHandler = new Handler() {
     @Override
@@ -373,6 +376,9 @@ public class VideoMediaController extends RelativeLayout {
 //          }
 
           if (MediaHelper.getInstance().isPlaying()) {
+            Intent recordIntent = new Intent(RECORD_ACTION);
+            recordIntent.putExtra(RECORD_STATUS, 2);
+            getContext().sendBroadcast(recordIntent);
             //暂停
             MediaHelper.pause();
             //移除隐藏Controller布局的消息
@@ -383,12 +389,19 @@ public class VideoMediaController extends RelativeLayout {
             hasPause = true;
           } else {
             if (hasPause) {
+              Intent recordIntent = new Intent(RECORD_ACTION);
+              recordIntent.putExtra(RECORD_STATUS, 1);
+              getContext().sendBroadcast(recordIntent);
               //继续播放
               MediaHelper.play();
               mHandler.sendEmptyMessageDelayed(MSG_HIDE_CONTROLLER, 2000);
               updatePlayTimeAndProgress();
               hasPause = false;
             } else {
+              // 此时发送记录时间的广播
+              Intent recordIntent = new Intent(RECORD_ACTION);
+              recordIntent.putExtra(RECORD_STATUS, 1);
+              getContext().sendBroadcast(recordIntent);
               //播放
               ivPlay.setVisibility(View.GONE);
               tvAllTime.setVisibility(View.GONE);
