@@ -183,3 +183,6 @@
     @butterknife.* <methods>;
 }
 
+#bean
+-keep class com.youyu.bean.**{*;}
+
