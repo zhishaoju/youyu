@@ -20,6 +20,8 @@ public class VideoPlayerItemInfo {
   public String title;
   public int type;
   public String postId;
+  public String userName;
+  public String avatarUrl;
 
 //  public VideoPlayerItemInfo(int id, String coverImage) {
 //    this.id = id;

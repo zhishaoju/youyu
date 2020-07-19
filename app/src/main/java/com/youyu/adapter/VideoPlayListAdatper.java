@@ -82,6 +82,13 @@ public class VideoPlayListAdatper extends Adapter {
         .load(info.coverImage)
         .into(viewHolder.ivBg);
 
+    Glide.with(context)
+        .load(info.avatarUrl)
+        .placeholder(R.drawable.qq_allshare_normal)
+        .into(viewHolder.ivAuthor);
+
+    viewHolder.tvAuthorName.setText(info.userName + "");
+
     viewHolder.ivZan.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

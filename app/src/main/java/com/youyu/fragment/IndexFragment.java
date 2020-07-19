@@ -51,8 +51,6 @@ public class IndexFragment extends BaseFragment {
   RelativeLayout headView;
   @BindView(R.id.content_view)
   CusRecycleView contentView;
-  //  @BindView(R.id.content_view)
-//  PullableGridView contentView;
   @BindView(R.id.pullup_icon)
   ImageView pullupIcon;
   @BindView(R.id.loading_icon)
@@ -68,7 +66,7 @@ public class IndexFragment extends BaseFragment {
 
   private int mPageNumer = 1;
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
-  private int pageSize = 10;
+  private int pageSize = 5;
 
   private Unbinder mUnbinder;
 
@@ -83,7 +81,6 @@ public class IndexFragment extends BaseFragment {
       Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_index, container, false);
     mUnbinder = ButterKnife.bind(this, view);
-//    gridView = (GridView) view.findViewById(R.id.content_view);
     initRecyclerView();
     initValue();
     initListener();
@@ -158,6 +155,7 @@ public class IndexFragment extends BaseFragment {
     mNetRequestFlag = 1;
     mRefresh = 1;
     LogUtil.showDLog(TAG, "refresh()");
+    LogUtil.showDLog(TAG, "refresh() mPageNumer = " + mPageNumer);
     String url = BASE_URL + POST_COMMENT_LIST;
     JSONObject jsonObject = new JSONObject();
     try {

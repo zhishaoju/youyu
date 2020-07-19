@@ -212,9 +212,11 @@ public class BaseActivity extends Activity {
             JSONObject jsonObject = null;
             try {
               jsonObject = new JSONObject(resposeStr);
-              int state = jsonObjectIntGetValue(jsonObject, "state");
+              int code = jsonObjectIntGetValue(jsonObject, "code");
               String msgPost = Utils.jsonObjectStringGetValue(jsonObject, "msg");
-              Utils.show(msgPost);
+              if (code != 0) {
+                Utils.show(msgPost);
+              }
 //              if (Contants.NetStatus.OK == state) {
                 mNetInterface.success(resposeStr);
 //              }
@@ -237,9 +239,11 @@ public class BaseActivity extends Activity {
             JSONObject jsonObject = null;
             try {
               jsonObject = new JSONObject(sdata);
-              int state = jsonObjectIntGetValue(jsonObject, "state");
+              int code = jsonObjectIntGetValue(jsonObject, "code");
               String msgGet = jsonObject.getString("msg");
-              Utils.show(msgGet);
+              if (code != 0) {
+                Utils.show(msgGet);
+              }
 //              if (Contants.NetStatus.OK == state) {
                 mNetInterface.success(sdata);
 //              }

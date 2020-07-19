@@ -1,5 +1,6 @@
 package com.youyu.fragment;
 
+import static com.youyu.utils.Contants.Net.ACTIVITY_LIST;
 import static com.youyu.utils.Contants.Net.BASE_URL;
 import static com.youyu.utils.Contants.Net.POST_COMMENT_LIST;
 import static com.youyu.utils.Contants.USER_ID;
@@ -107,10 +108,10 @@ public class SecondFragment extends BaseFragment {
     secondViewPagerModel1.picUrl =
         "http://youimg1.c-ctrip.com/target/tg/618/480/977/c8339992a8ef4df7b9520ef28ec5c856.jpg";
 
-    SecondViewPagerModel secondViewPagerModel2 = new SecondViewPagerModel();
-    secondViewPagerModel2.picUrl = "http://img1.imgtn.bdimg.com/it/u=3961931988,142045105&fm=26&gp=0.jpg";
+//    SecondViewPagerModel secondViewPagerModel2 = new SecondViewPagerModel();
+//    secondViewPagerModel2.picUrl = "http://img1.imgtn.bdimg.com/it/u=3961931988,142045105&fm=26&gp=0.jpg";
     mData.add(secondViewPagerModel1);
-    mData.add(secondViewPagerModel2);
+//    mData.add(secondViewPagerModel2);
     mSecondPagerAdapter.setData(mData);
 //    ActiveModel activeModel = new ActiveModel();
 //    activeModel.title = "test1";
@@ -218,7 +219,7 @@ public class SecondFragment extends BaseFragment {
   private void refresh() {
     mRefresh = 1;
     LogUtil.showDLog(TAG, "refresh()");
-    String url = BASE_URL + POST_COMMENT_LIST;
+    String url = BASE_URL + ACTIVITY_LIST;
     JSONObject jsonObject = new JSONObject();
     try {
       jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));

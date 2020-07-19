@@ -53,7 +53,8 @@ public class SecondPagerAdapter extends PagerAdapter {
       LogUtil.showDLog(TAG, "container.getChildCount() = " + container.getChildCount());
     }
     Glide.with(mCtx)
-        .load(spm.picUrl)
+//        .load(spm.picUrl)
+        .load(R.mipmap.huodonglunbo)
         .into(iv_show_pic);
 
     container.addView(view);
