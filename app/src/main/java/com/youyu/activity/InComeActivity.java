@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.youyu.R;
 import com.youyu.adapter.InComeAdapter;
 import com.youyu.cusListview.CusRecycleView;
@@ -18,8 +19,12 @@ public class InComeActivity extends BaseActivity {
 
     @BindView(R.id.tv_title)
     TextView tvTitle;
-    @BindView(R.id.income_list_view)
+    @BindView(R.id.content_view)
     CusRecycleView incomeListView;
+    @BindView(R.id.pull_to_refresh)
+    PullToRefreshLayout pullToRefreshLayout;
+
+
 
     private InComeAdapter mInComeAdapter;
 

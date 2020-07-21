@@ -156,7 +156,7 @@
     </LinearLayout>
   </LinearLayout>
 
-  <com.youyu.cusListview.PullToRefreshLayout
+  <!--<com.youyu.cusListview.PullToRefreshLayout
     android:id="@+id/refresh_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -172,6 +172,19 @@
 
     <include layout="@layout/load_more" />
 
-  </com.youyu.cusListview.PullToRefreshLayout>
+  </com.youyu.cusListview.PullToRefreshLayout>-->
+
+  <com.jwenfeng.library.pulltorefresh.PullToRefreshLayout
+    android:id="@+id/pull_to_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="60dp">
+    <com.youyu.cusListview.CusRecycleView
+      android:id="@+id/content_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:listSelector="@android:color/transparent"
+      android:scrollbars="none" />
+  </com.jwenfeng.library.pulltorefresh.PullToRefreshLayout>
 
 </LinearLayout>

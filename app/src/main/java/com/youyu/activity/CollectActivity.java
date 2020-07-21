@@ -6,8 +6,6 @@ import static com.youyu.utils.Contants.Net.POST_UPDATE;
 import static com.youyu.utils.Contants.USER_ID;
 
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
@@ -15,12 +13,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.google.gson.Gson;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.youyu.R;
 import com.youyu.adapter.VideoPlayListAdatper;
 import com.youyu.adapter.VideoPlayListAdatper.OnClickListener;
 import com.youyu.bean.VideoPlayerItemInfo;
 import com.youyu.cusListview.CusRecycleView;
-import com.youyu.cusListview.PullToRefreshLayout;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.LogUtil;
 import com.youyu.utils.SharedPrefsUtil;
@@ -43,12 +42,17 @@ public class CollectActivity extends BaseActivity {
   TextView tvTitle;
   @BindView(R.id.content_view)
   CusRecycleView contentView;
-  @BindView(R.id.loadstate_iv)
-  ImageView loadstateIv;
-  @BindView(R.id.loadmore_view)
-  RelativeLayout loadmoreView;
-  @BindView(R.id.refresh_view)
-  PullToRefreshLayout refreshView;
+
+  @BindView(R.id.pull_to_refresh)
+  PullToRefreshLayout pullToRefresh;
+//  @BindView(R.id.loadstate_iv)
+//  ImageView loadstateIv;
+//  @BindView(R.id.loadmore_view)
+//  RelativeLayout loadmoreView;
+//  @BindView(R.id.refresh_view)
+//  PullToRefreshLayout refreshView;
+
+
   private Unbinder mUnBinder;
 
   private VideoPlayListAdatper mIndexShowAdapter;
@@ -96,17 +100,30 @@ public class CollectActivity extends BaseActivity {
         post(url, param);
       }
     });
-    refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+//    refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+//
+//      @Override
+//      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+//        refresh();
+//      }
+//
+//      @Override
+//      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+//        mPageNumer += 1;
+//        loadMore(mPageNumer);
+//      }
+//    });
 
+    pullToRefresh.setRefreshListener(new BaseRefreshListener() {
       @Override
-      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        refresh();
+      public void refresh() {
+        refreshCus();
       }
 
       @Override
-      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+      public void loadMore() {
         mPageNumer += 1;
-        loadMore(mPageNumer);
+        loadMoreCus(mPageNumer);
       }
     });
     setNetListener(new RequestResponse() {
@@ -148,7 +165,7 @@ public class CollectActivity extends BaseActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    refresh();
+    refreshCus();
   }
 
   @Override
@@ -181,10 +198,10 @@ public class CollectActivity extends BaseActivity {
         }
         if (mRefresh == 1) {
           mIndexShowAdapter.updateData(mData);
-          refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);
+          pullToRefresh.finishRefresh();
         } else if (mRefresh == 2) {
           mIndexShowAdapter.appendData(mData);
-          refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+          pullToRefresh.finishLoadMore();
         }
       }
     } catch (Exception e) {
@@ -194,9 +211,10 @@ public class CollectActivity extends BaseActivity {
     }
   }
 
-  private void refresh() {
+  private void refreshCus() {
     mRefresh = 1;
     mNetRequestFlag = 1;
+    mPageNumer = 1;
     LogUtil.showDLog(TAG, "refresh()");
     String url = BASE_URL + COLLECTION_LIST;
     JSONObject jsonObject = new JSONObject();
@@ -211,9 +229,9 @@ public class CollectActivity extends BaseActivity {
     post(url, param);
   }
 
-  private void loadMore(int pageNum) {
+  private void loadMoreCus(int pageNum) {
     mNetRequestFlag = 1;
-    LogUtil.showDLog(TAG, "loadMore(int pageNum) pageNum = " + pageNum);
+    LogUtil.showDLog(TAG, "loadMoreCus(int pageNum) pageNum = " + pageNum);
     mRefresh = 2;
     String url = BASE_URL + COLLECTION_LIST;
     JSONObject jsonObject = new JSONObject();

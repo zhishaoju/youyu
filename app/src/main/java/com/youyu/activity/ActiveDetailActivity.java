@@ -9,21 +9,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.google.gson.Gson;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.youyu.R;
 import com.youyu.adapter.RecordListAdapter;
 import com.youyu.bean.ActiveBean;
 import com.youyu.bean.RecordListBean;
 import com.youyu.cusListview.CusRecycleView;
-import com.youyu.cusListview.PullToRefreshLayout;
-import com.youyu.cusListview.PullToRefreshLayout.OnRefreshListener;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.JsonUtils;
 import com.youyu.utils.LogUtil;
@@ -58,30 +56,33 @@ public class ActiveDetailActivity extends BaseActivity {
   TextView tvActiveCountDown;
   @BindView(R.id.tv_active_money)
   TextView tvActiveMoney;
-  @BindView(R.id.pull_icon)
-  ImageView pullIcon;
-  @BindView(R.id.refreshing_icon)
-  ImageView refreshingIcon;
-  @BindView(R.id.state_tv)
-  TextView stateTv;
-  @BindView(R.id.state_iv)
-  ImageView stateIv;
-  @BindView(R.id.head_view)
-  RelativeLayout headView;
-  @BindView(R.id.finish_task_view)
+  //  @BindView(R.id.pull_icon)
+//  ImageView pullIcon;
+//  @BindView(R.id.refreshing_icon)
+//  ImageView refreshingIcon;
+//  @BindView(R.id.state_tv)
+//  TextView stateTv;
+//  @BindView(R.id.state_iv)
+//  ImageView stateIv;
+//  @BindView(R.id.head_view)
+//  RelativeLayout headView;
+  @BindView(R.id.content_view)
   CusRecycleView finishTaskView;
-  @BindView(R.id.pullup_icon)
-  ImageView pullupIcon;
-  @BindView(R.id.loading_icon)
-  ImageView loadingIcon;
-  @BindView(R.id.loadstate_tv)
-  TextView loadstateTv;
-  @BindView(R.id.loadstate_iv)
-  ImageView loadstateIv;
-  @BindView(R.id.loadmore_view)
-  RelativeLayout loadmoreView;
-  @BindView(R.id.refresh_view)
-  PullToRefreshLayout refreshView;
+  @BindView(R.id.pull_to_refresh)
+  PullToRefreshLayout pullToRefresh;
+
+//  @BindView(R.id.pullup_icon)
+//  ImageView pullupIcon;
+//  @BindView(R.id.loading_icon)
+//  ImageView loadingIcon;
+//  @BindView(R.id.loadstate_tv)
+//  TextView loadstateTv;
+//  @BindView(R.id.loadstate_iv)
+//  ImageView loadstateIv;
+//  @BindView(R.id.loadmore_view)
+//  RelativeLayout loadmoreView;
+//  @BindView(R.id.refresh_view)
+//  PullToRefreshLayout refreshView;
 
   private Intent mIntent;
   private String activeId = "";
@@ -106,7 +107,7 @@ public class ActiveDetailActivity extends BaseActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    refresh();
+    refreshCus();
     activityInfoNet();
   }
 
@@ -137,23 +138,35 @@ public class ActiveDetailActivity extends BaseActivity {
   }
 
   private void initListener() {
-    refreshView.setOnRefreshListener(new OnRefreshListener() {
-
+//    refreshView.setOnRefreshListener(new OnRefreshListener() {
+//
+//      @Override
+//      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+//        refresh();
+//      }
+//
+//      @Override
+//      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+//        mPageNumer += 1;
+//        loadMore(mPageNumer);
+//      }
+//    });
+    pullToRefresh.setRefreshListener(new BaseRefreshListener() {
       @Override
-      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        refresh();
+      public void refresh() {
+        refreshCus();
       }
 
       @Override
-      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+      public void loadMore() {
         mPageNumer += 1;
-        loadMore(mPageNumer);
+        loadMoreCus(mPageNumer);
       }
     });
     setNetListener(new RequestResponse() {
       @Override
       public void failure(Exception e) {
-        refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);
+        pullToRefresh.finishRefresh();
         LogUtil.showELog(TAG, "failure e : " + e.getStackTrace());
       }
 
@@ -188,10 +201,10 @@ public class ActiveDetailActivity extends BaseActivity {
                 }
                 if (mRefresh == 1) {
                   mRecordListAdapter.setData(mData);
-                  refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);
+                  pullToRefresh.finishRefresh();
                 } else if (mRefresh == 2) {
                   mRecordListAdapter.appendData(mData);
-                  refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                  pullToRefresh.finishLoadMore();
                 }
               }
             }
@@ -203,9 +216,10 @@ public class ActiveDetailActivity extends BaseActivity {
     });
   }
 
-  private void refresh() {
-    LogUtil.showDLog(TAG, "refresh()");
+  private void refreshCus() {
+    LogUtil.showDLog(TAG, "refreshCus()");
     mRefresh = 1;
+    mPageNumer = 1;
     String url = BASE_URL + RECORD_LIST;
     String params = "";
     try {
@@ -221,8 +235,8 @@ public class ActiveDetailActivity extends BaseActivity {
     post(url, params);
   }
 
-  private void loadMore(int pageNum) {
-    LogUtil.showDLog(TAG, "loadMore(int pageNum) pageNum = " + pageNum);
+  private void loadMoreCus(int pageNum) {
+    LogUtil.showDLog(TAG, "loadMoreCus(int pageNum) pageNum = " + pageNum);
     mRefresh = 2;
     String url = BASE_URL + RECORD_LIST;
     JSONObject jsonObject = new JSONObject();

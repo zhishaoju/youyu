@@ -16,6 +16,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.google.gson.Gson;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.youyu.R;
 import com.youyu.activity.ActiveDetailActivity;
 import com.youyu.adapter.SecondFragmentAdapter;
@@ -24,7 +26,6 @@ import com.youyu.adapter.SecondPagerAdapter;
 import com.youyu.bean.ActiveModel;
 import com.youyu.bean.SecondViewPagerModel;
 import com.youyu.cusListview.CusRecycleView;
-import com.youyu.cusListview.PullToRefreshLayout;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.LogUtil;
 import com.youyu.utils.SharedPrefsUtil;
@@ -39,8 +40,8 @@ public class SecondFragment extends BaseFragment {
   private final String TAG = SecondFragment.class.getSimpleName();
   @BindView(R.id.viewPager)
   ViewPager viewPager;
-  @BindView(R.id.refresh_view)
-  PullToRefreshLayout refreshView;
+  @BindView(R.id.pull_to_refresh)
+  PullToRefreshLayout pullToRefreshLayout;
   @BindView(R.id.content_view)
   CusRecycleView contentView;
 
@@ -72,7 +73,7 @@ public class SecondFragment extends BaseFragment {
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
       // 请求网络
-      refresh();
+      refreshCus();
     }
   }
 
@@ -82,7 +83,7 @@ public class SecondFragment extends BaseFragment {
     LogUtil.showELog(TAG, "hidden = " + hidden);
     if (!hidden) {
       // 请求网络展示界面
-      refresh();
+      refreshCus();
     }
   }
 
@@ -92,7 +93,7 @@ public class SecondFragment extends BaseFragment {
     LogUtil.showELog(TAG, "onResume");
     // 第一次进来的时候，会走到这里而不走onHiddenChanged
     // 请求网络展示界面
-    refresh();
+    refreshCus();
   }
 
   private void initValue() {
@@ -144,24 +145,38 @@ public class SecondFragment extends BaseFragment {
       }
     });
 
-    refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+//    refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+//
+//      @Override
+//      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+//        refreshCus();
+//      }
+//
+//      @Override
+//      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+//        mPageNumer += 1;
+//        loadMoreCus(mPageNumer);
+//      }
+//    });
 
+    pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
       @Override
-      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        refresh();
+      public void refresh() {
+        refreshCus();
       }
 
       @Override
-      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+      public void loadMore() {
         mPageNumer += 1;
-        loadMore(mPageNumer);
+        loadMoreCus(mPageNumer);
       }
     });
+
     setNetLisenter(new RequestResponse() {
       @Override
       public void failure(Exception e) {
         LogUtil.showELog(TAG, "failure(Exception e) e:" + e.toString());
-        refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+        pullToRefreshLayout.finishLoadMore();
       }
 
       @Override
@@ -203,10 +218,10 @@ public class SecondFragment extends BaseFragment {
         }
         if (mRefresh == 1) {
           mActiveAdapter.updateData(mActiveModelList);
-          refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);
+          pullToRefreshLayout.finishRefresh();
         } else if (mRefresh == 2) {
           mActiveAdapter.appendData(mActiveModelList);
-          refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+          pullToRefreshLayout.finishLoadMore();
         }
       }
     } catch (Exception e) {
@@ -216,8 +231,9 @@ public class SecondFragment extends BaseFragment {
     }
   }
 
-  private void refresh() {
+  private void refreshCus() {
     mRefresh = 1;
+    mPageNumer = 1;
     LogUtil.showDLog(TAG, "refresh()");
     String url = BASE_URL + ACTIVITY_LIST;
     JSONObject jsonObject = new JSONObject();
@@ -232,7 +248,7 @@ public class SecondFragment extends BaseFragment {
     post(url, param);
   }
 
-  private void loadMore(int pageNum) {
+  private void loadMoreCus(int pageNum) {
     LogUtil.showDLog(TAG, "loadMore(int pageNum) pageNum = " + pageNum);
     mRefresh = 2;
     String url = BASE_URL + POST_COMMENT_LIST;

@@ -157,6 +157,7 @@ public class IndexFragment extends BaseFragment {
   private void refreshCus() {
     mNetRequestFlag = 1;
     mRefresh = 1;
+    mPageNumer = 1;
     LogUtil.showDLog(TAG, "refreshCus()");
     LogUtil.showDLog(TAG, "refreshCus() mPageNumer = " + mPageNumer);
     String url = BASE_URL + POST_COMMENT_LIST;

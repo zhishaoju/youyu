@@ -26,7 +26,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,12 +34,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.youyu.R;
 import com.youyu.adapter.VideoDetailCommentListAdapter;
 import com.youyu.bean.CommentBean;
 import com.youyu.bean.VideoPlayerItemInfo;
 import com.youyu.cusListview.CusRecycleView;
-import com.youyu.cusListview.PullToRefreshLayout;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.LogUtil;
 import com.youyu.utils.MediaHelper;
@@ -77,30 +77,33 @@ public class VideoDetailActivity extends BaseActivity {
   LinearLayout llAttention;
   @BindView(R.id.tv_content_desc)
   TextView tvContentDesc;
-  @BindView(R.id.pull_icon)
-  ImageView pullIcon;
-  @BindView(R.id.refreshing_icon)
-  ImageView refreshingIcon;
-  @BindView(R.id.state_tv)
-  TextView stateTv;
-  @BindView(R.id.state_iv)
-  ImageView stateIv;
-  @BindView(R.id.head_view)
-  RelativeLayout headView;
-  @BindView(R.id.pinglun_list_view)
+  //  @BindView(R.id.pull_icon)
+//  ImageView pullIcon;
+//  @BindView(R.id.refreshing_icon)
+//  ImageView refreshingIcon;
+//  @BindView(R.id.state_tv)
+//  TextView stateTv;
+//  @BindView(R.id.state_iv)
+//  ImageView stateIv;
+//  @BindView(R.id.head_view)
+//  RelativeLayout headView;
+  @BindView(R.id.content_view)
   CusRecycleView pinglunListView;
-  @BindView(R.id.pullup_icon)
-  ImageView pullupIcon;
-  @BindView(R.id.loading_icon)
-  ImageView loadingIcon;
-  @BindView(R.id.loadstate_tv)
-  TextView loadstateTv;
-  @BindView(R.id.loadstate_iv)
-  ImageView loadstateIv;
-  @BindView(R.id.loadmore_view)
-  RelativeLayout loadmoreView;
-  @BindView(R.id.refresh_view)
-  PullToRefreshLayout refreshView;
+
+  @BindView(R.id.pull_to_refresh)
+  PullToRefreshLayout pullToRefreshLayout;
+  //  @BindView(R.id.pullup_icon)
+//  ImageView pullupIcon;
+//  @BindView(R.id.loading_icon)
+//  ImageView loadingIcon;
+//  @BindView(R.id.loadstate_tv)
+//  TextView loadstateTv;
+//  @BindView(R.id.loadstate_iv)
+//  ImageView loadstateIv;
+//  @BindView(R.id.loadmore_view)
+//  RelativeLayout loadmoreView;
+//  @BindView(R.id.refresh_view)
+//  PullToRefreshLayout refreshView;
   @BindView(R.id.et_comment_content)
   EditText etCommentContent;
   @BindView(R.id.iv_video_zan)
@@ -216,19 +219,32 @@ public class VideoDetailActivity extends BaseActivity {
         return false;
       }
     });
-    refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
-
+    pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
       @Override
-      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        refresh();
+      public void refresh() {
+        refreshCus();
       }
 
       @Override
-      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+      public void loadMore() {
         mPageNumer += 1;
-        loadMore(mPageNumer);
+        loadMoreCus(mPageNumer);
       }
     });
+//    refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+//
+//      @Override
+//      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+//        refresh();
+//      }
+//
+//      @Override
+//      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+//        mPageNumer += 1;
+//        loadMore(mPageNumer);
+//      }
+//    });
+
     setNetListener(new RequestResponse() {
       @Override
       public void failure(Exception e) {
@@ -264,7 +280,7 @@ public class VideoDetailActivity extends BaseActivity {
                 videoPlayer.initViewDisplay(videoPlayerItemInfo.duration);
               }
               flag = 2;
-              refresh();
+              refreshCus();
             }
           } catch (Exception e) {
             LogUtil.showELog(TAG, "parseData(String data) catch (JSONException e)"
@@ -315,10 +331,10 @@ public class VideoDetailActivity extends BaseActivity {
 
         if (mRefresh == 1) {
           mCommentListAdapter.updateData(mData);
-          refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);
+          pullToRefreshLayout.finishRefresh();
         } else if (mRefresh == 2) {
           mCommentListAdapter.appendData(mData);
-          refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+          pullToRefreshLayout.finishLoadMore();
         }
       }
     } catch (Exception e) {
@@ -328,11 +344,11 @@ public class VideoDetailActivity extends BaseActivity {
     }
   }
 
-  private void refresh() {
+  private void refreshCus() {
     mPageNumer = 1;
     mRefresh = 1;
     flag = 2;
-    LogUtil.showDLog(TAG, "refresh()");
+    LogUtil.showDLog(TAG, "refreshCus()");
     String url = BASE_URL + COMMENT_LIST;
     JSONObject jsonObject = new JSONObject();
     try {
@@ -340,14 +356,14 @@ public class VideoDetailActivity extends BaseActivity {
       jsonObject.put("pageNum", mPageNumer);
       jsonObject.put("pageSize", pageSize);
     } catch (JSONException e) {
-      LogUtil.showELog(TAG, "indexFragment refresh e :" + e.getLocalizedMessage());
+      LogUtil.showELog(TAG, "indexFragment refreshCus e :" + e.getLocalizedMessage());
     }
     String param = jsonObject.toString();
     post(url, param);
   }
 
-  private void loadMore(int pageNum) {
-    LogUtil.showDLog(TAG, "loadMore(int pageNum) pageNum = " + pageNum);
+  private void loadMoreCus(int pageNum) {
+    LogUtil.showDLog(TAG, "loadMoreCus(int pageNum) pageNum = " + pageNum);
     mRefresh = 2;
     flag = 2;
     String url = BASE_URL + COMMENT_LIST;
@@ -388,7 +404,7 @@ public class VideoDetailActivity extends BaseActivity {
     }
   }
 
-  @OnClick({R.id.fl_back, R.id.ll_attention, R.id.pinglun_list_view, R.id.et_comment_content,
+  @OnClick({R.id.fl_back, R.id.ll_attention, R.id.et_comment_content,
       R.id.ll_zan, R.id.ll_pinglun, R.id.ll_shoucang, R.id.ll_share})
   public void onViewClicked(View view) {
     switch (view.getId()) {
@@ -396,8 +412,6 @@ public class VideoDetailActivity extends BaseActivity {
         finish();
         break;
       case R.id.ll_attention:
-        break;
-      case R.id.pinglun_list_view:
         break;
       case R.id.et_comment_content:
         break;

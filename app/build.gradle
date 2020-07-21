@@ -7,8 +7,8 @@ android {
         applicationId "com.youyu"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 3
-        versionName "1.3"
+        versionCode 4
+        versionName "1.4"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -18,12 +18,12 @@ android {
         }
     }
     signingConfigs {
-//        release {
-//            keyAlias 'spirit2020'
-//            keyPassword 'spirit2020'
-//            storeFile file('spirit.jks')
-//            storePassword 'spirit2020'
-//        }
+        release {
+            keyAlias 'key'
+            keyPassword '123456'
+            storeFile file('youyu.jks')
+            storePassword '123456'
+        }
     }
 
     buildTypes {
@@ -45,7 +45,7 @@ android {
             minifyEnabled true
             zipAlignEnabled true
             shrinkResources true
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

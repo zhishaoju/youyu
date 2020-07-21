@@ -124,6 +124,7 @@ public class ThirdFragment extends BaseFragment {
     if (TextUtils.isEmpty(phone)) {
       tvLogin.setVisibility(View.VISIBLE);
       llMyView.setVisibility(View.GONE);
+//      startActivityForResult(new Intent(getActivity(), LoginActivity.class), 100);
     } else {
       flag = 1;
       String url = BASE_URL + LOGIN;

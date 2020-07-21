@@ -107,7 +107,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.youyu.cusListview.PullToRefreshLayout
+    <!--<com.youyu.cusListview.PullToRefreshLayout
       android:id="@+id/refresh_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
@@ -123,7 +123,20 @@
 
       <include layout="@layout/load_more" />
 
-    </com.youyu.cusListview.PullToRefreshLayout>
+    </com.youyu.cusListview.PullToRefreshLayout>-->
+
+    <com.jwenfeng.library.pulltorefresh.PullToRefreshLayout
+      android:id="@+id/pull_to_refresh"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginBottom="58dp">
+      <com.youyu.cusListview.CusRecycleView
+        android:id="@+id/content_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:listSelector="@android:color/transparent"
+        android:scrollbars="none" />
+    </com.jwenfeng.library.pulltorefresh.PullToRefreshLayout>
 
     <LinearLayout
       android:id="@+id/ll_comment"
@@ -140,12 +153,12 @@
         android:background="@drawable/corner_video_comment_bg">
         <EditText
           android:id="@+id/et_comment_content"
-          android:imeOptions="actionSend"
-          android:background="@null"
           android:layout_width="0dp"
           android:layout_height="40dp"
           android:layout_marginLeft="@dimen/margin_16"
-          android:layout_weight="1" />
+          android:layout_weight="1"
+          android:background="@null"
+          android:imeOptions="actionSend" />
 
         <FrameLayout
           android:id="@+id/fl_xialian"
