@@ -8,26 +8,39 @@
     android:layout_height="@dimen/margin_48"
     android:background="#FCD113"
     android:gravity="center"
-    android:textSize="@dimen/font_20"
     android:text="鱿鱼搞笑"
-    android:textColor="@color/black" />
+    android:textColor="@color/black"
+    android:textSize="@dimen/font_20" />
 
-  <com.youyu.cusListview.PullToRefreshLayout
-    android:id="@+id/refresh_view"
+  <!-- <com.youyu.cusListview.PullToRefreshLayout-->
+  <!--    android:id="@+id/refresh_view"-->
+  <!--    android:layout_width="match_parent"-->
+  <!--    android:layout_height="match_parent"-->
+  <!--    android:layout_marginBottom="60dp">-->
+
+  <!--    <include layout="@layout/refresh_head" />-->
+
+  <!--    <com.youyu.cusListview.CusRecycleView-->
+  <!--      android:id="@+id/content_view"-->
+  <!--      android:layout_width="match_parent"-->
+  <!--      android:layout_height="match_parent"-->
+  <!--      android:listSelector="@android:color/transparent"-->
+  <!--      android:scrollbars="none" />-->
+
+  <!--    <include layout="@layout/load_more" />-->
+
+  <!--  </com.youyu.cusListview.PullToRefreshLayout>-->
+
+  <com.jwenfeng.library.pulltorefresh.PullToRefreshLayout
+    android:id="@+id/pull_ro_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="60dp">
-
-    <include layout="@layout/refresh_head" />
-
     <com.youyu.cusListview.CusRecycleView
       android:id="@+id/content_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:listSelector="@android:color/transparent"
       android:scrollbars="none" />
-
-    <include layout="@layout/load_more" />
-
-  </com.youyu.cusListview.PullToRefreshLayout>
+  </com.jwenfeng.library.pulltorefresh.PullToRefreshLayout>
 </LinearLayout>

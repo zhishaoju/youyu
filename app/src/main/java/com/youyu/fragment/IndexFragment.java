@@ -10,20 +10,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.google.gson.Gson;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.youyu.R;
 import com.youyu.adapter.VideoPlayListAdatper;
 import com.youyu.adapter.VideoPlayListAdatper.OnClickListener;
 import com.youyu.bean.VideoPlayerItemInfo;
 import com.youyu.cusListview.CusRecycleView;
-import com.youyu.cusListview.PullToRefreshLayout;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.LogUtil;
 import com.youyu.utils.SharedPrefsUtil;
@@ -39,30 +37,35 @@ import org.json.JSONObject;
 public class IndexFragment extends BaseFragment {
 
   private static final String TAG = IndexFragment.class.getSimpleName();
-  @BindView(R.id.pull_icon)
-  ImageView pullIcon;
-  @BindView(R.id.refreshing_icon)
-  ImageView refreshingIcon;
-  @BindView(R.id.state_tv)
-  TextView stateTv;
-  @BindView(R.id.state_iv)
-  ImageView stateIv;
-  @BindView(R.id.head_view)
-  RelativeLayout headView;
+  //  @BindView(R.id.pull_icon)
+//  ImageView pullIcon;
+//  @BindView(R.id.refreshing_icon)
+//  ImageView refreshingIcon;
+//  @BindView(R.id.state_tv)
+//  TextView stateTv;
+//  @BindView(R.id.state_iv)
+//  ImageView stateIv;
+//  @BindView(R.id.head_view)
+//  RelativeLayout headView;
   @BindView(R.id.content_view)
   CusRecycleView contentView;
-  @BindView(R.id.pullup_icon)
-  ImageView pullupIcon;
-  @BindView(R.id.loading_icon)
-  ImageView loadingIcon;
-  @BindView(R.id.loadstate_tv)
-  TextView loadstateTv;
-  @BindView(R.id.loadstate_iv)
-  ImageView loadstateIv;
-  @BindView(R.id.loadmore_view)
-  RelativeLayout loadmoreView;
-  @BindView(R.id.refresh_view)
-  PullToRefreshLayout refreshView;
+  @BindView(R.id.pull_ro_refresh)
+  PullToRefreshLayout pullToRefreshLayout;
+
+  //  @BindView(R.id.content_view)
+//  PullableGridView contentView;
+//  @BindView(R.id.pullup_icon)
+//  ImageView pullupIcon;
+//  @BindView(R.id.loading_icon)
+//  ImageView loadingIcon;
+//  @BindView(R.id.loadstate_tv)
+//  TextView loadstateTv;
+//  @BindView(R.id.loadstate_iv)
+//  ImageView loadstateIv;
+//  @BindView(R.id.loadmore_view)
+//  RelativeLayout loadmoreView;
+//  @BindView(R.id.refresh_view)
+//  PullToRefreshLayout refreshView;
 
   private int mPageNumer = 1;
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
@@ -128,7 +131,7 @@ public class IndexFragment extends BaseFragment {
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
       // 请求网络
-      refresh();
+      refreshCus();
     }
   }
 
@@ -138,7 +141,7 @@ public class IndexFragment extends BaseFragment {
     LogUtil.showELog(TAG, "hidden = " + hidden);
     if (!hidden) {
       // 请求网络展示界面
-      refresh();
+      refreshCus();
     }
   }
 
@@ -148,14 +151,14 @@ public class IndexFragment extends BaseFragment {
     LogUtil.showELog(TAG, "onResume");
     // 第一次进来的时候，会走到这里而不走onHiddenChanged
     // 请求网络展示界面
-    refresh();
+    refreshCus();
   }
 
-  private void refresh() {
+  private void refreshCus() {
     mNetRequestFlag = 1;
     mRefresh = 1;
-    LogUtil.showDLog(TAG, "refresh()");
-    LogUtil.showDLog(TAG, "refresh() mPageNumer = " + mPageNumer);
+    LogUtil.showDLog(TAG, "refreshCus()");
+    LogUtil.showDLog(TAG, "refreshCus() mPageNumer = " + mPageNumer);
     String url = BASE_URL + POST_COMMENT_LIST;
     JSONObject jsonObject = new JSONObject();
     try {
@@ -169,9 +172,9 @@ public class IndexFragment extends BaseFragment {
     post(url, param);
   }
 
-  private void loadMore(int pageNum) {
+  private void loadMoreCus(int pageNum) {
     mNetRequestFlag = 1;
-    LogUtil.showDLog(TAG, "loadMore(int pageNum) pageNum = " + pageNum);
+    LogUtil.showDLog(TAG, "loadMoreCus(int pageNum) pageNum = " + pageNum);
     mRefresh = 2;
     String url = BASE_URL + POST_COMMENT_LIST;
     JSONObject jsonObject = new JSONObject();
@@ -213,17 +216,30 @@ public class IndexFragment extends BaseFragment {
       }
     });
 
-    refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+//    pullToRefreshLayout.setRefreshListener(new BaseRefreshListener().OnRefreshListener() {
+//
+//      @Override
+//      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+//        refresh();
+//      }
+//
+//      @Override
+//      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+//        mPageNumer += 1;
+//        loadMore(mPageNumer);
+//      }
+//    });
 
+    pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
       @Override
-      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        refresh();
+      public void refresh() {
+        refreshCus();
       }
 
       @Override
-      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+      public void loadMore() {
         mPageNumer += 1;
-        loadMore(mPageNumer);
+        loadMoreCus(mPageNumer);
       }
     });
     setNetLisenter(new RequestResponse() {
@@ -263,10 +279,12 @@ public class IndexFragment extends BaseFragment {
         }
         if (mRefresh == 1) {
           mIndexShowAdapter.updateData(mData);
-          refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);
+//          pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+          pullToRefreshLayout.finishRefresh();
         } else if (mRefresh == 2) {
           mIndexShowAdapter.appendData(mData);
-          refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+//          pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+          pullToRefreshLayout.finishLoadMore();
         }
       }
     } catch (Exception e) {
