@@ -44,6 +44,7 @@
     <activity android:name=".activity.VideoDetailActivity" />
     <activity android:name=".activity.ActiveListActivity" />
     <activity android:name=".activity.ActiveDetailActivity"/>
+
   </application>
 
 </manifest>

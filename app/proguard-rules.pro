@@ -159,9 +159,6 @@
     @com.google.gson.annotations.* <fields>;
 }
 
-#bugly
--keep class com.tencent.bugly.**{*;}
-
 ##Glide
 -dontwarn com.bumptech.glide.**
 -keep class com.bumptech.glide.**{*;}
@@ -185,4 +182,9 @@
 
 #bean
 -keep class com.youyu.bean.**{*;}
+
+#bugly
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+-keep class android.support.**{*;}
 

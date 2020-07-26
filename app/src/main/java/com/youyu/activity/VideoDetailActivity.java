@@ -278,6 +278,8 @@ public class VideoDetailActivity extends BaseActivity {
 
                 videoPlayer.setPlayData(videoPlayerItemInfo);
                 videoPlayer.initViewDisplay(videoPlayerItemInfo.duration);
+
+                videoPlayer.mediaController.clickPlay();
               }
               flag = 2;
               refreshCus();

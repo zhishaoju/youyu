@@ -12,9 +12,15 @@ import static com.youyu.utils.Utils.fromPropertiesGetValue;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
@@ -28,10 +34,11 @@ import com.youyu.R;
 import com.youyu.activity.ActiveListActivity;
 import com.youyu.activity.CollectActivity;
 import com.youyu.activity.InComeActivity;
-import com.youyu.activity.LoginActivity;
+import com.youyu.activity.RegisterActivity;
 import com.youyu.bean.UserInfo;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.Contants.NetStatus;
+import com.youyu.utils.JsonUtils;
 import com.youyu.utils.LogUtil;
 import com.youyu.utils.SharedPrefsUtil;
 import com.youyu.utils.Utils;
@@ -62,10 +69,36 @@ public class ThirdFragment extends BaseFragment {
   LinearLayout llCollect;
   @BindView(R.id.ll_active)
   LinearLayout llActive;
-  @BindView(R.id.tv_login)
-  TextView tvLogin;
+  //  @BindView(R.id.tv_login)
+//  TextView tvLogin;
+  @BindView(R.id.ll_login)
+  LinearLayout llLogin;
+
   @BindView(R.id.ll_my_view)
   LinearLayout llMyView;
+
+
+  @BindView(R.id.et_phone)
+  EditText etPhone;
+  @BindView(R.id.et_password)
+  EditText etPassword;
+  @BindView(R.id.iv_pass_icon)
+  ImageView ivPassIcon;
+  @BindView(R.id.fl_pass_icon)
+  FrameLayout flPassIcon;
+  @BindView(R.id.tv_forget_password)
+  TextView tvForgetPassword;
+  @BindView(R.id.bt_login)
+  Button btLogin;
+  @BindView(R.id.fl_chat)
+  FrameLayout flChat;
+  @BindView(R.id.fl_qq)
+  FrameLayout flQq;
+
+  /**
+   * =1, 登录； =2, 忘记密码；=3, 注册
+   */
+  private int mNetClick;
 
   private Unbinder mUnbinder;
 
@@ -122,7 +155,8 @@ public class ThirdFragment extends BaseFragment {
     LogUtil.showELog(TAG, "netRequest()");
     String phone = SharedPrefsUtil.get(USER_PHONE, "");
     if (TextUtils.isEmpty(phone)) {
-      tvLogin.setVisibility(View.VISIBLE);
+//      tvLogin.setVisibility(View.VISIBLE);
+      llLogin.setVisibility(View.VISIBLE);
       llMyView.setVisibility(View.GONE);
 //      startActivityForResult(new Intent(getActivity(), LoginActivity.class), 100);
     } else {
@@ -140,7 +174,6 @@ public class ThirdFragment extends BaseFragment {
       String param = jsonObject.toString();
       post(url, param);
     }
-
   }
 
   @Override
@@ -202,7 +235,7 @@ public class ThirdFragment extends BaseFragment {
               String param = jsonObject.toString();
               post(url, param);
             } else if (USER_NOT_EXIST == code) {
-              tvLogin.setVisibility(View.VISIBLE);
+              llLogin.setVisibility(View.VISIBLE);
               llMyView.setVisibility(View.GONE);
             }
           } catch (Exception e) {
@@ -238,7 +271,8 @@ public class ThirdFragment extends BaseFragment {
                 tvPinglun.setText(userInfo.comTotal + "");
                 tvIncoming.setText(userInfo.totalMoney + "");
               }
-              tvLogin.setVisibility(View.GONE);
+//              tvLogin.setVisibility(View.GONE);
+              llLogin.setVisibility(View.GONE);
               llMyView.setVisibility(View.VISIBLE);
             }
           } catch (Exception e) {
@@ -247,11 +281,36 @@ public class ThirdFragment extends BaseFragment {
             Utils.show("解析数据失败");
           }
         }
+
+        if (1 == mNetClick) {
+          SharedPrefsUtil.put(USER_PHONE, etPhone.getText().toString());
+          SharedPrefsUtil.put(USER_PASSWORD, etPassword.getText().toString());
+          if (JsonUtils.isJsonObject(data)) {
+            try {
+              JSONObject jsonObject1 = new JSONObject(data);
+              int code = Utils.jsonObjectIntGetValue(jsonObject1, "code");
+              if (NetStatus.OK == code) {
+                JSONObject jsonObject = jsonObject1.getJSONObject("data");
+                SharedPrefsUtil.put(USER_ID, jsonObject.getString("id"));
+
+                // todo
+                llLogin.setVisibility(View.GONE);
+                llMyView.setVisibility(View.VISIBLE);
+              }
+            } catch (JSONException e) {
+              LogUtil.showELog(TAG, "1 == mNetClick e : " + e.getLocalizedMessage());
+            }
+          }
+
+        } else if ((2 == mNetClick)) {
+        }
       }
     });
   }
 
-  @OnClick({R.id.ll_incoming_detail, R.id.ll_collect, R.id.ll_active, R.id.tv_login})
+  @OnClick({R.id.ll_incoming_detail, R.id.ll_collect, R.id.ll_active,
+      R.id.fl_pass_icon, R.id.tv_forget_password, R.id.bt_login, R.id.fl_chat, R.id.fl_qq,
+      R.id.bt_register})
   public void onViewClicked(View view) {
     switch (view.getId()) {
       case R.id.ll_incoming_detail:
@@ -263,12 +322,59 @@ public class ThirdFragment extends BaseFragment {
       case R.id.ll_active:
         startActivity(new Intent(getActivity(), ActiveListActivity.class));
         break;
-      case R.id.tv_login:
-        startActivityForResult(new Intent(getActivity(), LoginActivity.class), 100);
+//      case R.id.tv_login:
+//        startActivityForResult(new Intent(getActivity(), LoginActivity.class), 100);
+//        break;
+
+      case R.id.fl_pass_icon:
+        hidePassword();
         break;
+      case R.id.tv_forget_password:
+        LogUtil.showDLog(TAG, "tv_forget_password()");
+        break;
+      case R.id.bt_login:
+        mNetClick = 1;
+        String url = BASE_URL + LOGIN;
+        JSONObject jsonObject = new JSONObject();
+        try {
+          jsonObject.put("mobile", etPhone.getText().toString());
+          jsonObject.put("imei", Utils.getIMEI());
+          jsonObject.put("channelId", fromPropertiesGetValue("channelId"));
+          jsonObject.put("password", etPassword.getText().toString());
+        } catch (JSONException e) {
+          LogUtil.showELog(TAG, "R.id.bt_login e :" + e.getLocalizedMessage());
+        }
+        String param = jsonObject.toString();
+        post(url, param);
+        LogUtil.showDLog(TAG, "bt_login()");
+        break;
+      case R.id.bt_register:
+        startActivity(new Intent(getActivity(), RegisterActivity.class));
+        break;
+      case R.id.fl_chat:
+        break;
+      case R.id.fl_qq:
+        break;
+
       default:
         break;
     }
+  }
+
+  private void hidePassword() {
+    LogUtil.showDLog(TAG, "hidePassword()");
+
+    //记住光标开始的位置
+    int pos = etPassword.getSelectionStart();
+    if (ivPassIcon.getDrawable().getConstantState()
+        .equals(getResources().getDrawable(R.mipmap.pass_show).getConstantState())) {
+      etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+      ivPassIcon.setImageDrawable(getResources().getDrawable(R.mipmap.pass_hide));
+    } else {
+      etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+      ivPassIcon.setImageDrawable(getResources().getDrawable(R.mipmap.pass_show));
+    }
+    etPassword.setSelection(pos);
   }
 
 

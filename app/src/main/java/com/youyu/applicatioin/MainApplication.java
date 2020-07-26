@@ -3,6 +3,7 @@ package com.youyu.applicatioin;
 import android.Manifest;
 import android.Manifest.permission;
 import android.app.Application;
+import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 
 /**
@@ -27,6 +28,7 @@ public class MainApplication extends Application {
   public void onCreate() {
     super.onCreate();
     CrashReport.initCrashReport(this, "70454defe9", true);
+//    Bugly.init(getApplicationContext(), "70454defe9", false);
     mInstance = this;
 //    grantUriPermission(getCallingPackage(),
 //        contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);

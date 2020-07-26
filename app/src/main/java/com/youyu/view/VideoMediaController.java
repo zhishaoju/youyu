@@ -345,17 +345,26 @@ public class VideoMediaController extends RelativeLayout {
       case R.id.iv_share:
         break;
       case R.id.iv_play:
-        if (adapter != null) {
+        clickPlay();
+        break;
+      case R.id.iv_fullscreen:
+        break;
+      default:
+        break;
+    }
+  }
 
-          Intent intent = new Intent(adapter.getContext(),
-              VideoDetailActivity.class);
-          // 把Video id 传过去
-          intent.putExtra("postId", myVideoPlayer.info.id);
-          adapter.getContext().startActivity(intent);
-          break;
-        } else {
-          //点击一个新的条目进行播放
-          //点击的条目下标是否是之前播放的条目下标
+  public void clickPlay() {
+    if (adapter != null) {
+
+      Intent intent = new Intent(adapter.getContext(),
+          VideoDetailActivity.class);
+      // 把Video id 传过去
+      intent.putExtra("postId", myVideoPlayer.info.id);
+      adapter.getContext().startActivity(intent);
+    } else {
+      //点击一个新的条目进行播放
+      //点击的条目下标是否是之前播放的条目下标
 //          if (position != adapter.currentPosition && adapter.currentPosition != -1) {
 //            LogUtil.showDLog(TAG, "点击了其他的条目");
 //
@@ -375,51 +384,44 @@ public class VideoMediaController extends RelativeLayout {
 //            return;
 //          }
 
-          if (MediaHelper.getInstance().isPlaying()) {
-            Intent recordIntent = new Intent(RECORD_ACTION);
-            recordIntent.putExtra(RECORD_STATUS, 2);
-            getContext().sendBroadcast(recordIntent);
-            //暂停
-            MediaHelper.pause();
-            //移除隐藏Controller布局的消息
-            mHandler.removeMessages(MSG_HIDE_CONTROLLER);
-            //移除更新播放时间和进度的消息
-            mHandler.removeMessages(MSG_UPDATE_TIME_PROGRESS);
-            ivPlay.setImageResource(R.drawable.new_play_video);
-            hasPause = true;
-          } else {
-            if (hasPause) {
-              Intent recordIntent = new Intent(RECORD_ACTION);
-              recordIntent.putExtra(RECORD_STATUS, 1);
-              getContext().sendBroadcast(recordIntent);
-              //继续播放
-              MediaHelper.play();
-              mHandler.sendEmptyMessageDelayed(MSG_HIDE_CONTROLLER, 2000);
-              updatePlayTimeAndProgress();
-              hasPause = false;
-            } else {
-              // 此时发送记录时间的广播
-              Intent recordIntent = new Intent(RECORD_ACTION);
-              recordIntent.putExtra(RECORD_STATUS, 1);
-              getContext().sendBroadcast(recordIntent);
-              //播放
-              ivPlay.setVisibility(View.GONE);
-              tvAllTime.setVisibility(View.GONE);
-              pbLoading.setVisibility(View.VISIBLE);
-              //视频播放界面也需要显示
-              myVideoPlayer.setVideoViewVisiable(View.VISIBLE);
-              //把播放条目的下标设置给适配器
+      if (MediaHelper.getInstance().isPlaying()) {
+        Intent recordIntent = new Intent(RECORD_ACTION);
+        recordIntent.putExtra(RECORD_STATUS, 2);
+        getContext().sendBroadcast(recordIntent);
+        //暂停
+        MediaHelper.pause();
+        //移除隐藏Controller布局的消息
+        mHandler.removeMessages(MSG_HIDE_CONTROLLER);
+        //移除更新播放时间和进度的消息
+        mHandler.removeMessages(MSG_UPDATE_TIME_PROGRESS);
+        ivPlay.setImageResource(R.drawable.new_play_video);
+        hasPause = true;
+      } else {
+        if (hasPause) {
+          Intent recordIntent = new Intent(RECORD_ACTION);
+          recordIntent.putExtra(RECORD_STATUS, 1);
+          getContext().sendBroadcast(recordIntent);
+          //继续播放
+          MediaHelper.play();
+          mHandler.sendEmptyMessageDelayed(MSG_HIDE_CONTROLLER, 2000);
+          updatePlayTimeAndProgress();
+          hasPause = false;
+        } else {
+          // 此时发送记录时间的广播
+          Intent recordIntent = new Intent(RECORD_ACTION);
+          recordIntent.putExtra(RECORD_STATUS, 1);
+          getContext().sendBroadcast(recordIntent);
+          //播放
+          ivPlay.setVisibility(View.GONE);
+          tvAllTime.setVisibility(View.GONE);
+          pbLoading.setVisibility(View.VISIBLE);
+          //视频播放界面也需要显示
+          myVideoPlayer.setVideoViewVisiable(View.VISIBLE);
+          //把播放条目的下标设置给适配器
 //              adapter.setPlayPosition(position);
-            }
-            ivPlay.setImageResource(R.drawable.new_pause_video);
-          }
-
-          break;
         }
-      case R.id.iv_fullscreen:
-        break;
-      default:
-        break;
+        ivPlay.setImageResource(R.drawable.new_pause_video);
+      }
     }
   }
 
