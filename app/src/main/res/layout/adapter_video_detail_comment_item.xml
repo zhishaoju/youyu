@@ -52,7 +52,8 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginRight="2dp"
-        android:background="@mipmap/zan1" />
+        android:background="@mipmap/zan1"
+        android:visibility="invisible" />
 
       <TextView
         android:id="@+id/tv_zan"
@@ -61,14 +62,16 @@
         android:layout_marginLeft="10dp"
         android:layout_weight="1"
         android:text="362"
-        android:textColor="#8b8787" />
+        android:textColor="#8b8787"
+        android:visibility="invisible" />
 
       <ImageView
         android:id="@+id/iv_cai"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginRight="2dp"
-        android:background="@mipmap/cai1" />
+        android:background="@mipmap/cai1"
+        android:visibility="invisible" />
 
       <TextView
         android:id="@+id/tv_cai"
@@ -77,7 +80,8 @@
         android:layout_marginLeft="10dp"
         android:layout_weight="1"
         android:text="362"
-        android:textColor="#8b8787" />
+        android:textColor="#8b8787"
+        android:visibility="invisible" />
 
     </LinearLayout>
 
@@ -92,6 +96,20 @@
       android:textColor="@color/black"
       android:textSize="@dimen/font_16" />
 
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="1.5dp"
+      android:layout_marginLeft="30dp"
+      android:layout_marginRight="@dimen/margin_16"
+      android:background="#FAFAFC" />
+
   </LinearLayout>
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="1.5dp"
+    android:layout_alignParentBottom="true"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="@dimen/margin_16"
+    android:background="#FAFAFC" />
 
 </RelativeLayout>

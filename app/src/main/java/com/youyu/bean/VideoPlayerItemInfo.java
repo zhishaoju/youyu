@@ -12,16 +12,17 @@ public class VideoPlayerItemInfo {
   public int commentTotal;
   public String content;
   public String coverImage;
-  public String description;
+  public String description;// 说明
   public int duration;
   public int footTotal;
   public String playUrl;
-  public int readTotal;
+  public int readTotal; // 观看次数
   public String title;
+  public String time; // 日期
   public int type;
   public String postId;
-  public String userName;
-  public String avatarUrl;
+  public String userName; // 作者名字
+  public String avatarUrl;// 头像
 
 //  public VideoPlayerItemInfo(int id, String coverImage) {
 //    this.id = id;

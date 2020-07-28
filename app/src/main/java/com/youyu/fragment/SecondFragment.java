@@ -201,7 +201,7 @@ public class SecondFragment extends BaseFragment {
 
   private void parseData(String data) {
     LogUtil.showELog(TAG, "parseData(String data) 解析数据data：" + data);
-    mData.clear();
+    mActiveModelList.clear();
     try {
       JSONObject jsonObject = new JSONObject(data);
       int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
@@ -216,6 +216,9 @@ public class SecondFragment extends BaseFragment {
             mActiveModelList.add(activeModel);
           }
         }
+
+        LogUtil.showELog(TAG,
+            "parseData(String data) mActiveModelList.size：" + mActiveModelList.size());
         if (mRefresh == 1) {
           mActiveAdapter.updateData(mActiveModelList);
           pullToRefreshLayout.finishRefresh();

@@ -13,7 +13,8 @@ public class ActiveBean {
   public int haveJoin;
   public String id;
   public String title;
-  public String totalMoney;
-  public int status;
+  public int totalMoney;
+  public int requireJoin;
+  public String status;
 
 }

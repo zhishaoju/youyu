@@ -7,8 +7,6 @@ import static com.youyu.utils.Contants.USER_ID;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
@@ -16,14 +14,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.google.gson.Gson;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.youyu.R;
 import com.youyu.adapter.ActiveAdapter;
 import com.youyu.adapter.ActiveAdapter.OnItemClickListener;
-import com.youyu.bean.ActiveBean;
 import com.youyu.bean.ActiveModel;
 import com.youyu.cusListview.CusRecycleView;
-import com.youyu.cusListview.PullToRefreshLayout;
-import com.youyu.cusListview.PullToRefreshLayout.OnRefreshListener;
 import com.youyu.net.NetInterface.RequestResponse;
 import com.youyu.utils.LogUtil;
 import com.youyu.utils.SharedPrefsUtil;
@@ -47,28 +44,31 @@ public class ActiveListActivity extends BaseActivity {
   TextView tvTitle;
   @BindView(R.id.content_view)
   CusRecycleView contentView;
-  @BindView(R.id.pull_icon)
-  ImageView pullIcon;
-  @BindView(R.id.refreshing_icon)
-  ImageView refreshingIcon;
-  @BindView(R.id.state_tv)
-  TextView stateTv;
-  @BindView(R.id.state_iv)
-  ImageView stateIv;
-  @BindView(R.id.head_view)
-  RelativeLayout headView;
-  @BindView(R.id.pullup_icon)
-  ImageView pullupIcon;
-  @BindView(R.id.loading_icon)
-  ImageView loadingIcon;
-  @BindView(R.id.loadstate_tv)
-  TextView loadstateTv;
-  @BindView(R.id.loadstate_iv)
-  ImageView loadstateIv;
-  @BindView(R.id.loadmore_view)
-  RelativeLayout loadmoreView;
-  @BindView(R.id.refresh_view)
-  PullToRefreshLayout refreshView;
+//  @BindView(R.id.pull_icon)
+//  ImageView pullIcon;
+//  @BindView(R.id.refreshing_icon)
+//  ImageView refreshingIcon;
+//  @BindView(R.id.state_tv)
+//  TextView stateTv;
+//  @BindView(R.id.state_iv)
+//  ImageView stateIv;
+//  @BindView(R.id.head_view)
+//  RelativeLayout headView;
+//  @BindView(R.id.pullup_icon)
+//  ImageView pullupIcon;
+//  @BindView(R.id.loading_icon)
+//  ImageView loadingIcon;
+//  @BindView(R.id.loadstate_tv)
+//  TextView loadstateTv;
+//  @BindView(R.id.loadstate_iv)
+//  ImageView loadstateIv;
+//  @BindView(R.id.loadmore_view)
+//  RelativeLayout loadmoreView;
+//  @BindView(R.id.refresh_view)
+//  PullToRefreshLayout refreshView;
+
+  @BindView(R.id.pull_ro_refresh)
+  PullToRefreshLayout pullToRefreshLayout;
 
   private ActiveAdapter mActiveAdapter;
   private ArrayList<ActiveModel> mActiveModelList;
@@ -127,7 +127,7 @@ public class ActiveListActivity extends BaseActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    refresh();
+    refreshCus();
   }
 
   private void initListener() {
@@ -141,19 +141,32 @@ public class ActiveListActivity extends BaseActivity {
       }
     });
 
-    refreshView.setOnRefreshListener(new OnRefreshListener() {
-
+    pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
       @Override
-      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        refresh();
+      public void refresh() {
+        refreshCus();
       }
 
       @Override
-      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+      public void loadMore() {
         mPageNumer += 1;
-        loadMore(mPageNumer);
+        loadMoreCus(mPageNumer);
       }
     });
+
+//    refreshView.setOnRefreshListener(new OnRefreshListener() {
+//
+//      @Override
+//      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+//        refresh();
+//      }
+//
+//      @Override
+//      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+//        mPageNumer += 1;
+//        loadMore(mPageNumer);
+//      }
+//    });
     setNetListener(new RequestResponse() {
       @Override
       public void failure(Exception e) {
@@ -173,9 +186,10 @@ public class ActiveListActivity extends BaseActivity {
     finish();
   }
 
-  private void refresh() {
+  private void refreshCus() {
     mRefresh = 1;
-    LogUtil.showDLog(TAG, "refresh()");
+    mPageNumer = 1;
+    LogUtil.showDLog(TAG, "refreshCus()");
     String url = BASE_URL + ACTIVITY_LIST;
     JSONObject jsonObject = new JSONObject();
     try {
@@ -183,14 +197,14 @@ public class ActiveListActivity extends BaseActivity {
       jsonObject.put("pageNum", mPageNumer);
       jsonObject.put("pageSize", pageSize);
     } catch (JSONException e) {
-      LogUtil.showELog(TAG, "active list refresh e :" + e.getLocalizedMessage());
+      LogUtil.showELog(TAG, "active list refreshCus e :" + e.getLocalizedMessage());
     }
     String param = jsonObject.toString();
     post(url, param);
   }
 
-  private void loadMore(int pageNum) {
-    LogUtil.showDLog(TAG, "loadMore(int pageNum) pageNum = " + pageNum);
+  private void loadMoreCus(int pageNum) {
+    LogUtil.showDLog(TAG, "loadMoreCus(int pageNum) pageNum = " + pageNum);
     mRefresh = 2;
     String url = BASE_URL + ACTIVITY_LIST;
     JSONObject jsonObject = new JSONObject();
@@ -224,10 +238,12 @@ public class ActiveListActivity extends BaseActivity {
         }
         if (mRefresh == 1) {
           mActiveAdapter.setData(mData);
-          refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);
+          pullToRefreshLayout.finishRefresh();
+//          refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);
         } else if (mRefresh == 2) {
           mActiveAdapter.appendData(mData);
-          refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+          pullToRefreshLayout.finishLoadMore();
+//          refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
         }
       }
     } catch (Exception e) {

@@ -253,6 +253,7 @@ public class VideoDetailActivity extends BaseActivity {
 
       @Override
       public void success(String data) {
+        LogUtil.showELog(TAG, "flag = " + flag);
         if (1 == flag) {
           try {
             JSONObject jsonObject = new JSONObject(data);
@@ -302,6 +303,9 @@ public class VideoDetailActivity extends BaseActivity {
               InputMethodManager imm = (InputMethodManager) getSystemService(
                   Context.INPUT_METHOD_SERVICE);
               imm.hideSoftInputFromWindow(etCommentContent.getWindowToken(), 0);
+
+              flag = 2;
+              refreshCus();
             }
           } catch (Exception e) {
             LogUtil.showELog(TAG, "parseData(String data) catch (JSONException e)"
@@ -375,7 +379,7 @@ public class VideoDetailActivity extends BaseActivity {
       jsonObject.put("pageNum", pageNum);
       jsonObject.put("pageSize", pageSize);
     } catch (JSONException e) {
-      LogUtil.showELog(TAG, "indexFragment refresh e :" + e.getLocalizedMessage());
+      LogUtil.showELog(TAG, "loadMoreCus refresh e :" + e.getLocalizedMessage());
     }
     String param = jsonObject.toString();
     post(url, param);

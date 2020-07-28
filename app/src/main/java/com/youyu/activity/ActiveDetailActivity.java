@@ -107,7 +107,6 @@ public class ActiveDetailActivity extends BaseActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    refreshCus();
     activityInfoNet();
   }
 
@@ -167,6 +166,7 @@ public class ActiveDetailActivity extends BaseActivity {
       @Override
       public void failure(Exception e) {
         pullToRefresh.finishRefresh();
+        pullToRefresh.finishLoadMore();
         LogUtil.showELog(TAG, "failure e : " + e.getStackTrace());
       }
 
@@ -175,15 +175,16 @@ public class ActiveDetailActivity extends BaseActivity {
         if (JsonUtils.isJsonObject(data)) {
           try {
             mData.clear();
+            refreshCus();
             JSONObject jsonObject = new JSONObject(data);
             int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
             if (code == 0) {
               if (jsonObject.has("data")) {
                 String resultData = jsonObject.getJSONObject("data").toString();
                 ActiveBean activeBean = new Gson().fromJson(resultData, ActiveBean.class);
-                tvTitle.setText(activeBean.title);
-                tvTime.setText(activeBean.beginTime + "-" + activeBean.endTime);
-                tvRequire.setText(activeBean.content);
+                tvActiveName.setText(activeBean.title);
+                tvTime.setText("日期：" + activeBean.beginTime + "-" + activeBean.endTime);
+                tvRequire.setText("要求：" + activeBean.content);
                 tvJoinNum.setText(activeBean.haveJoin + "");
                 tvActiveCountDown.setText("");
                 tvActiveMoney.setText(activeBean.totalMoney + "");

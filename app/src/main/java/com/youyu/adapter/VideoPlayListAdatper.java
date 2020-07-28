@@ -1,6 +1,7 @@
 package com.youyu.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.youyu.R;
+import com.youyu.activity.VideoDetailActivity;
 import com.youyu.bean.VideoPlayerItemInfo;
+import com.youyu.view.CircleImageView;
 import com.youyu.view.VideoPlayer;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +92,16 @@ public class VideoPlayListAdatper extends Adapter {
 
     viewHolder.tvAuthorName.setText(info.userName + "");
 
+    viewHolder.tvTitle.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(context, VideoDetailActivity.class);
+        // 把Video id 传过去
+        intent.putExtra("postId", info.id);
+        context.startActivity(intent);
+      }
+    });
+
     viewHolder.ivZan.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -116,8 +129,8 @@ public class VideoPlayListAdatper extends Adapter {
 
   static class ListViewHolder extends ViewHolder {
 
-    @BindView(R.id.iv_author)
-    ImageView ivAuthor;
+    @BindView(R.id.civ_author)
+    CircleImageView ivAuthor;
     @BindView(R.id.tv_author_name)
     TextView tvAuthorName;
     @BindView(R.id.iv_comment_more)

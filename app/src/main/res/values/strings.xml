@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">Youyu</string>
+  <string name="app_name">鱿鱼搞笑</string>
 
   <string name="pull_down_has_data">刷新有数据</string>
   <string name="pull_down_has_no_data">刷新无数据</string>
