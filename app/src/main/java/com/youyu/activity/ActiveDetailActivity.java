@@ -3,6 +3,7 @@ package com.youyu.activity;
 import static com.youyu.utils.Contants.Net.ACTIVE_DETAIL;
 import static com.youyu.utils.Contants.Net.BASE_URL;
 import static com.youyu.utils.Contants.Net.RECORD_LIST;
+import static com.youyu.utils.Contants.PAGE_SIZE;
 import static com.youyu.utils.Contants.USER_ID;
 
 import android.content.Intent;
@@ -56,40 +57,16 @@ public class ActiveDetailActivity extends BaseActivity {
   TextView tvActiveCountDown;
   @BindView(R.id.tv_active_money)
   TextView tvActiveMoney;
-  //  @BindView(R.id.pull_icon)
-//  ImageView pullIcon;
-//  @BindView(R.id.refreshing_icon)
-//  ImageView refreshingIcon;
-//  @BindView(R.id.state_tv)
-//  TextView stateTv;
-//  @BindView(R.id.state_iv)
-//  ImageView stateIv;
-//  @BindView(R.id.head_view)
-//  RelativeLayout headView;
   @BindView(R.id.content_view)
   CusRecycleView finishTaskView;
   @BindView(R.id.pull_to_refresh)
   PullToRefreshLayout pullToRefresh;
-
-//  @BindView(R.id.pullup_icon)
-//  ImageView pullupIcon;
-//  @BindView(R.id.loading_icon)
-//  ImageView loadingIcon;
-//  @BindView(R.id.loadstate_tv)
-//  TextView loadstateTv;
-//  @BindView(R.id.loadstate_iv)
-//  ImageView loadstateIv;
-//  @BindView(R.id.loadmore_view)
-//  RelativeLayout loadmoreView;
-//  @BindView(R.id.refresh_view)
-//  PullToRefreshLayout refreshView;
-
   private Intent mIntent;
   private String activeId = "";
 
   private int mPageNumer = 1;
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
-  private int pageSize = 10;
+  private int pageSize = PAGE_SIZE;
 
   private ArrayList<RecordListBean> mData = new ArrayList<>();
 
@@ -137,19 +114,6 @@ public class ActiveDetailActivity extends BaseActivity {
   }
 
   private void initListener() {
-//    refreshView.setOnRefreshListener(new OnRefreshListener() {
-//
-//      @Override
-//      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-//        refresh();
-//      }
-//
-//      @Override
-//      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-//        mPageNumer += 1;
-//        loadMore(mPageNumer);
-//      }
-//    });
     pullToRefresh.setRefreshListener(new BaseRefreshListener() {
       @Override
       public void refresh() {
@@ -175,7 +139,6 @@ public class ActiveDetailActivity extends BaseActivity {
         if (JsonUtils.isJsonObject(data)) {
           try {
             mData.clear();
-            refreshCus();
             JSONObject jsonObject = new JSONObject(data);
             int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
             if (code == 0) {
@@ -188,7 +151,7 @@ public class ActiveDetailActivity extends BaseActivity {
                 tvJoinNum.setText(activeBean.haveJoin + "");
                 tvActiveCountDown.setText("");
                 tvActiveMoney.setText(activeBean.totalMoney + "");
-
+                refreshCus();
               } else if (jsonObject.has("rows")) {
                 JSONArray ja = jsonObject.getJSONArray("rows");
                 if (ja != null) {

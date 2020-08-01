@@ -48,7 +48,7 @@ public class SecondFragmentAdapter extends Adapter {
     ActiveModel activeModel = mData.get(position);
     viewHolder.tvActiveName.setText(activeModel.title);
     viewHolder.tvTimeScope.setText(activeModel.beginTime + "-" + activeModel.endTime);
-    viewHolder.tvCanYuRen.setText(activeModel.count);
+    viewHolder.tvCanYuRen.setText(activeModel.requireJoin + "");
     ActiveItemUi activeItemUi = Utils.transform(activeModel.status);
     viewHolder.tvActiveNoStart.setText(activeItemUi.stateName);
     viewHolder.tvActiveNoStart.setBackgroundResource(activeItemUi.bgValue);
@@ -98,11 +98,16 @@ public class SecondFragmentAdapter extends Adapter {
     notifyDataSetChanged();
   }
 
+  public int getSize() {
+    return mData.size();
+  }
+
   public void setOnClickListener(ItemClickListener l) {
     mListener = l;
   }
 
   public interface ItemClickListener {
+
     void OnItemClickListener(ActiveModel activeModel);
   }
 }

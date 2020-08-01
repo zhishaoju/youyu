@@ -1,22 +1,19 @@
 package com.youyu.activity;
 
 import static android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE;
-import static com.youyu.utils.Contants.BroadcastConst.RECORD_ACTION;
-import static com.youyu.utils.Contants.BroadcastConst.RECORD_STATUS;
 import static com.youyu.utils.Contants.Net.BASE_URL;
 import static com.youyu.utils.Contants.Net.COLLECTION_ADD;
 import static com.youyu.utils.Contants.Net.COMMENT_DETAIL;
 import static com.youyu.utils.Contants.Net.COMMENT_LIST;
-import static com.youyu.utils.Contants.Net.RECORD_ADD;
 import static com.youyu.utils.Contants.Net.SEND_COMMENT;
+import static com.youyu.utils.Contants.PAGE_SIZE;
+import static com.youyu.utils.Contants.POST_ID;
 import static com.youyu.utils.Contants.USER_ID;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -77,33 +74,11 @@ public class VideoDetailActivity extends BaseActivity {
   LinearLayout llAttention;
   @BindView(R.id.tv_content_desc)
   TextView tvContentDesc;
-  //  @BindView(R.id.pull_icon)
-//  ImageView pullIcon;
-//  @BindView(R.id.refreshing_icon)
-//  ImageView refreshingIcon;
-//  @BindView(R.id.state_tv)
-//  TextView stateTv;
-//  @BindView(R.id.state_iv)
-//  ImageView stateIv;
-//  @BindView(R.id.head_view)
-//  RelativeLayout headView;
   @BindView(R.id.content_view)
   CusRecycleView pinglunListView;
 
   @BindView(R.id.pull_to_refresh)
   PullToRefreshLayout pullToRefreshLayout;
-  //  @BindView(R.id.pullup_icon)
-//  ImageView pullupIcon;
-//  @BindView(R.id.loading_icon)
-//  ImageView loadingIcon;
-//  @BindView(R.id.loadstate_tv)
-//  TextView loadstateTv;
-//  @BindView(R.id.loadstate_iv)
-//  ImageView loadstateIv;
-//  @BindView(R.id.loadmore_view)
-//  RelativeLayout loadmoreView;
-//  @BindView(R.id.refresh_view)
-//  PullToRefreshLayout refreshView;
   @BindView(R.id.et_comment_content)
   EditText etCommentContent;
   @BindView(R.id.iv_video_zan)
@@ -141,15 +116,12 @@ public class VideoDetailActivity extends BaseActivity {
 
   private int mPageNumer = 1;
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
-  private int pageSize = 10;
+  private int pageSize = PAGE_SIZE;
+  private int mTotal;
 
   private ArrayList<CommentBean> mData = new ArrayList<>();
   private VideoDetailCommentListAdapter mCommentListAdapter;
   private LinearLayoutManager lm;
-
-  private static Handler mHandler = new Handler();
-
-  private RecordReceiver mRecordReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -168,14 +140,6 @@ public class VideoDetailActivity extends BaseActivity {
     lm = new LinearLayoutManager(this);
     pinglunListView.setLayoutManager(lm);
     pinglunListView.setAdapter(mCommentListAdapter);
-    // 1. 实例化BroadcastReceiver子类 &  IntentFilter
-    mRecordReceiver = new RecordReceiver();
-    // 2. 设置接收广播的类型
-    IntentFilter intentFilter = new IntentFilter();
-    intentFilter.addAction(RECORD_ACTION);
-    // 3. 动态注册：调用Context的registerReceiver（）方法
-    registerReceiver(mRecordReceiver, intentFilter);
-
   }
 
   @Override
@@ -186,6 +150,7 @@ public class VideoDetailActivity extends BaseActivity {
     mIntent = getIntent();
     if (mIntent != null) {
       mPostId = mIntent.getStringExtra("postId");
+      SharedPrefsUtil.put(POST_ID, mPostId);
     }
     String params = "";
     try {
@@ -204,8 +169,7 @@ public class VideoDetailActivity extends BaseActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    mHandler.removeCallbacks(handlerTimer);
-    unregisterReceiver(mRecordReceiver);
+    videoPlayer.mediaController.destroy();
   }
 
   private void initListener() {
@@ -227,23 +191,15 @@ public class VideoDetailActivity extends BaseActivity {
 
       @Override
       public void loadMore() {
-        mPageNumer += 1;
-        loadMoreCus(mPageNumer);
+        if (mTotal < mPageNumer * pageSize) {
+          Utils.show("没有更多数据啦");
+          pullToRefreshLayout.finishLoadMore();
+        } else {
+          mPageNumer += 1;
+          loadMoreCus(mPageNumer);
+        }
       }
     });
-//    refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
-//
-//      @Override
-//      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-//        refresh();
-//      }
-//
-//      @Override
-//      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-//        mPageNumer += 1;
-//        loadMore(mPageNumer);
-//      }
-//    });
 
     setNetListener(new RequestResponse() {
       @Override
@@ -267,6 +223,15 @@ public class VideoDetailActivity extends BaseActivity {
                 Glide.with(VideoDetailActivity.this)
                     .load(videoPlayerItemInfo.coverImage)
                     .into(ivBg);
+
+                Glide.with(VideoDetailActivity.this)
+                    .load(videoPlayerItemInfo.avatarUrl)
+                    .into(civHeadPic);
+
+                tvUserName.setText(videoPlayerItemInfo.userName + "");
+                String timeNum =
+                    videoPlayerItemInfo.createTime + " " + videoPlayerItemInfo.readTotal + "次观看";
+                tvTimeNum.setText(timeNum);
 
                 if (TextUtils.isEmpty(videoPlayerItemInfo.description)) {
                   tvContentDesc.setText(videoPlayerItemInfo.title + "");
@@ -312,6 +277,17 @@ public class VideoDetailActivity extends BaseActivity {
                 + " 异常：" + e.toString());
             Utils.show("解析数据失败");
           }
+        } else if (4 == flag) {
+          try {
+            JSONObject jsonObject = new JSONObject(data);
+            int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
+            if (code == 0) {
+              Utils.show("收藏成功~");
+            }
+          } catch (Exception e) {
+            LogUtil.showELog(TAG, "4 parseData(String data) catch (JSONException e)"
+                + " 异常：" + e.toString());
+          }
         }
       }
     });
@@ -323,6 +299,8 @@ public class VideoDetailActivity extends BaseActivity {
     try {
       JSONObject jsonObject = new JSONObject(data);
       int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
+      int total = Utils.jsonObjectIntGetValue(jsonObject, "total");
+      mTotal = total;
       if (code == 0) {
         JSONArray ja = jsonObject.getJSONArray("rows");
         if (ja != null) {
@@ -474,48 +452,5 @@ public class VideoDetailActivity extends BaseActivity {
     }
     post(url, params);
   }
-
-  public class RecordReceiver extends BroadcastReceiver {
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      int flag = intent.getIntExtra(RECORD_STATUS, 0);
-      LogUtil.showDLog(TAG, "RecordReceiver flag = " + flag);
-
-      // flag:1开始计时；2结束计时
-      if (flag == 1) {
-        mHandler.post(handlerTimer);
-      } else if (flag == 2) {
-        mHandler.removeCallbacks(handlerTimer);
-      }
-    }
-  }
-
-
-  private Runnable handlerTimer = new Runnable() {
-    @Override
-    public void run() {
-      // 发送网络请求
-      recordNet();
-      mHandler.postDelayed(this, 5000);
-    }
-
-    private void recordNet() {
-      flag = 6;
-      String url = BASE_URL + RECORD_ADD;
-      String params = "";
-      try {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
-        jsonObject.put("postId", mPostId);
-        jsonObject.put("duration", 5);
-        params = jsonObject.toString();
-      } catch (Exception e) {
-        LogUtil.showELog(TAG, "shouCang e is " + e.getLocalizedMessage());
-      }
-      post(url, params);
-    }
-  };
-
 
 }

@@ -18,11 +18,12 @@ public class VideoPlayerItemInfo {
   public String playUrl;
   public int readTotal; // 观看次数
   public String title;
-  public String time; // 日期
+  public String createTime; // 日期
   public int type;
   public String postId;
   public String userName; // 作者名字
   public String avatarUrl;// 头像
+
 
 //  public VideoPlayerItemInfo(int id, String coverImage) {
 //    this.id = id;

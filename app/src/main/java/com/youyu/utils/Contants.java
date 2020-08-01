@@ -22,7 +22,7 @@ public interface Contants {
     String COLLECTION_ADD = "/youyu/api/collection/add";
     String RECORD_LIST = "/youyu/api/record/list";
     String RECORD_ADD = "/youyu/api/video/record/add";
-    String TASK_CANCLETASK = "buyer/task/cancleTask";
+    String VERSION_INFO = "/youyu/api/version/info";
     String TASK_CONTINUETASK = "buyer/task/continueTask";
     String TASK_SAVESTEP3 = "buyer/task/saveStep3";
     String TASK_CHECKSHOPNAME = "buyer/task/checkShopName";
@@ -92,10 +92,13 @@ public interface Contants {
   String USER_ID = "userId";
   String USER_PHONE = "user_phone";
   String USER_PASSWORD = "password";
+  String POST_ID = "postId";
 
   interface BroadcastConst {
     String RECORD_ACTION = "record_action";
     String RECORD_STATUS = "recordStatus";
   }
+
+  int PAGE_SIZE = 20;
 
 }

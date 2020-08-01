@@ -1,6 +1,8 @@
 package com.youyu;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
+import static com.youyu.utils.Contants.Net.BASE_URL;
+import static com.youyu.utils.Contants.Net.VERSION_INFO;
 import static com.youyu.utils.Contants.REQUEST_PERMISSION_CODE;
 
 import android.Manifest.permission;
@@ -19,20 +21,26 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.tencent.bugly.crashreport.CrashReport;
+import com.google.gson.Gson;
+import com.youyu.activity.BaseActivity;
+import com.youyu.bean.UpdateVersion;
 import com.youyu.fragment.IndexFragment;
 import com.youyu.fragment.SecondFragment;
 import com.youyu.fragment.ThirdFragment;
+import com.youyu.net.NetInterface.RequestResponse;
+import com.youyu.service.PlayReqService;
 import com.youyu.utils.LogUtil;
+import com.youyu.utils.Utils;
 import java.util.ArrayList;
+import org.json.JSONObject;
+import update.UpdateAppUtils;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends BaseActivity {
 
   private String TAG = MainActivity.class.getSimpleName();
 
@@ -82,9 +90,64 @@ public class MainActivity extends FragmentActivity {
     getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN,
         LayoutParams.FLAG_FULLSCREEN);
     setContentView(R.layout.activity_main);
+
     ButterKnife.bind(this);
     setTabSelect(0);
 
+    initService();
+    initListener();
+    sendCheckoutVersion();
+  }
+
+  private void sendCheckoutVersion() {
+    String url = BASE_URL + VERSION_INFO;
+    JSONObject jsonObject = new JSONObject();
+    String param = jsonObject.toString();
+    post(url, param);
+  }
+
+  private void initListener() {
+    setNetListener(new RequestResponse() {
+      @Override
+      public void failure(Exception e) {
+        LogUtil.showELog(TAG, "failure(Exception e) e:" + e.toString());
+      }
+
+      @Override
+      public void success(String data) {
+        try {
+          JSONObject jsonObject = new JSONObject(data);
+          int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
+          if (code == 0) {
+            long currentCode = Utils.getVersionCode();
+            if (jsonObject.has("data")) {
+              String resultData = jsonObject.getJSONObject("data").toString();
+              UpdateVersion updateVersion = new Gson().fromJson(resultData, UpdateVersion.class);
+
+              LogUtil.showDLog(TAG, "updateVersion = " + updateVersion);
+              LogUtil.showDLog(TAG, "currentCode = " + currentCode);
+
+              if (currentCode < updateVersion.appVersion) {
+                UpdateAppUtils
+                    .getInstance()
+                    .apkUrl(updateVersion.downUrl)
+                    .updateTitle(updateVersion.updateTitle)
+                    .updateContent(updateVersion.appDesc)
+                    .update();
+              }
+            }
+          }
+        } catch (
+            Exception e) {
+          LogUtil.showELog(TAG, "success(Exception e) e:" + e.toString());
+        }
+      }
+    });
+  }
+
+  private void initService() {
+    Intent playReqService = new Intent(this, PlayReqService.class);
+    startService(playReqService);
   }
 
   @OnClick({R.id.ll_first, R.id.ll_second, R.id.ll_third})

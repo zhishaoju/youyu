@@ -96,13 +96,11 @@ public class ThirdFragment extends BaseFragment {
   FrameLayout flQq;
 
   /**
-   * =1, 登录； =2, 忘记密码；=3, 注册
+   * =1, 登录；=2, 展示个人页面 =3, 忘记密码；=4, 注册
    */
-  private int mNetClick;
+  private int mNetClickLogin;
 
   private Unbinder mUnbinder;
-
-  private int flag = -1;
 
 
   @Nullable
@@ -147,33 +145,29 @@ public class ThirdFragment extends BaseFragment {
     LogUtil.showELog(TAG, "hidden = " + hidden);
     if (!hidden) {
       // 请求网络展示界面
-      netRequest();
+      String phone = SharedPrefsUtil.get(USER_PHONE, "");
+      if (!TextUtils.isEmpty(phone)) {
+        userInfo(phone);
+      } else {
+        llLogin.setVisibility(View.VISIBLE);
+        llMyView.setVisibility(View.GONE);
+      }
     }
   }
 
-  private void netRequest() {
-    LogUtil.showELog(TAG, "netRequest()");
-    String phone = SharedPrefsUtil.get(USER_PHONE, "");
-    if (TextUtils.isEmpty(phone)) {
-//      tvLogin.setVisibility(View.VISIBLE);
-      llLogin.setVisibility(View.VISIBLE);
-      llMyView.setVisibility(View.GONE);
-//      startActivityForResult(new Intent(getActivity(), LoginActivity.class), 100);
-    } else {
-      flag = 1;
-      String url = BASE_URL + LOGIN;
-      JSONObject jsonObject = new JSONObject();
-      try {
-        jsonObject.put("mobile", phone);
-        jsonObject.put("imei", Utils.getIMEI());
-        jsonObject.put("channelId", fromPropertiesGetValue("channelId"));
-        jsonObject.put("password", SharedPrefsUtil.get(USER_PASSWORD, ""));
-      } catch (JSONException e) {
-        LogUtil.showELog(TAG, "netRequest e :" + e.getLocalizedMessage());
-      }
-      String param = jsonObject.toString();
-      post(url, param);
+  private void userInfo(String phone) {
+    mNetClickLogin = 2;
+    LogUtil.showELog(TAG, "userInfo phone = " + phone);
+    String url = BASE_URL + USER_INFO;
+    JSONObject jsonObject = new JSONObject();
+    try {
+      jsonObject.put("imei", Utils.getIMEI());
+      jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+    } catch (JSONException e) {
+      LogUtil.showELog(TAG, "netRequest e :" + e.getLocalizedMessage());
     }
+    String param = jsonObject.toString();
+    post(url, param);
   }
 
   @Override
@@ -185,8 +179,6 @@ public class ThirdFragment extends BaseFragment {
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == 100) {
-//      tvLogin.setVisibility(View.GONE);
-//      llMyView.setVisibility(View.VISIBLE);
     }
   }
 
@@ -196,9 +188,13 @@ public class ThirdFragment extends BaseFragment {
     LogUtil.showELog(TAG, "onResume");
     // 第一次进来的时候，会走到这里而不走onHiddenChanged
     // 请求网络展示界面
-//    if (!TextUtils.isEmpty(SharedPrefsUtil.get(USER_PHONE, ""))) {
-    netRequest();
-//    }
+    String phone = SharedPrefsUtil.get(USER_PHONE, "");
+    if (!TextUtils.isEmpty(phone)) {
+      userInfo(phone);
+    } else {
+      llLogin.setVisibility(View.VISIBLE);
+      llMyView.setVisibility(View.GONE);
+    }
   }
 
   @Override
@@ -211,78 +207,14 @@ public class ThirdFragment extends BaseFragment {
     setNetLisenter(new RequestResponse() {
       @Override
       public void failure(Exception e) {
-
+        LogUtil.showELog(TAG, "failure(Exception e) e " + e);
       }
 
       @Override
       public void success(String data) {
         LogUtil.showELog(TAG, "success(String data) data = " + data);
-        if (flag == 1) {
-          try {
-            JSONObject jsonObject1 = new JSONObject(data);
-            int code = Utils.jsonObjectIntGetValue(jsonObject1, "code");
-            if (NetStatus.OK == code) {
-              // 登录的请求结果
-              flag = 2;
-              String url = BASE_URL + USER_INFO;
-              JSONObject jsonObject = new JSONObject();
-              try {
-                jsonObject.put("imei", Utils.getIMEI());
-                jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
-              } catch (JSONException e) {
-                LogUtil.showELog(TAG, "USER_INFO e :" + e.getLocalizedMessage());
-              }
-              String param = jsonObject.toString();
-              post(url, param);
-            } else if (USER_NOT_EXIST == code) {
-              llLogin.setVisibility(View.VISIBLE);
-              llMyView.setVisibility(View.GONE);
-            }
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        } else if (flag == 2) {
-          // 展示个人界面的结果
-          try {
-            JSONObject jsonObject = new JSONObject(data);
-            int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
-            if (code == 0) {
-              JSONObject jo = jsonObject.getJSONObject("data");
-              if (jo != null) {
-                UserInfo userInfo = new Gson()
-                    .fromJson(jo.toString(), UserInfo.class);
 
-                if (getActivity() != null && !TextUtils.isEmpty(userInfo.avatarUrl)) {
-                  Glide.with(getActivity())
-                      .asBitmap()//只加载静态图片，如果是git图片则只加载第一帧。
-                      .load(userInfo.avatarUrl)
-                      .placeholder(R.mipmap.ic_launcher_round)
-                      .error(R.mipmap.ic_launcher_round)
-                      .into(civHeadPic);
-                }
-
-                if (!TextUtils.isEmpty(userInfo.nickName)) {
-                  tvHeadName.setText(userInfo.nickName + "");
-                }
-
-                tvGuanzhuNum.setText(userInfo.postTotal + "");
-                tvZan.setText(userInfo.agreeTotal + "");
-                tvFensi.setText(userInfo.fansTotal + "");
-                tvPinglun.setText(userInfo.comTotal + "");
-                tvIncoming.setText(userInfo.totalMoney + "");
-              }
-//              tvLogin.setVisibility(View.GONE);
-              llLogin.setVisibility(View.GONE);
-              llMyView.setVisibility(View.VISIBLE);
-            }
-          } catch (Exception e) {
-            LogUtil.showELog(TAG, "parseData(String data) catch (JSONException e)"
-                + " 异常：" + e.toString());
-            Utils.show("解析数据失败");
-          }
-        }
-
-        if (1 == mNetClick) {
+        if (1 == mNetClickLogin) {
           SharedPrefsUtil.put(USER_PHONE, etPhone.getText().toString());
           SharedPrefsUtil.put(USER_PASSWORD, etPassword.getText().toString());
           if (JsonUtils.isJsonObject(data)) {
@@ -292,20 +224,65 @@ public class ThirdFragment extends BaseFragment {
               if (NetStatus.OK == code) {
                 JSONObject jsonObject = jsonObject1.getJSONObject("data");
                 SharedPrefsUtil.put(USER_ID, jsonObject.getString("id"));
-
-                // todo
-                llLogin.setVisibility(View.GONE);
-                llMyView.setVisibility(View.VISIBLE);
+                if (NetStatus.OK == code) {
+                  showUserInfo(data);
+                  llLogin.setVisibility(View.GONE);
+                  llMyView.setVisibility(View.VISIBLE);
+                } else if (USER_NOT_EXIST == code) {
+                  llLogin.setVisibility(View.VISIBLE);
+                  llMyView.setVisibility(View.GONE);
+                }
               }
             } catch (JSONException e) {
-              LogUtil.showELog(TAG, "1 == mNetClick e : " + e.getLocalizedMessage());
+              LogUtil.showELog(TAG, "1 == mNetClickLogin e : " + e.getLocalizedMessage());
             }
           }
 
-        } else if ((2 == mNetClick)) {
+        } else if ((2 == mNetClickLogin)) {
+          // 展示个人界面的结果
+          showUserInfo(data);
         }
       }
     });
+  }
+
+  private void showUserInfo(String data) {
+    try {
+      JSONObject jsonObject = new JSONObject(data);
+      int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
+      if (code == 0) {
+        JSONObject jo = jsonObject.getJSONObject("data");
+        if (jo != null) {
+          UserInfo userInfo = new Gson()
+              .fromJson(jo.toString(), UserInfo.class);
+
+          if (getActivity() != null && !TextUtils.isEmpty(userInfo.avatarUrl)) {
+            Glide.with(getActivity())
+                .asBitmap()//只加载静态图片，如果是git图片则只加载第一帧。
+                .load(userInfo.avatarUrl)
+                .placeholder(R.mipmap.ic_launcher_round)
+                .error(R.mipmap.ic_launcher_round)
+                .into(civHeadPic);
+          }
+
+          if (!TextUtils.isEmpty(userInfo.nickName)) {
+            tvHeadName.setText(userInfo.nickName + "");
+          }
+
+          tvGuanzhuNum.setText(userInfo.postTotal + "");
+          tvZan.setText(userInfo.agreeTotal + "");
+          tvFensi.setText(userInfo.fansTotal + "");
+          tvPinglun.setText(userInfo.comTotal + "");
+          tvIncoming.setText(userInfo.totalMoney + "");
+        }
+        llLogin.setVisibility(View.GONE);
+        llMyView.setVisibility(View.VISIBLE);
+      }
+    } catch (Exception e) {
+      LogUtil.showELog(TAG, "parseData(String data) catch (JSONException e)"
+          + " 异常：" + e.toString());
+      Utils.show("解析数据失败");
+    }
   }
 
   @OnClick({R.id.ll_incoming_detail, R.id.ll_collect, R.id.ll_active,
@@ -333,7 +310,7 @@ public class ThirdFragment extends BaseFragment {
         LogUtil.showDLog(TAG, "tv_forget_password()");
         break;
       case R.id.bt_login:
-        mNetClick = 1;
+        mNetClickLogin = 1;
         String url = BASE_URL + LOGIN;
         JSONObject jsonObject = new JSONObject();
         try {

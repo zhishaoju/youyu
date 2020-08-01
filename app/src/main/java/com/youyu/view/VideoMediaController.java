@@ -24,6 +24,7 @@ import butterknife.OnClick;
 import com.youyu.R;
 import com.youyu.activity.VideoDetailActivity;
 import com.youyu.adapter.VideoPlayListAdatper;
+import com.youyu.utils.LogUtil;
 import com.youyu.utils.MediaHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -137,12 +138,32 @@ public class VideoMediaController extends RelativeLayout {
     //拖动的过程中调用
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+      LogUtil.showELog(TAG, "onProgressChanged fromUser = " + fromUser);
+      LogUtil.showELog(TAG, "onProgressChanged progress = " + progress);
+//      if (fromUser) {//<span style="color:#ff0000;"> 注意点</span>
+//        try {
+//          if (!MediaHelper.getInstance().isPlaying()) {
+//            try {
+//              MediaHelper.getInstance().reset();
+////              MediaHelper.getInstance().setDataSource(mediaFile.toString());
+//              MediaHelper.getInstance().prepareAsync();
+//              // mPlayer.prepare();
+//              MediaHelper.getInstance().start();
+//            } catch (IllegalStateException e) {
+//              LogUtil.showELog(TAG, "onProgressChanged e = " + e.getLocalizedMessage());
+//            }
+//          }
+//          MediaHelper.getInstance().seekTo(seekBar.getProgress());
+//        } catch (IllegalStateException e) {
+//          e.printStackTrace();
+//        }
+//      }
     }
 
     //开始拖动的时候调用
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
+      LogUtil.showELog(TAG, "onStartTrackingTouch");
       //暂停视频的播放、停止时间和进度条的更新
       MediaHelper.pause();
       mHandler.removeMessages(MSG_UPDATE_TIME_PROGRESS);
@@ -151,6 +172,7 @@ public class VideoMediaController extends RelativeLayout {
     //停止拖动时调用
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+      LogUtil.showELog(TAG, "onStopTrackingTouch");
       //把视频跳转到对应的位置
       int progress = seekBar.getProgress();
       int duration = myVideoPlayer.mPlayer.getDuration();
@@ -234,6 +256,7 @@ public class VideoMediaController extends RelativeLayout {
   public void updatePlayTimeAndProgress() {
     //获取目前播放的进度
     int currentPosition = MediaHelper.getInstance().getCurrentPosition();
+    LogUtil.showDLog(TAG, "currentPosition = " + currentPosition);
     //格式化
     String useTime = formatDuration(currentPosition);
     tvUseTime.setText(useTime);
@@ -355,6 +378,9 @@ public class VideoMediaController extends RelativeLayout {
   }
 
   public void clickPlay() {
+    MediaHelper.getInstance().seekTo(0);
+    LogUtil.showELog(TAG, "clickPlay");
+    LogUtil.showELog(TAG, "adapter != null is " + (adapter != null));
     if (adapter != null) {
 
       Intent intent = new Intent(adapter.getContext(),
@@ -384,6 +410,9 @@ public class VideoMediaController extends RelativeLayout {
 //            return;
 //          }
 
+      LogUtil.showELog(TAG,
+          "MediaHelper.getInstance().isPlaying() is " + MediaHelper.getInstance().isPlaying());
+      // RECORD_STATUS :1开始计时；2结束计时
       if (MediaHelper.getInstance().isPlaying()) {
         Intent recordIntent = new Intent(RECORD_ACTION);
         recordIntent.putExtra(RECORD_STATUS, 2);
@@ -419,10 +448,22 @@ public class VideoMediaController extends RelativeLayout {
           myVideoPlayer.setVideoViewVisiable(View.VISIBLE);
           //把播放条目的下标设置给适配器
 //              adapter.setPlayPosition(position);
+
         }
         ivPlay.setImageResource(R.drawable.new_pause_video);
       }
     }
+  }
+
+  public void destroy() {
+    Intent recordIntent = new Intent(RECORD_ACTION);
+    recordIntent.putExtra(RECORD_STATUS, 2);
+    getContext().sendBroadcast(recordIntent);
+    MediaHelper.pause();
+    MediaHelper.release();
+    seekBar.setProgress(0);
+    seekBar.setSecondaryProgress(0);
+    removeAllMessage();
   }
 
   private VideoPlayer myVideoPlayer;

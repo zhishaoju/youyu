@@ -1,17 +1,15 @@
-package com.youyu.activity;
+package com.youyu.service;
 
 import static com.youyu.utils.Utils.jsonObjectIntGetValue;
 
-import android.app.Activity;
-import android.os.Bundle;
+import android.app.Service;
+import android.content.Intent;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
-import android.view.Window;
-import android.view.WindowManager;
-import androidx.fragment.app.FragmentActivity;
+import androidx.annotation.Nullable;
 import com.youyu.BuildConfig;
 import com.youyu.net.NetInterface;
-import com.youyu.utils.Contants;
 import com.youyu.utils.JsonUtils;
 import com.youyu.utils.LogUtil;
 import com.youyu.utils.Utils;
@@ -31,13 +29,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @author zhisiyi
- * @date 20.04.08 16:09
- * @comment
+ * @Author zhisiyi
+ * @Date 2020.08.01 10:26
+ * @Comment
  */
-public class BaseActivity extends FragmentActivity {
+public class BaseService extends Service {
 
-  private final String TAG = BaseActivity.class.getSimpleName();
+  private final String TAG = BaseService.class.getSimpleName();
   public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
   private final Object mTag = new Object();
 
@@ -46,19 +44,10 @@ public class BaseActivity extends FragmentActivity {
   protected CusHandler mCusHandler;
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    //无title
-    requestWindowFeature(Window.FEATURE_NO_TITLE);
-    //全屏
-    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+  public void onCreate() {
+    super.onCreate();
     initNet();
     mCusHandler = new CusHandler(this);
-  }
-
-  protected void setNetListener(NetInterface.RequestResponse requestResponse) {
-    mNetInterface = requestResponse;
   }
 
   private void initNet() {
@@ -76,17 +65,7 @@ public class BaseActivity extends FragmentActivity {
     LogUtil.showELog(TAG, "post 请求url = " + url);
     LogUtil.showELog(TAG, "post 请求params = " + params);
     if (JsonUtils.isJsonObject(params)) {
-//            FormBody.Builder body = new FormBody.Builder();
       try {
-//                JSONObject jsonObject = new JSONObject(params);
-//                Iterator<String> keys = jsonObject.keys();
-//                while (keys.hasNext()) {
-//                    String key = keys.next();
-//                    String value = jsonObject.getString(key);
-//                    body.add(key, value);
-//                }
-////              body.add("params", params);
-//                RequestBody requestBody = body.build();
         // MediaType.parse("application/json;charset=utf-8"),
         // 这一块就是okhttp设置Content-Type
         RequestBody requestBody = RequestBody
@@ -130,36 +109,8 @@ public class BaseActivity extends FragmentActivity {
 
   }
 
-  protected void get(String url) {
-    LogUtil.showELog(TAG, "get 请求 url = " + url);
-    final Request request = new Request.Builder()
-        .url(url)
-        .get()
-        .build();
-    mHttpClient.newCall(request).enqueue(new Callback() {
-      @Override
-      public void onFailure(Call call, IOException e) {
-        LogUtil.showELog(TAG, "get请求返回失败的值：" + e.getMessage());
-        Message mGetFail = new Message();
-        mGetFail.obj = e;
-        mGetFail.what = 3;
-        mCusHandler.sendMessage(mGetFail);
-      }
-
-      @Override
-      public void onResponse(Call call, Response response) throws IOException {
-        String sdata = response.body().string();
-        LogUtil.showELog(TAG, "get请求返回成功的值：" + sdata);
-        Message mGetSuccess = new Message();
-        mGetSuccess.obj = sdata;
-        mGetSuccess.what = 4;
-        mCusHandler.sendMessage(mGetSuccess);
-      }
-    });
-  }
-
   @Override
-  protected void onDestroy() {
+  public void onDestroy() {
     super.onDestroy();
     cancleAll(mTag);
   }
@@ -180,17 +131,21 @@ public class BaseActivity extends FragmentActivity {
     }
   }
 
+  protected void setNetListener(NetInterface.RequestResponse requestResponse) {
+    mNetInterface = requestResponse;
+  }
+
   protected static class CusHandler extends Handler {
 
-    private final WeakReference<BaseActivity> mActivity;
+    private final WeakReference<BaseService> mActivity;
 
-    public CusHandler(BaseActivity activity) {
-      mActivity = new WeakReference<>(activity);
+    public CusHandler(BaseService service) {
+      mActivity = new WeakReference<>(service);
     }
 
     @Override
     public void handleMessage(Message msg) {
-      final BaseActivity activity = mActivity.get();
+      final BaseService activity = mActivity.get();
       if (activity == null) {
         super.handleMessage(msg);
         return;
@@ -219,7 +174,7 @@ public class BaseActivity extends FragmentActivity {
                 Utils.show(msgPost);
               }
 //              if (Contants.NetStatus.OK == state) {
-                mNetInterface.success(resposeStr);
+              mNetInterface.success(resposeStr);
 //              }
             } catch (JSONException e) {
               LogUtil.showELog(TAG,
@@ -246,7 +201,7 @@ public class BaseActivity extends FragmentActivity {
                 Utils.show(msgGet);
               }
 //              if (Contants.NetStatus.OK == state) {
-                mNetInterface.success(sdata);
+              mNetInterface.success(sdata);
 //              }
             } catch (JSONException e) {
               LogUtil.showELog(TAG, "get JSONException:" + e.toString());
@@ -259,5 +214,12 @@ public class BaseActivity extends FragmentActivity {
       default:
         break;
     }
+  }
+
+
+  @Nullable
+  @Override
+  public IBinder onBind(Intent intent) {
+    return null;
   }
 }

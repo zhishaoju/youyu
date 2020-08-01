@@ -3,6 +3,7 @@ package com.youyu.activity;
 import static com.youyu.utils.Contants.Net.BASE_URL;
 import static com.youyu.utils.Contants.Net.COLLECTION_LIST;
 import static com.youyu.utils.Contants.Net.POST_UPDATE;
+import static com.youyu.utils.Contants.PAGE_SIZE;
 import static com.youyu.utils.Contants.USER_ID;
 
 import android.os.Bundle;
@@ -59,7 +60,7 @@ public class CollectActivity extends BaseActivity {
   private LinearLayoutManager lm;
   private int mPageNumer = 1;
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
-  private int pageSize = 10;
+  private int pageSize = PAGE_SIZE;
   private ArrayList<VideoPlayerItemInfo> mData = new ArrayList<>();
 
   private int mNetRequestFlag = -1;

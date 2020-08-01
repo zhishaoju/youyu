@@ -115,6 +115,17 @@ public class VideoPlayListAdatper extends Adapter {
         mOnClickListener.onViewClick(2, info.id);
       }
     });
+
+    //实现点击效果
+    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(context, VideoDetailActivity.class);
+        // 把Video id 传过去
+        intent.putExtra("postId", info.id);
+        context.startActivity(intent);
+      }
+    });
   }
 
   @Override
@@ -175,6 +186,10 @@ public class VideoPlayListAdatper extends Adapter {
   public void appendData(ArrayList<VideoPlayerItemInfo> data) {
     videoPlayerItemInfoList.addAll(data);
     notifyDataSetChanged();
+  }
+
+  public int getSize() {
+    return videoPlayerItemInfoList.size();
   }
 
   //回调接口

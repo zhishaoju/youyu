@@ -4,6 +4,7 @@ package com.youyu.fragment;
 import static com.youyu.utils.Contants.Net.BASE_URL;
 import static com.youyu.utils.Contants.Net.POST_COMMENT_LIST;
 import static com.youyu.utils.Contants.Net.POST_UPDATE;
+import static com.youyu.utils.Contants.PAGE_SIZE;
 import static com.youyu.utils.Contants.USER_ID;
 
 import android.os.Bundle;
@@ -37,39 +38,17 @@ import org.json.JSONObject;
 public class IndexFragment extends BaseFragment {
 
   private static final String TAG = IndexFragment.class.getSimpleName();
-  //  @BindView(R.id.pull_icon)
-//  ImageView pullIcon;
-//  @BindView(R.id.refreshing_icon)
-//  ImageView refreshingIcon;
-//  @BindView(R.id.state_tv)
-//  TextView stateTv;
-//  @BindView(R.id.state_iv)
-//  ImageView stateIv;
-//  @BindView(R.id.head_view)
-//  RelativeLayout headView;
+
   @BindView(R.id.content_view)
   CusRecycleView contentView;
   @BindView(R.id.pull_ro_refresh)
   PullToRefreshLayout pullToRefreshLayout;
 
-  //  @BindView(R.id.content_view)
-//  PullableGridView contentView;
-//  @BindView(R.id.pullup_icon)
-//  ImageView pullupIcon;
-//  @BindView(R.id.loading_icon)
-//  ImageView loadingIcon;
-//  @BindView(R.id.loadstate_tv)
-//  TextView loadstateTv;
-//  @BindView(R.id.loadstate_iv)
-//  ImageView loadstateIv;
-//  @BindView(R.id.loadmore_view)
-//  RelativeLayout loadmoreView;
-//  @BindView(R.id.refresh_view)
-//  PullToRefreshLayout refreshView;
-
   private int mPageNumer = 1;
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
-  private int pageSize = 5;
+  private int pageSize = PAGE_SIZE;
+
+  private int mTotal;
 
   private Unbinder mUnbinder;
 
@@ -78,6 +57,8 @@ public class IndexFragment extends BaseFragment {
   private ArrayList<VideoPlayerItemInfo> mData = new ArrayList<>();
 
   private int mNetRequestFlag = -1;
+
+  private boolean mIsFirst = true;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,29 +110,39 @@ public class IndexFragment extends BaseFragment {
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
     super.setUserVisibleHint(isVisibleToUser);
+    LogUtil.showELog(TAG, "show isVisibleToUser = " + isVisibleToUser);
     if (isVisibleToUser) {
       // 请求网络
-      refreshCus();
+      if (mIsFirst) {
+        refreshCus();
+        mIsFirst = false;
+      }
     }
   }
 
   @Override
   public void onHiddenChanged(boolean hidden) {
     super.onHiddenChanged(hidden);
-    LogUtil.showELog(TAG, "hidden = " + hidden);
+    LogUtil.showELog(TAG, "show hidden = " + hidden);
     if (!hidden) {
       // 请求网络展示界面
-      refreshCus();
+      if (mIsFirst) {
+        refreshCus();
+        mIsFirst = false;
+      }
     }
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    LogUtil.showELog(TAG, "onResume");
+    LogUtil.showELog(TAG, "show onResume");
     // 第一次进来的时候，会走到这里而不走onHiddenChanged
     // 请求网络展示界面
-    refreshCus();
+    if (mIsFirst) {
+      refreshCus();
+      mIsFirst = false;
+    }
   }
 
   private void refreshCus() {
@@ -217,20 +208,6 @@ public class IndexFragment extends BaseFragment {
       }
     });
 
-//    pullToRefreshLayout.setRefreshListener(new BaseRefreshListener().OnRefreshListener() {
-//
-//      @Override
-//      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-//        refresh();
-//      }
-//
-//      @Override
-//      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-//        mPageNumer += 1;
-//        loadMore(mPageNumer);
-//      }
-//    });
-
     pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
       @Override
       public void refresh() {
@@ -239,15 +216,21 @@ public class IndexFragment extends BaseFragment {
 
       @Override
       public void loadMore() {
-        mPageNumer += 1;
-        loadMoreCus(mPageNumer);
+        if (mTotal < mPageNumer * pageSize) {
+          Utils.show("没有更多数据啦");
+          pullToRefreshLayout.finishLoadMore();
+        } else {
+          mPageNumer += 1;
+          loadMoreCus(mPageNumer);
+        }
       }
     });
     setNetLisenter(new RequestResponse() {
       @Override
       public void failure(Exception e) {
         LogUtil.showELog(TAG, "failure(Exception e) e:" + e.toString());
-//        pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+        pullToRefreshLayout.finishRefresh();
+        pullToRefreshLayout.finishLoadMore();
       }
 
       @Override
@@ -267,6 +250,8 @@ public class IndexFragment extends BaseFragment {
     try {
       JSONObject jsonObject = new JSONObject(data);
       int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
+      int total = Utils.jsonObjectIntGetValue(jsonObject, "total");
+      mTotal = total;
       if (code == 0) {
         JSONArray ja = jsonObject.getJSONArray("rows");
         if (ja != null) {
@@ -283,10 +268,17 @@ public class IndexFragment extends BaseFragment {
 //          pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
           pullToRefreshLayout.finishRefresh();
         } else if (mRefresh == 2) {
+          int size = mIndexShowAdapter.getSize();
+
           mIndexShowAdapter.appendData(mData);
 //          pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
           pullToRefreshLayout.finishLoadMore();
+
+          contentView.smoothScrollToPosition(size);
         }
+      } else {
+        pullToRefreshLayout.finishRefresh();
+        pullToRefreshLayout.finishLoadMore();
       }
     } catch (Exception e) {
       LogUtil.showELog(TAG, "parseData(String data) catch (JSONException e)"

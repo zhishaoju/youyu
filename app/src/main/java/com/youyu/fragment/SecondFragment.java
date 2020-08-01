@@ -2,7 +2,7 @@ package com.youyu.fragment;
 
 import static com.youyu.utils.Contants.Net.ACTIVITY_LIST;
 import static com.youyu.utils.Contants.Net.BASE_URL;
-import static com.youyu.utils.Contants.Net.POST_COMMENT_LIST;
+import static com.youyu.utils.Contants.PAGE_SIZE;
 import static com.youyu.utils.Contants.USER_ID;
 
 import android.content.Intent;
@@ -56,7 +56,10 @@ public class SecondFragment extends BaseFragment {
 
   private int mPageNumer = 1;
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
-  private int pageSize = 10;
+  private int pageSize = PAGE_SIZE;
+  private int mTotal;
+
+  private boolean mIsFirst = true;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +76,10 @@ public class SecondFragment extends BaseFragment {
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
       // 请求网络
-      refreshCus();
+      if (mIsFirst) {
+        refreshCus();
+        mIsFirst = false;
+      }
     }
   }
 
@@ -83,7 +89,10 @@ public class SecondFragment extends BaseFragment {
     LogUtil.showELog(TAG, "hidden = " + hidden);
     if (!hidden) {
       // 请求网络展示界面
-      refreshCus();
+      if (mIsFirst) {
+        refreshCus();
+        mIsFirst = false;
+      }
     }
   }
 
@@ -91,9 +100,13 @@ public class SecondFragment extends BaseFragment {
   public void onResume() {
     super.onResume();
     LogUtil.showELog(TAG, "onResume");
+    LogUtil.showELog(TAG, "onResume");
     // 第一次进来的时候，会走到这里而不走onHiddenChanged
     // 请求网络展示界面
-    refreshCus();
+    if (mIsFirst) {
+      refreshCus();
+      mIsFirst = false;
+    }
   }
 
   private void initValue() {
@@ -145,20 +158,6 @@ public class SecondFragment extends BaseFragment {
       }
     });
 
-//    refreshView.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
-//
-//      @Override
-//      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-//        refreshCus();
-//      }
-//
-//      @Override
-//      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-//        mPageNumer += 1;
-//        loadMoreCus(mPageNumer);
-//      }
-//    });
-
     pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
       @Override
       public void refresh() {
@@ -167,8 +166,13 @@ public class SecondFragment extends BaseFragment {
 
       @Override
       public void loadMore() {
-        mPageNumer += 1;
-        loadMoreCus(mPageNumer);
+        if (mTotal < mPageNumer * pageSize) {
+          Utils.show("没有更多数据啦");
+          pullToRefreshLayout.finishLoadMore();
+        } else {
+          mPageNumer += 1;
+          loadMoreCus(mPageNumer);
+        }
       }
     });
 
@@ -176,6 +180,7 @@ public class SecondFragment extends BaseFragment {
       @Override
       public void failure(Exception e) {
         LogUtil.showELog(TAG, "failure(Exception e) e:" + e.toString());
+        pullToRefreshLayout.finishRefresh();
         pullToRefreshLayout.finishLoadMore();
       }
 
@@ -205,6 +210,8 @@ public class SecondFragment extends BaseFragment {
     try {
       JSONObject jsonObject = new JSONObject(data);
       int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
+      int total = Utils.jsonObjectIntGetValue(jsonObject, "total");
+      mTotal = total;
       if (code == 0) {
         JSONArray ja = jsonObject.getJSONArray("rows");
         if (ja != null) {
@@ -223,9 +230,17 @@ public class SecondFragment extends BaseFragment {
           mActiveAdapter.updateData(mActiveModelList);
           pullToRefreshLayout.finishRefresh();
         } else if (mRefresh == 2) {
+          int size = mActiveAdapter.getSize();
+
           mActiveAdapter.appendData(mActiveModelList);
           pullToRefreshLayout.finishLoadMore();
+
+          contentView.smoothScrollToPosition(size);
+
         }
+      } else {
+        pullToRefreshLayout.finishRefresh();
+        pullToRefreshLayout.finishLoadMore();
       }
     } catch (Exception e) {
       LogUtil.showELog(TAG, "parseData(String data) catch (JSONException e)"
@@ -254,7 +269,7 @@ public class SecondFragment extends BaseFragment {
   private void loadMoreCus(int pageNum) {
     LogUtil.showDLog(TAG, "loadMore(int pageNum) pageNum = " + pageNum);
     mRefresh = 2;
-    String url = BASE_URL + POST_COMMENT_LIST;
+    String url = BASE_URL + ACTIVITY_LIST;
     JSONObject jsonObject = new JSONObject();
     try {
       jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));

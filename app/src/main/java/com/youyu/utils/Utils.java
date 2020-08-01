@@ -5,6 +5,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -57,6 +59,18 @@ public class Utils {
   private static final String UPLOAD_PIC_PATH =
       Environment.getExternalStorageDirectory() + "/upload";
 
+
+  public static long getVersionCode() {
+    long versionCode = 0;
+    try {
+      PackageInfo packageInfo = MainApplication.mInstance.getPackageManager().getPackageInfo("", 0);
+      versionCode = packageInfo.getLongVersionCode();
+    } catch (NameNotFoundException e) {
+      e.printStackTrace();
+      LogUtil.showELog(TAG, "getVersionCode e = " + e.getLocalizedMessage());
+    }
+    return versionCode;
+  }
 
   public static void show(String msg) {
     if (!TextUtils.isEmpty(msg) && !("null".equals(msg))) {

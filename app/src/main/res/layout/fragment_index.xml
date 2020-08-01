@@ -34,7 +34,7 @@
   <com.jwenfeng.library.pulltorefresh.PullToRefreshLayout
     android:id="@+id/pull_ro_refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="60dp">
     <com.youyu.cusListview.CusRecycleView
       android:id="@+id/content_view"

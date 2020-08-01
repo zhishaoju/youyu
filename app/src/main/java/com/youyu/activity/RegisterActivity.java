@@ -2,6 +2,7 @@ package com.youyu.activity;
 
 import static com.youyu.utils.Contants.Net.BASE_URL;
 import static com.youyu.utils.Contants.Net.CODE;
+import static com.youyu.utils.Contants.USER_ID;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +16,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.youyu.R;
 import com.youyu.net.NetInterface.RequestResponse;
+import com.youyu.utils.Contants.NetStatus;
 import com.youyu.utils.LogUtil;
+import com.youyu.utils.SharedPrefsUtil;
 import com.youyu.utils.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,6 +61,16 @@ public class RegisterActivity extends BaseActivity {
       @Override
       public void success(String data) {
         LogUtil.showELog(TAG, "setNetListener success data :" + data);
+        try {
+          JSONObject jsonObject1 = new JSONObject(data);
+          int code = Utils.jsonObjectIntGetValue(jsonObject1, "code");
+          if (NetStatus.OK == code) {
+            JSONObject jsonObject = jsonObject1.getJSONObject("data");
+            SharedPrefsUtil.put(USER_ID, jsonObject.getString("id"));
+          }
+        } catch (Exception e) {
+          LogUtil.showELog(TAG, "success e : " + e.getLocalizedMessage());
+        }
 //        Intent intent = new Intent(RegisterActivity.this, RegisterSetPassActivity.class);
 //        intent.putExtra("mobile", etPhone.getText().toString());
 //        startActivity(intent);
@@ -83,7 +96,7 @@ public class RegisterActivity extends BaseActivity {
           post(url, param);
 
           finish();
-          
+
           Intent intent = new Intent(RegisterActivity.this, RegisterSetPassActivity.class);
           intent.putExtra("mobile", etPhone.getText().toString());
           startActivity(intent);

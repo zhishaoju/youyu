@@ -2,6 +2,7 @@ package com.youyu.activity;
 
 import static com.youyu.utils.Contants.Net.ACTIVITY_LIST;
 import static com.youyu.utils.Contants.Net.BASE_URL;
+import static com.youyu.utils.Contants.PAGE_SIZE;
 import static com.youyu.utils.Contants.USER_ID;
 
 import android.content.Intent;
@@ -76,7 +77,8 @@ public class ActiveListActivity extends BaseActivity {
 
   private int mPageNumer = 1;
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
-  private int pageSize = 10;
+  private int pageSize = PAGE_SIZE;
+  private int mTotal;
 
   private ArrayList<ActiveModel> mData = new ArrayList<>();
 
@@ -149,29 +151,20 @@ public class ActiveListActivity extends BaseActivity {
 
       @Override
       public void loadMore() {
-        mPageNumer += 1;
-        loadMoreCus(mPageNumer);
+        if (mTotal < mPageNumer * pageSize) {
+          Utils.show("没有更多数据啦");
+          pullToRefreshLayout.finishLoadMore();
+        } else {
+          mPageNumer += 1;
+          loadMoreCus(mPageNumer);
+        }
       }
     });
 
-//    refreshView.setOnRefreshListener(new OnRefreshListener() {
-//
-//      @Override
-//      public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-//        refresh();
-//      }
-//
-//      @Override
-//      public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-//        mPageNumer += 1;
-//        loadMore(mPageNumer);
-//      }
-//    });
     setNetListener(new RequestResponse() {
       @Override
       public void failure(Exception e) {
         LogUtil.showELog(TAG, "failure(Exception e) e:" + e.toString());
-//        pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
       }
 
       @Override
@@ -225,6 +218,8 @@ public class ActiveListActivity extends BaseActivity {
     try {
       JSONObject jsonObject = new JSONObject(data);
       int code = Utils.jsonObjectIntGetValue(jsonObject, "code");
+      int total = Utils.jsonObjectIntGetValue(jsonObject, "total");
+      mTotal = total;
       if (code == 0) {
         JSONArray ja = jsonObject.getJSONArray("rows");
         if (ja != null) {

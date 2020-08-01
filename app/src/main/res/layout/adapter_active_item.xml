@@ -18,7 +18,8 @@
       android:layout_height="wrap_content"
       android:text="参与："
       android:textColor="@color/gray"
-      android:textSize="@dimen/font_20" />
+      android:textSize="@dimen/font_20"
+      android:visibility="gone" />
 
     <TextView
       android:id="@+id/tv_active_name"

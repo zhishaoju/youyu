@@ -188,3 +188,32 @@
 -keep public class com.tencent.bugly.**{*;}
 -keep class android.support.**{*;}
 
+-dontwarn com.teprinciple.updateapputils.**
+-dontwarn constacne.**
+-dontwarn extension.**
+-dontwarn listener.**
+-dontwarn model.**
+-dontwarn ui.**
+-dontwarn update.**
+-dontwarn util.**
+-dontwarn java.nio.*
+-dontwarn kotlinx.coroutines.**
+-dontwarn kotlin.sequences.**
+
+-keep public class com.teprinciple.updateapputils.**{*;}
+-keep public class constacne.**{*;}
+-keep public class extension.**{*;}
+-keep public class listener.**{*;}
+-keep public class model.**{*;}
+-keep public class ui.**{*;}
+-keep public class update.**{*;}
+-keep public class util.**{*;}
+
+-keep public class org.jetbrains.kotlinx.**{*;}
+-keep public class org.jetbrains.kotlin.**{*;}
+-keep public class com.liulishuo.filedownloader.**{*;}
+-keep public class java.nio.**{*;}
+-keep public class kotlinx.coroutines.**{*;}
+-keep public class kotlin.sequences.**{*;}
+
+
