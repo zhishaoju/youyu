@@ -2,7 +2,6 @@ package com.youyu.activity;
 
 import static com.youyu.utils.Contants.Net.BASE_URL;
 import static com.youyu.utils.Contants.Net.REGISTER;
-import static com.youyu.utils.Contants.NetStatus.OK;
 import static com.youyu.utils.Contants.NetStatus.USER_EXIST;
 import static com.youyu.utils.Contants.USER_ID;
 import static com.youyu.utils.Contants.USER_PASSWORD;
@@ -85,8 +84,9 @@ public class RegisterSetPassActivity extends BaseActivity {
         try {
           jsonObject = new JSONObject(data);
           int state = jsonObjectIntGetValue(jsonObject, "code");
-          String userId = jsonObjectStringGetValue(jsonObject, "id");
-
+          JSONObject dataJson = jsonObject.getJSONObject("data");
+          String userId = jsonObjectStringGetValue(dataJson, "id");
+          LogUtil.showDLog(TAG, "userId = " + userId);
           if (Contants.NetStatus.OK == state) {
             if (mIntent != null) {
               SharedPrefsUtil.put(USER_PHONE, mIntent.getStringExtra("mobile"));
