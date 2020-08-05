@@ -5,10 +5,12 @@ import static com.youyu.utils.Contants.Net.BASE_URL;
 import static com.youyu.utils.Contants.Net.COLLECTION_ADD;
 import static com.youyu.utils.Contants.Net.COMMENT_DETAIL;
 import static com.youyu.utils.Contants.Net.COMMENT_LIST;
+import static com.youyu.utils.Contants.Net.POST_UPDATE;
 import static com.youyu.utils.Contants.Net.SEND_COMMENT;
 import static com.youyu.utils.Contants.PAGE_SIZE;
 import static com.youyu.utils.Contants.POST_ID;
 import static com.youyu.utils.Contants.USER_ID;
+import static com.youyu.utils.Contants.USER_PHONE;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -112,7 +114,10 @@ public class VideoDetailActivity extends BaseActivity {
 
   private Intent mIntent;
 
+  //1：加载详情; 2:评论列表；3: 发表评论；4:收藏；5:点赞
   private int flag = -1;
+
+  private VideoPlayerItemInfo mVideoPlayerItemInfo;
 
   private int mPageNumer = 1;
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
@@ -204,7 +209,7 @@ public class VideoDetailActivity extends BaseActivity {
     setNetListener(new RequestResponse() {
       @Override
       public void failure(Exception e) {
-
+        LogUtil.showELog(TAG, "setNetListener e " + e);
       }
 
       @Override
@@ -217,33 +222,33 @@ public class VideoDetailActivity extends BaseActivity {
             if (code == 0) {
               JSONObject jo = jsonObject.getJSONObject("data");
               if (jo != null) {
-                VideoPlayerItemInfo videoPlayerItemInfo = new Gson()
+                mVideoPlayerItemInfo = new Gson()
                     .fromJson(jo.toString(), VideoPlayerItemInfo.class);
-                videoPlayerItemInfo.postId = mPostId;
+                mVideoPlayerItemInfo.postId = mPostId;
                 Glide.with(VideoDetailActivity.this)
-                    .load(videoPlayerItemInfo.coverImage)
+                    .load(mVideoPlayerItemInfo.coverImage)
                     .into(ivBg);
 
                 Glide.with(VideoDetailActivity.this)
-                    .load(videoPlayerItemInfo.avatarUrl)
+                    .load(mVideoPlayerItemInfo.avatarUrl)
                     .into(civHeadPic);
 
-                tvUserName.setText(videoPlayerItemInfo.userName + "");
+                tvUserName.setText(mVideoPlayerItemInfo.userName + "");
                 String timeNum =
-                    videoPlayerItemInfo.createTime + " " + videoPlayerItemInfo.readTotal + "次观看";
+                    mVideoPlayerItemInfo.createTime + " " + mVideoPlayerItemInfo.readTotal + "次观看";
                 tvTimeNum.setText(timeNum);
 
-                if (TextUtils.isEmpty(videoPlayerItemInfo.description)) {
-                  tvContentDesc.setText(videoPlayerItemInfo.title + "");
+                if (TextUtils.isEmpty(mVideoPlayerItemInfo.description)) {
+                  tvContentDesc.setText(mVideoPlayerItemInfo.title + "");
                 } else {
-                  tvContentDesc.setText(videoPlayerItemInfo.description + "");
+                  tvContentDesc.setText(mVideoPlayerItemInfo.description + "");
                 }
 
-                tvVideoZan.setText(videoPlayerItemInfo.agreeTotal + "");
-                tvVideoPinglun.setText(videoPlayerItemInfo.commentTotal + "");
+                tvVideoZan.setText(mVideoPlayerItemInfo.agreeTotal + "");
+                tvVideoPinglun.setText(mVideoPlayerItemInfo.commentTotal + "");
 
-                videoPlayer.setPlayData(videoPlayerItemInfo);
-                videoPlayer.initViewDisplay(videoPlayerItemInfo.duration);
+                videoPlayer.setPlayData(mVideoPlayerItemInfo);
+                videoPlayer.initViewDisplay(mVideoPlayerItemInfo.duration);
 
                 videoPlayer.mediaController.clickPlay();
               }
@@ -288,6 +293,17 @@ public class VideoDetailActivity extends BaseActivity {
             LogUtil.showELog(TAG, "4 parseData(String data) catch (JSONException e)"
                 + " 异常：" + e.toString());
           }
+        } else if (5 == flag) {
+          // 点赞
+          try {
+            JSONObject jsonObject = new JSONObject(data);
+            JSONObject da = jsonObject.getJSONObject("data");
+            int agreeTotal = da.getInt("agreeTotal");
+
+            tvVideoZan.setText("" + agreeTotal);
+          } catch (Exception e) {
+            LogUtil.showELog(TAG, "parseData(String data) 点赞和踩e：" + e);
+          }
         }
       }
     });
@@ -320,6 +336,8 @@ public class VideoDetailActivity extends BaseActivity {
           mCommentListAdapter.appendData(mData);
           pullToRefreshLayout.finishLoadMore();
         }
+
+        tvVideoPinglun.setText("" + mTotal);
       }
     } catch (Exception e) {
       LogUtil.showELog(TAG, "parseData(String data) catch (JSONException e)"
@@ -383,14 +401,17 @@ public class VideoDetailActivity extends BaseActivity {
   @Override
   protected void onPause() {
     super.onPause();
-    if (MediaHelper.getInstance().isPlaying()) {
-      MediaHelper.release();
-    }
+    LogUtil.showELog(TAG, "onPause()");
+//    if (MediaHelper.getInstance().isPlaying()) {
+//      MediaHelper.release();
+//    }
+    videoPlayer.mediaController.destroy();
   }
 
   @OnClick({R.id.fl_back, R.id.ll_attention, R.id.et_comment_content,
       R.id.ll_zan, R.id.ll_pinglun, R.id.ll_shoucang, R.id.ll_share})
   public void onViewClicked(View view) {
+    String phone = SharedPrefsUtil.get(USER_PHONE, "");
     switch (view.getId()) {
       case R.id.fl_back:
         finish();
@@ -400,13 +421,28 @@ public class VideoDetailActivity extends BaseActivity {
       case R.id.et_comment_content:
         break;
       case R.id.ll_zan:
+        if (TextUtils.isEmpty(phone)) {
+          Utils.show("您还没有登录~~");
+        } else {
+          zan();
+        }
         break;
       case R.id.ll_pinglun:
+        if (TextUtils.isEmpty(phone)) {
+          Utils.show("您还没有登录~~");
+        }
         break;
       case R.id.ll_shoucang:
-        shouCang();
+        if (TextUtils.isEmpty(phone)) {
+          Utils.show("您还没有登录~~");
+        } else {
+          shouCang();
+        }
         break;
       case R.id.ll_share:
+        if (TextUtils.isEmpty(phone)) {
+          Utils.show("您还没有登录~~");
+        }
         break;
       default:
         break;
@@ -438,19 +474,23 @@ public class VideoDetailActivity extends BaseActivity {
     }
   };
 
-  public void uploadStatue() {
+  public void zan() {
+    LogUtil.showELog(TAG, "uploadStatue");
     flag = 5;
-    String url = BASE_URL + SEND_COMMENT;
-    String params = "";
+    String url = BASE_URL + POST_UPDATE;
+    JSONObject jsonObject = new JSONObject();
     try {
-      JSONObject jsonObject = new JSONObject();
       jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
-      jsonObject.put("postId", mPostId);
-      params = jsonObject.toString();
-    } catch (Exception e) {
-      LogUtil.showELog(TAG, "shouCang e is " + e.getLocalizedMessage());
+      if (mVideoPlayerItemInfo != null) {
+        jsonObject.put("id", mVideoPlayerItemInfo.id);
+      }
+      jsonObject.put("agreeTotal", 1);
+      jsonObject.put("footTotal", 0);
+    } catch (JSONException e) {
+      LogUtil.showELog(TAG, "uploadStatue refresh e :" + e.getLocalizedMessage());
     }
-    post(url, params);
+    String param = jsonObject.toString();
+    post(url, param);
   }
 
 }

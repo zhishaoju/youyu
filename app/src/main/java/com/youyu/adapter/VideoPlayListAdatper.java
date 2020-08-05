@@ -105,28 +105,19 @@ public class VideoPlayListAdatper extends Adapter {
     viewHolder.ivZan.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mOnClickListener.onViewClick(1, info.id);
+        mOnClickListener.onViewClick(1, info, position);
       }
     });
 
     viewHolder.ivCai.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mOnClickListener.onViewClick(2, info.id);
+        mOnClickListener.onViewClick(2, info, position);
       }
     });
 
-    //实现点击效果
-    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Intent intent = new Intent(context, VideoDetailActivity.class);
-        // 把Video id 传过去
-        intent.putExtra("postId", info.id);
-        context.startActivity(intent);
-      }
-    });
   }
+
 
   @Override
   public int getItemCount() {
@@ -177,6 +168,12 @@ public class VideoPlayListAdatper extends Adapter {
     return context;
   }
 
+  public void updateOneItem(VideoPlayerItemInfo videoPlayerItemInfo, int position) {
+    VideoPlayerItemInfo v = videoPlayerItemInfoList.get(position);
+    v = videoPlayerItemInfo;
+    notifyItemChanged(position);
+  }
+
   public void updateData(ArrayList<VideoPlayerItemInfo> data) {
     videoPlayerItemInfoList.clear();
     videoPlayerItemInfoList.addAll(data);
@@ -196,6 +193,6 @@ public class VideoPlayListAdatper extends Adapter {
   public interface OnClickListener {
 
     // flag = 1 赞； flag = 2 踩
-    void onViewClick(int flag, String postId);
+    void onViewClick(int flag, VideoPlayerItemInfo videoPlayerItemInfo, int position);
   }
 }

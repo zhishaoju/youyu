@@ -62,7 +62,8 @@ public class CollectActivity extends BaseActivity {
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
   private int pageSize = PAGE_SIZE;
   private ArrayList<VideoPlayerItemInfo> mData = new ArrayList<>();
-
+  private VideoPlayerItemInfo mVideoPlayerItemInfo;
+  private int mPosition = -1;
   private int mNetRequestFlag = -1;
 
   @Override
@@ -80,13 +81,16 @@ public class CollectActivity extends BaseActivity {
     mIndexShowAdapter.setOnViewClick(new OnClickListener() {
 
       @Override
-      public void onViewClick(int flag, String postId) {
+      public void onViewClick(int flag, VideoPlayerItemInfo v, int position) {
+        mVideoPlayerItemInfo = v;
+        mPosition = position;
+
         mNetRequestFlag = 2;
         String url = BASE_URL + POST_UPDATE;
         JSONObject jsonObject = new JSONObject();
         try {
           jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
-          jsonObject.put("id", postId);
+          jsonObject.put("id", v.id);
           if (flag == 1) {
             jsonObject.put("agreeTotal", 1);
             jsonObject.put("footTotal", 0);
@@ -138,6 +142,28 @@ public class CollectActivity extends BaseActivity {
         if (mNetRequestFlag == 1) {
           parseData(data);
         }
+        if (mNetRequestFlag == 2) {
+          // 点赞和踩的逻辑
+          LogUtil.showDLog(TAG, "parseData(String data) 点赞和踩解析数据data：" + data);
+          try {
+            JSONObject jsonObject = new JSONObject(data);
+            JSONObject da = jsonObject.getJSONObject("data");
+            int footTotal = da.getInt("footTotal");
+            int agreeTotal = da.getInt("agreeTotal");
+            int commentTotal = da.getInt("commentTotal");
+            if (mVideoPlayerItemInfo != null) {
+              mVideoPlayerItemInfo.footTotal = footTotal;
+              mVideoPlayerItemInfo.agreeTotal = agreeTotal;
+              mVideoPlayerItemInfo.commentTotal = commentTotal;
+            }
+            if (mPosition != -1) {
+              mIndexShowAdapter.updateOneItem(mVideoPlayerItemInfo, mPosition);
+            }
+          } catch (Exception e) {
+            LogUtil.showELog(TAG, "parseData(String data) 点赞和踩e：" + e);
+          }
+        }
+
       }
     });
   }

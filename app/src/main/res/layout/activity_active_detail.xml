@@ -30,7 +30,8 @@
         android:layout_marginLeft="@dimen/margin_10"
         android:text="名称："
         android:textColor="@color/black"
-        android:textSize="@dimen/font_20" />
+        android:textSize="@dimen/font_20"
+        android:visibility="gone" />
 
       <TextView
         android:id="@+id/tv_active_name"
@@ -72,8 +73,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="57dp"
-        android:layout_marginTop="40dp">
-
+        android:layout_marginTop="45dp">
+<!--        android:layout_marginTop="40dp"-->
         <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -94,11 +95,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="57dp"
+        android:visibility="gone"
         android:layout_marginTop="10dp">
 
         <TextView
           android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
+          android:layout_height="match_parent"
           android:text="活动倒计时："
           android:textColor="@color/white"
           android:textSize="@dimen/font_14" />
@@ -116,8 +118,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="57dp"
-        android:layout_marginTop="10dp">
-
+        android:layout_marginTop="25dp">
+<!--        android:layout_marginTop="10dp"-->
         <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"

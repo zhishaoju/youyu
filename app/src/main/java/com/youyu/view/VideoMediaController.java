@@ -347,7 +347,7 @@ public class VideoMediaController extends RelativeLayout {
     seekBar.setSecondaryProgress(0);
   }
 
-  @OnClick({R.id.iv_replay, R.id.iv_share, R.id.iv_play, R.id.iv_fullscreen})
+  @OnClick({R.id.iv_replay, R.id.iv_share, R.id.iv_play, R.id.iv_fullscreen, R.id.rl_play_finish})
   public void onClick(View view) {
     switch (view.getId()) {
       case R.id.iv_replay:
@@ -371,6 +371,13 @@ public class VideoMediaController extends RelativeLayout {
         clickPlay();
         break;
       case R.id.iv_fullscreen:
+        break;
+      case R.id.rl_play_finish:
+        Intent intent = new Intent(adapter.getContext(),
+            VideoDetailActivity.class);
+        // 把Video id 传过去
+        intent.putExtra("postId", myVideoPlayer.info.id);
+        adapter.getContext().startActivity(intent);
         break;
       default:
         break;
@@ -464,6 +471,11 @@ public class VideoMediaController extends RelativeLayout {
     seekBar.setProgress(0);
     seekBar.setSecondaryProgress(0);
     removeAllMessage();
+    initViewDisplay(0);
+    //设置视频播放时的点击界面
+    setOnTouchListener(null);
+    //设置SeekBar的拖动监听
+    seekBar.setOnSeekBarChangeListener(null);
   }
 
   private VideoPlayer myVideoPlayer;

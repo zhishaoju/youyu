@@ -55,6 +55,8 @@ public class IndexFragment extends BaseFragment {
   private VideoPlayListAdatper mIndexShowAdapter;
   private LinearLayoutManager lm;
   private ArrayList<VideoPlayerItemInfo> mData = new ArrayList<>();
+  private VideoPlayerItemInfo mVideoPlayerItemInfo;
+  private int mPosition = -1;
 
   private int mNetRequestFlag = -1;
 
@@ -183,16 +185,18 @@ public class IndexFragment extends BaseFragment {
 
 
   private void initListener() {
-
+    // flag = 1 赞； flag = 2 踩
     mIndexShowAdapter.setOnViewClick(new OnClickListener() {
       @Override
-      public void onViewClick(int flag, String postId) {
+      public void onViewClick(int flag, VideoPlayerItemInfo videoPlayerItemInfo, int position) {
+        mVideoPlayerItemInfo = videoPlayerItemInfo;
+        mPosition = position;
         mNetRequestFlag = 2;
         String url = BASE_URL + POST_UPDATE;
         JSONObject jsonObject = new JSONObject();
         try {
           jsonObject.put("userId", SharedPrefsUtil.get(USER_ID, ""));
-          jsonObject.put("id", postId);
+          jsonObject.put("id", videoPlayerItemInfo.id);
           if (flag == 1) {
             jsonObject.put("agreeTotal", 1);
             jsonObject.put("footTotal", 0);
@@ -236,7 +240,25 @@ public class IndexFragment extends BaseFragment {
       @Override
       public void success(String data) {
         if (mNetRequestFlag == 2) {
-
+          // 点赞和踩的逻辑
+          LogUtil.showDLog(TAG, "parseData(String data) 点赞和踩解析数据data：" + data);
+          try {
+            JSONObject jsonObject = new JSONObject(data);
+            JSONObject da = jsonObject.getJSONObject("data");
+            int footTotal = da.getInt("footTotal");
+            int agreeTotal = da.getInt("agreeTotal");
+            int commentTotal = da.getInt("commentTotal");
+            if (mVideoPlayerItemInfo != null) {
+              mVideoPlayerItemInfo.footTotal = footTotal;
+              mVideoPlayerItemInfo.agreeTotal = agreeTotal;
+              mVideoPlayerItemInfo.commentTotal = commentTotal;
+            }
+            if (mPosition != -1) {
+              mIndexShowAdapter.updateOneItem(mVideoPlayerItemInfo, mPosition);
+            }
+          } catch (Exception e) {
+            LogUtil.showELog(TAG, "parseData(String data) 点赞和踩e：" + e);
+          }
         } else {
           parseData(data);
         }

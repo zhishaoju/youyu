@@ -166,6 +166,7 @@
           android:layout_height="match_parent">
           <ImageView
             android:layout_width="30dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="30dp"
             android:src="@mipmap/xialian" />
         </FrameLayout>
@@ -216,7 +217,8 @@
         </LinearLayout>
         <LinearLayout
           android:id="@+id/ll_share"
-          style="@style/VideoDetailLLStyle">
+          style="@style/VideoDetailLLStyle"
+          android:layout_marginRight="10dp">
           <ImageView
             android:id="@+id/iv_video_share"
             style="@style/VideoDetailIvStyle"

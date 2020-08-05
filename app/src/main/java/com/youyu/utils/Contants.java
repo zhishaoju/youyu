@@ -42,7 +42,6 @@ public interface Contants {
   }
 
   interface NetStatus {
-
     int OK = 0;         // 操作成功
     int USER_NOT_EXIST = 1; // 用户不存在
     int USER_EXIST = 2; // 用户已经存在
