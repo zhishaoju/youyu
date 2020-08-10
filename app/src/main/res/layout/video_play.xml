@@ -11,7 +11,7 @@
     android:visibility="visible" />
 
   <!--视频播放控制界面-->
-  <com.youyu.view.VideoMediaController
+  <com.youyu.gao.xiao.view.VideoMediaController
     android:id="@+id/mediaController"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />

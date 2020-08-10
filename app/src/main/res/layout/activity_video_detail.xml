@@ -16,7 +16,7 @@
       android:src="@mipmap/beautiful"
       android:visibility="visible" />
 
-    <com.youyu.view.VideoPlayer
+    <com.youyu.gao.xiao.view.VideoPlayer
       android:id="@+id/videoPlayer"
       android:layout_width="match_parent"
       android:layout_height="200dp"
@@ -39,7 +39,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical">
 
-    <com.youyu.view.CircleImageView
+    <com.youyu.gao.xiao.view.CircleImageView
       android:id="@+id/civ_head_pic"
       android:layout_width="40dp"
       android:layout_height="40dp"
@@ -107,14 +107,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!--<com.youyu.cusListview.PullToRefreshLayout
+    <!--<com.youyu.gao.xiao.cusListview.PullToRefreshLayout
       android:id="@+id/refresh_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
 
       <include layout="@layout/refresh_head" />
 
-      <com.youyu.cusListview.CusRecycleView
+      <com.youyu.gao.xiao.cusListview.CusRecycleView
         android:id="@+id/pinglun_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -123,14 +123,14 @@
 
       <include layout="@layout/load_more" />
 
-    </com.youyu.cusListview.PullToRefreshLayout>-->
+    </com.youyu.gao.xiao.cusListview.PullToRefreshLayout>-->
 
     <com.jwenfeng.library.pulltorefresh.PullToRefreshLayout
       android:id="@+id/pull_to_refresh"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_marginBottom="58dp">
-      <com.youyu.cusListview.CusRecycleView
+      <com.youyu.gao.xiao.cusListview.CusRecycleView
         android:id="@+id/content_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

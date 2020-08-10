@@ -12,7 +12,7 @@
     android:textColor="@color/black"
     android:textSize="@dimen/font_20" />
 
-  <!-- <com.youyu.cusListview.PullToRefreshLayout-->
+  <!-- <com.youyu.gao.xiao.cusListview.PullToRefreshLayout-->
   <!--    android:id="@+id/refresh_view"-->
   <!--    android:layout_width="match_parent"-->
   <!--    android:layout_height="match_parent"-->
@@ -20,7 +20,7 @@
 
   <!--    <include layout="@layout/refresh_head" />-->
 
-  <!--    <com.youyu.cusListview.CusRecycleView-->
+  <!--    <com.youyu.gao.xiao.cusListview.CusRecycleView-->
   <!--      android:id="@+id/content_view"-->
   <!--      android:layout_width="match_parent"-->
   <!--      android:layout_height="match_parent"-->
@@ -29,14 +29,14 @@
 
   <!--    <include layout="@layout/load_more" />-->
 
-  <!--  </com.youyu.cusListview.PullToRefreshLayout>-->
+  <!--  </com.youyu.gao.xiao.cusListview.PullToRefreshLayout>-->
 
   <com.jwenfeng.library.pulltorefresh.PullToRefreshLayout
     android:id="@+id/pull_ro_refresh"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="60dp">
-    <com.youyu.cusListview.CusRecycleView
+    <com.youyu.gao.xiao.cusListview.CusRecycleView
       android:id="@+id/content_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"

@@ -12,7 +12,7 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
 
-    <com.youyu.view.CircleImageView
+    <com.youyu.gao.xiao.view.CircleImageView
       android:id="@+id/civ_head_pic"
       android:layout_width="20dp"
       android:layout_height="20dp"

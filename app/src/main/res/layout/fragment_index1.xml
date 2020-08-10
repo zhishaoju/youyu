@@ -4,7 +4,7 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <com.youyu.cusListview.PullToRefreshLayout
+  <com.youyu.gao.xiao.cusListview.PullToRefreshLayout
     android:id="@+id/refresh_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,7 +12,7 @@
 
     <include layout="@layout/refresh_head" />
 
-    <com.youyu.cusListview.PullableGridView
+    <com.youyu.gao.xiao.cusListview.PullableGridView
       android:id="@+id/content_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -26,5 +26,5 @@
 
     <include layout="@layout/load_more" />
 
-  </com.youyu.cusListview.PullToRefreshLayout>
+  </com.youyu.gao.xiao.cusListview.PullToRefreshLayout>
 </LinearLayout>

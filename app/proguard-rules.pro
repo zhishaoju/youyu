@@ -74,7 +74,7 @@
 -keep public class * extends android.preference.Preference
 -keep public class * extends android.view.View
 -keep public class com.android.vending.licensing.ILicensingService
--keep public class * extends com.youyu.cusListview.PullToRefreshLayout
+-keep public class * extends com.youyu.gao.xiao.cusListview.PullToRefreshLayout
 
 # 保留support下的所有类及其内部类
 -keep class android.support.** {*;}
@@ -181,7 +181,7 @@
 }
 
 #bean
--keep class com.youyu.bean.**{*;}
+-keep class com.youyu.gao.xiao.bean.**{*;}
 
 #bugly
 -dontwarn com.tencent.bugly.**

@@ -6,7 +6,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId "com.youyu"
+        applicationId "com.youyu.gao.xiao"
         minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
