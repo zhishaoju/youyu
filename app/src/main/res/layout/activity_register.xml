@@ -57,7 +57,8 @@
     android:layout_height="30dp"
     android:layout_marginTop="20dp"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:visibility="invisible">
 
     <View
       android:layout_width="0dp"
@@ -86,7 +87,8 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="20dp"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:visibility="invisible">
 
     <FrameLayout
       android:id="@+id/fl_chat"
@@ -132,11 +134,11 @@
 
     <CheckBox
       android:id="@+id/cb_protocol"
-      android:scaleX="0.6"
-      android:scaleY="0.6"
-      android:gravity="center_vertical"
       android:layout_width="34dp"
-      android:layout_height="34dp" />
+      android:layout_height="34dp"
+      android:gravity="center_vertical"
+      android:scaleX="0.6"
+      android:scaleY="0.6" />
 
     <TextView
       android:layout_width="wrap_content"

@@ -288,7 +288,7 @@ public class ThirdFragment extends BaseFragment {
 
   @OnClick({R.id.ll_incoming_detail, R.id.ll_collect, R.id.ll_active,
       R.id.fl_pass_icon, R.id.tv_forget_password, R.id.bt_login, R.id.fl_chat, R.id.fl_qq,
-      R.id.bt_register,R.id.ll_trade_policy})
+      R.id.bt_register, R.id.ll_trade_policy})
   public void onViewClicked(View view) {
     switch (view.getId()) {
       case R.id.ll_incoming_detail:
@@ -314,6 +314,12 @@ public class ThirdFragment extends BaseFragment {
         LogUtil.showDLog(TAG, "tv_forget_password()");
         break;
       case R.id.bt_login:
+        String phone = etPhone.getText().toString();
+        String pass = etPassword.getText().toString();
+        if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(pass)) {
+          Utils.show("手机号或者密码为空");
+          break;
+        }
         mNetClickLogin = 1;
         String url = BASE_URL + LOGIN;
         JSONObject jsonObject = new JSONObject();
