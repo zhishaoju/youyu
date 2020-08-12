@@ -28,8 +28,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.google.gson.Gson;
 import com.youyu.gao.xiao.activity.BaseActivity;
+import com.youyu.gao.xiao.activity.PrivacyPolicyActivity;
 import com.youyu.gao.xiao.bean.UpdateVersion;
 import com.youyu.gao.xiao.dialog.XieyiDialog;
+import com.youyu.gao.xiao.dialog.XieyiDialog.OnClickEvent;
 import com.youyu.gao.xiao.fragment.IndexFragment;
 import com.youyu.gao.xiao.fragment.SecondFragment;
 import com.youyu.gao.xiao.fragment.ThirdFragment;
@@ -98,10 +100,30 @@ public class MainActivity extends BaseActivity {
 
     initService();
     initListener();
-//    sendCheckoutVersion();
+    sendCheckoutVersion();
+
     if (!"agree".equals(SharedPrefsUtil.get("agree", ""))) {
       XieyiDialog xieyiDialog = new XieyiDialog(this);
       xieyiDialog.show();
+
+      xieyiDialog.setOnClickEvent(new OnClickEvent() {
+        @Override
+        public void agree() {
+          xieyiDialog.dismiss();
+          SharedPrefsUtil.put("agree", "agree");
+        }
+
+        @Override
+        public void noUse() {
+          xieyiDialog.dismiss();
+          MainActivity.this.finish();
+        }
+
+        @Override
+        public void privacyPolicy() {
+          startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
+        }
+      });
     }
   }
 

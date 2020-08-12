@@ -75,6 +75,7 @@
 -keep public class * extends android.view.View
 -keep public class com.android.vending.licensing.ILicensingService
 -keep public class * extends com.youyu.gao.xiao.cusListview.PullToRefreshLayout
+-keep public class * extends com.jwenfeng.library.pulltorefresh.PullToRefreshLayout
 
 # 保留support下的所有类及其内部类
 -keep class android.support.** {*;}

@@ -21,14 +21,14 @@
     android:layout_height="match_parent"
     android:background="@mipmap/login_register_bg"
     android:orientation="vertical"
-    android:visibility="gone"
     android:paddingLeft="60dp"
-    android:paddingRight="60dp">
+    android:paddingRight="60dp"
+    android:visibility="visible">
 
     <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="50dp"
+      android:layout_marginTop="100dp"
       android:text="欢迎回来"
       android:textColor="@color/black"
       android:textSize="30sp" />
@@ -135,7 +135,8 @@
       android:layout_height="30dp"
       android:layout_marginTop="20dp"
       android:gravity="center_vertical"
-      android:orientation="horizontal">
+      android:orientation="horizontal"
+      android:visibility="invisible">
 
       <View
         android:layout_width="0dp"
@@ -164,7 +165,8 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="20dp"
       android:gravity="center_vertical"
-      android:orientation="horizontal">
+      android:orientation="horizontal"
+      android:visibility="invisible">
 
       <FrameLayout
         android:id="@+id/fl_chat"
@@ -202,7 +204,7 @@
     android:layout_height="match_parent"
     android:background="@color/my_bg"
     android:orientation="vertical"
-    android:visibility="visible">
+    android:visibility="gone">
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
