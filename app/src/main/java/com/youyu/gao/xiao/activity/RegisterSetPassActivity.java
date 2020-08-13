@@ -58,8 +58,10 @@ public class RegisterSetPassActivity extends BaseActivity {
     JSONObject jsonObject = new JSONObject();
     try {
       if (mIntent != null) {
+        LogUtil.showELog(TAG, "R.id.bt_login mobile :" + mIntent.getStringExtra("mobile"));
         jsonObject.put("mobile", mIntent.getStringExtra("mobile"));
       }
+      LogUtil.showELog(TAG, "R.id.bt_login Utils.getIMEI() :" + Utils.getIMEI());
       jsonObject.put("imei", Utils.getIMEI());
       jsonObject.put("type", "0");
       jsonObject.put("code", etCode.getText().toString());
