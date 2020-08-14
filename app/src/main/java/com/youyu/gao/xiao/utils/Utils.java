@@ -1,23 +1,30 @@
 package com.youyu.gao.xiao.utils;
 
 
+import static android.content.Context.TELEPHONY_SERVICE;
+
+import android.Manifest.permission;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.Toast;
+import androidx.core.app.ActivityCompat;
 import com.youyu.gao.xiao.R;
 import com.youyu.gao.xiao.applicatioin.MainApplication;
 import com.youyu.gao.xiao.bean.ActiveItemUi;
@@ -63,7 +70,8 @@ public class Utils {
   public static long getVersionCode() {
     long versionCode = 0;
     try {
-      PackageInfo packageInfo = MainApplication.getInstance().getPackageManager().getPackageInfo("", 0);
+      PackageInfo packageInfo = MainApplication.getInstance().getPackageManager()
+          .getPackageInfo("", 0);
       versionCode = packageInfo.getLongVersionCode();
     } catch (NameNotFoundException e) {
       e.printStackTrace();
@@ -454,30 +462,63 @@ public class Utils {
   }
 
   public static String getIMEI() {
-    TelephonyManager manager = (TelephonyManager) MainApplication.getInstance()
-        .getSystemService(Context.TELEPHONY_SERVICE);
+    String imei = "";
     try {
-      Method method = manager.getClass().getMethod("getImei", int.class);
-      String imei1 = (String) method.invoke(manager, 0);
-      String imei2 = (String) method.invoke(manager, 1);
-      if (TextUtils.isEmpty(imei2)) {
-        return imei1;
-      }
-      if (!TextUtils.isEmpty(imei1)) {
-        //因为手机卡插在不同位置，获取到的imei1和imei2值会交换，所以取它们的最小值,保证拿到的imei都是同一个
-        String imei = "";
-        if (imei1.compareTo(imei2) <= 0) {
-          imei = imei1;
-        } else {
-          imei = imei2;
+      TelephonyManager tm = (TelephonyManager) MainApplication.getInstance()
+          .getSystemService(TELEPHONY_SERVICE);
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (ActivityCompat
+            .checkSelfPermission(MainApplication.getInstance(), permission.READ_PHONE_STATE)
+            != PackageManager.PERMISSION_GRANTED) {
+          // TODO: Consider calling
+          //    ActivityCompat#requestPermissions
+          // here to request the missing permissions, and then overriding
+          //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+          //                                          int[] grantResults)
+          // to handle the case where the user grants the permission. See the documentation
+          // for ActivityCompat#requestPermissions for more details.
+          return "";
         }
-        return imei;
+        imei = tm.getDeviceId();
+      } else {
+        Method method = tm.getClass().getMethod("getImei");
+        imei = (String) method.invoke(tm);
       }
     } catch (Exception e) {
-      e.printStackTrace();
-      return manager.getDeviceId();
+      LogUtil.showELog(TAG, "getIMEI e = " + e.getLocalizedMessage());
     }
-    return "";
+
+    if (TextUtils.isEmpty(imei)) {
+      imei = Settings.System.getString(
+          MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
+
+    return imei;
+
+//    TelephonyManager manager = (TelephonyManager) MainApplication.getInstance()
+//        .getSystemService(TELEPHONY_SERVICE);
+//    try {
+//      Method method = manager.getClass().getMethod("getImei", int.class);
+//      String imei1 = (String) method.invoke(manager, 0);
+//      String imei2 = (String) method.invoke(manager, 1);
+//      if (TextUtils.isEmpty(imei2)) {
+//        return imei1;
+//      }
+//      if (!TextUtils.isEmpty(imei1)) {
+//        //因为手机卡插在不同位置，获取到的imei1和imei2值会交换，所以取它们的最小值,保证拿到的imei都是同一个
+//        String imei = "";
+//        if (imei1.compareTo(imei2) <= 0) {
+//          imei = imei1;
+//        } else {
+//          imei = imei2;
+//        }
+//        return imei;
+//      }
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//      return manager.getDeviceId();
+//    }
+//    return "";
   }
 
   public static ActiveItemUi transform(int status) {
