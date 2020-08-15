@@ -11,4 +11,14 @@ public class UpdateVersion {
   public String updateTitle;
   public int appVersion;
   public String downUrl;
+
+  @Override
+  public String toString() {
+    return "UpdateVersion{" +
+        "appDesc='" + appDesc + '\'' +
+        ", updateTitle='" + updateTitle + '\'' +
+        ", appVersion=" + appVersion +
+        ", downUrl='" + downUrl + '\'' +
+        '}';
+  }
 }

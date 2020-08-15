@@ -100,4 +100,5 @@ public interface Contants {
 
   int PAGE_SIZE = 20;
 
+  String  PACKAGE_NAME = "com.youyu.gao.xiao";
 }

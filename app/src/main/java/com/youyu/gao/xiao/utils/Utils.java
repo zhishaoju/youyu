@@ -2,6 +2,7 @@ package com.youyu.gao.xiao.utils;
 
 
 import static android.content.Context.TELEPHONY_SERVICE;
+import static com.youyu.gao.xiao.utils.Contants.PACKAGE_NAME;
 
 import android.Manifest.permission;
 import android.content.ClipData;
@@ -71,7 +72,7 @@ public class Utils {
     long versionCode = 0;
     try {
       PackageInfo packageInfo = MainApplication.getInstance().getPackageManager()
-          .getPackageInfo("", 0);
+          .getPackageInfo(PACKAGE_NAME, 0);
       versionCode = packageInfo.getLongVersionCode();
     } catch (NameNotFoundException e) {
       e.printStackTrace();
