@@ -18,7 +18,8 @@ import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
 import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.youyu.gao.xiao.R;
 import com.youyu.gao.xiao.adapter.VideoPlayListAdatper;
-import com.youyu.gao.xiao.adapter.VideoPlayListAdatper.OnClickListener;
+import com.youyu.gao.xiao.adapter.VideoPlayListAdatperList;
+import com.youyu.gao.xiao.adapter.VideoPlayListAdatperList.OnClickListener;
 import com.youyu.gao.xiao.bean.VideoPlayerItemInfo;
 import com.youyu.gao.xiao.cusListview.CusRecycleView;
 import com.youyu.gao.xiao.net.NetInterface.RequestResponse;
@@ -56,7 +57,7 @@ public class CollectActivity extends BaseActivity {
 
   private Unbinder mUnBinder;
 
-  private VideoPlayListAdatper mIndexShowAdapter;
+  private VideoPlayListAdatperList mIndexShowAdapter;
   private LinearLayoutManager lm;
   private int mPageNumer = 1;
   private int mRefresh; // =1 代表刷新；=2 代表加载更多
@@ -180,7 +181,7 @@ public class CollectActivity extends BaseActivity {
 //    }
 
 //    mIndexShowAdapter.setData(data);
-    mIndexShowAdapter = new VideoPlayListAdatper(this);
+    mIndexShowAdapter = new VideoPlayListAdatperList(this);
     contentView.setAdapter(mIndexShowAdapter);
   }
 

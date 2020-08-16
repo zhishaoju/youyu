@@ -6,9 +6,11 @@ import static com.youyu.gao.xiao.utils.Contants.NetStatus.USER_EXIST;
 import static com.youyu.gao.xiao.utils.Contants.USER_ID;
 import static com.youyu.gao.xiao.utils.Contants.USER_PASSWORD;
 import static com.youyu.gao.xiao.utils.Contants.USER_PHONE;
+import static com.youyu.gao.xiao.utils.Utils.fromPropertiesGetValue;
 import static com.youyu.gao.xiao.utils.Utils.jsonObjectIntGetValue;
 import static com.youyu.gao.xiao.utils.Utils.jsonObjectStringGetValue;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -61,9 +63,13 @@ public class RegisterSetPassActivity extends BaseActivity {
         LogUtil.showELog(TAG, "R.id.bt_login mobile :" + mIntent.getStringExtra("mobile"));
         jsonObject.put("mobile", mIntent.getStringExtra("mobile"));
       }
+      String from = SharedPrefsUtil.get("from", "");
       LogUtil.showELog(TAG, "R.id.bt_login Utils.getIMEI() :" + Utils.getIMEI());
+      LogUtil.showELog(TAG, "R.id.bt_login from :" + from);
       jsonObject.put("imei", Utils.getIMEI());
       jsonObject.put("type", "0");
+      jsonObject.put("channelId", fromPropertiesGetValue("channelId"));
+      jsonObject.put("otherCode", from);
       jsonObject.put("code", etCode.getText().toString());
       jsonObject.put("password", etPassword.getText().toString());
     } catch (JSONException e) {
@@ -107,4 +113,13 @@ public class RegisterSetPassActivity extends BaseActivity {
       }
     });
   }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    setResult(Activity.RESULT_OK, mIntent);
+    finish();
+    LogUtil.showDLog(TAG, "onDestroy");
+  }
 }
+

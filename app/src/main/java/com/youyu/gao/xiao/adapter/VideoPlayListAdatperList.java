@@ -3,9 +3,7 @@ package com.youyu.gao.xiao.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -18,9 +16,8 @@ import com.bumptech.glide.Glide;
 import com.youyu.gao.xiao.R;
 import com.youyu.gao.xiao.activity.VideoDetailActivity;
 import com.youyu.gao.xiao.bean.VideoPlayerItemInfo;
-import com.youyu.gao.xiao.utils.Utils;
 import com.youyu.gao.xiao.view.CircleImageView;
-import com.youyu.gao.xiao.view.VideoPlayer;
+import com.youyu.gao.xiao.view.VideoPlayerList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +32,7 @@ import java.util.List;
  * updateDes：${TODO} ============================================================
  */
 
-public class VideoPlayListAdatper extends Adapter {
+public class VideoPlayListAdatperList extends Adapter {
 
   private Context context;
   private List<VideoPlayerItemInfo> videoPlayerItemInfoList = new ArrayList<>();
@@ -43,12 +40,12 @@ public class VideoPlayListAdatper extends Adapter {
   //记录之前播放的条目下标
   public int currentPosition = -1;
 
-  public VideoPlayListAdatper(Context context, List<VideoPlayerItemInfo> videoPlayerItemInfoList) {
+  public VideoPlayListAdatperList(Context context, List<VideoPlayerItemInfo> videoPlayerItemInfoList) {
     this.context = context;
     this.videoPlayerItemInfoList = videoPlayerItemInfoList;
   }
 
-  public VideoPlayListAdatper(Context context) {
+  public VideoPlayListAdatperList(Context context) {
     this.context = context;
   }
 
@@ -61,7 +58,7 @@ public class VideoPlayListAdatper extends Adapter {
   @Override
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(context)
-        .inflate(R.layout.adapter_view_item_info, parent, false);
+        .inflate(R.layout.adapter_view_item_info_list, parent, false);
     ListViewHolder viewHolder = new ListViewHolder(view);
     return viewHolder;
   }
@@ -106,28 +103,6 @@ public class VideoPlayListAdatper extends Adapter {
       }
     });
 
-    viewHolder.flItem.setOnTouchListener(new OnTouchListener() {
-      @Override
-      public boolean onTouch(View v, MotionEvent event) {
-        Intent intent = new Intent(context, VideoDetailActivity.class);
-        // 把Video id 传过去
-        intent.putExtra("postId", info.id);
-        context.startActivity(intent);
-        Utils.show("点击item.");
-        return true;
-      }
-    });
-
-//    viewHolder.flItem.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View v) {
-//        Intent intent = new Intent(context, VideoDetailActivity.class);
-//        // 把Video id 传过去
-//        intent.putExtra("postId", info.id);
-//        context.startActivity(intent);
-//      }
-//    });
-
     viewHolder.ivZan.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -168,7 +143,7 @@ public class VideoPlayListAdatper extends Adapter {
     @BindView(R.id.iv_bg)
     ImageView ivBg;
     @BindView(R.id.videoPlayer)
-    VideoPlayer videoPlayer;
+    VideoPlayerList videoPlayer;
     @BindView(R.id.iv_zan)
     ImageView ivZan;
     @BindView(R.id.tv_zan)

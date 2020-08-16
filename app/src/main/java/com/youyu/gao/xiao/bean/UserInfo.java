@@ -10,7 +10,7 @@ public class UserInfo {
   public int postTotal;
   public String avatarUrl;
   public String nickName;
-  public int channel;
+  public String channel;
   public String mobile;
   public String totalMoney;
   public String id;

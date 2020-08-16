@@ -19,8 +19,8 @@ import com.google.gson.Gson;
 import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
 import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.youyu.gao.xiao.R;
-import com.youyu.gao.xiao.adapter.VideoPlayListAdatper;
-import com.youyu.gao.xiao.adapter.VideoPlayListAdatper.OnClickListener;
+import com.youyu.gao.xiao.adapter.VideoPlayListAdatperList.OnClickListener;
+import com.youyu.gao.xiao.adapter.VideoPlayListAdatperList;
 import com.youyu.gao.xiao.bean.VideoPlayerItemInfo;
 import com.youyu.gao.xiao.cusListview.CusRecycleView;
 import com.youyu.gao.xiao.net.NetInterface.RequestResponse;
@@ -52,7 +52,7 @@ public class IndexFragment extends BaseFragment {
 
   private Unbinder mUnbinder;
 
-  private VideoPlayListAdatper mIndexShowAdapter;
+  private VideoPlayListAdatperList mIndexShowAdapter;
   private LinearLayoutManager lm;
   private ArrayList<VideoPlayerItemInfo> mData = new ArrayList<>();
   private VideoPlayerItemInfo mVideoPlayerItemInfo;
@@ -105,7 +105,7 @@ public class IndexFragment extends BaseFragment {
 //    }
 
 //    mIndexShowAdapter.setData(data);
-    mIndexShowAdapter = new VideoPlayListAdatper(getActivity());
+    mIndexShowAdapter = new VideoPlayListAdatperList(getActivity());
     contentView.setAdapter(mIndexShowAdapter);
   }
 

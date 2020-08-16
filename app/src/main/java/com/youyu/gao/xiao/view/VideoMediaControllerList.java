@@ -25,6 +25,7 @@ import butterknife.OnClick;
 import com.youyu.gao.xiao.R;
 import com.youyu.gao.xiao.activity.VideoDetailActivity;
 import com.youyu.gao.xiao.adapter.VideoPlayListAdatper;
+import com.youyu.gao.xiao.adapter.VideoPlayListAdatperList;
 import com.youyu.gao.xiao.utils.LogUtil;
 import com.youyu.gao.xiao.utils.MediaHelper;
 import java.text.SimpleDateFormat;
@@ -41,7 +42,7 @@ import java.util.Date;
  * 18:05 updateDes：${TODO} ============================================================
  */
 
-public class VideoMediaController extends RelativeLayout {
+public class VideoMediaControllerList extends RelativeLayout {
 
   private static final String TAG = "VideoMediaController";
   @BindView(R.id.pb_loading)
@@ -54,6 +55,8 @@ public class VideoMediaController extends RelativeLayout {
   RelativeLayout rlPlayFinish;
   @BindView(R.id.tv_title)
   TextView tvTitle;
+  @BindView(R.id.fl_click)
+  FrameLayout flClick;
   @BindView(R.id.iv_play)
   ImageView ivPlay;
   @BindView(R.id.tv_all_time)
@@ -103,22 +106,22 @@ public class VideoMediaController extends RelativeLayout {
     mHandler.sendEmptyMessageDelayed(MSG_HIDE_TITLE, 2000);
   }
 
-  public VideoMediaController(Context context) {
+  public VideoMediaControllerList(Context context) {
     this(context, null);
   }
 
-  public VideoMediaController(Context context, AttributeSet attrs) {
+  public VideoMediaControllerList(Context context, AttributeSet attrs) {
     this(context, attrs, 0);
   }
 
-  public VideoMediaController(Context context, AttributeSet attrs, int defStyleAttr) {
+  public VideoMediaControllerList(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     initView();
   }
 
   //初始化控件
   private void initView() {
-    View view = View.inflate(getContext(), R.layout.video_controller, this);
+    View view = View.inflate(getContext(), R.layout.video_controller_list, this);
     ButterKnife.bind(this, view);
 
     initViewDisplay(0);
@@ -290,9 +293,9 @@ public class VideoMediaController extends RelativeLayout {
     this.position = position;
   }
 
-  private VideoPlayListAdatper adapter;
+  private VideoPlayListAdatperList adapter;
 
-  public void setAdapter(VideoPlayListAdatper videoPlayListAdatper) {
+  public void setAdapter(VideoPlayListAdatperList videoPlayListAdatper) {
     this.adapter = videoPlayListAdatper;
   }
 
@@ -348,7 +351,8 @@ public class VideoMediaController extends RelativeLayout {
     seekBar.setSecondaryProgress(0);
   }
 
-  @OnClick({R.id.iv_replay, R.id.iv_share, R.id.iv_play, R.id.iv_fullscreen})
+  @OnClick({R.id.iv_replay, R.id.iv_share, R.id.iv_play, R.id.iv_fullscreen, R.id.rl_play_finish,
+      R.id.fl_click})
   public void onClick(View view) {
     switch (view.getId()) {
       case R.id.iv_replay:
@@ -372,6 +376,13 @@ public class VideoMediaController extends RelativeLayout {
         clickPlay();
         break;
       case R.id.iv_fullscreen:
+        break;
+      case R.id.fl_click:
+        Intent intent = new Intent(adapter.getContext(),
+            VideoDetailActivity.class);
+        // 把Video id 传过去
+        intent.putExtra("postId", myVideoPlayer.info.id);
+        adapter.getContext().startActivity(intent);
         break;
       default:
         break;
@@ -472,9 +483,9 @@ public class VideoMediaController extends RelativeLayout {
     seekBar.setOnSeekBarChangeListener(null);
   }
 
-  private VideoPlayer myVideoPlayer;
+  private VideoPlayerList myVideoPlayer;
 
-  public void setVideoPlayer(VideoPlayer myVideoPlayer) {
+  public void setVideoPlayer(VideoPlayerList myVideoPlayer) {
     this.myVideoPlayer = myVideoPlayer;
   }
 

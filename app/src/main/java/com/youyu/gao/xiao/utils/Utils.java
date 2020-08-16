@@ -70,14 +70,33 @@ public class Utils {
 
   public static long getVersionCode() {
     long versionCode = 0;
-    try {
-      PackageInfo packageInfo = MainApplication.getInstance().getPackageManager()
-          .getPackageInfo(PACKAGE_NAME, 0);
-      versionCode = packageInfo.getLongVersionCode();
-    } catch (NameNotFoundException e) {
-      e.printStackTrace();
-      LogUtil.showELog(TAG, "getVersionCode e = " + e.getLocalizedMessage());
+//    try {
+//      PackageInfo packageInfo = MainApplication.getInstance().getPackageManager()
+//          .getPackageInfo(PACKAGE_NAME, 0);
+//      versionCode = packageInfo.getLongVersionCode();
+//    } catch (NameNotFoundException e) {
+//      e.printStackTrace();
+//      LogUtil.showELog(TAG, "getVersionCode e = " + e.getLocalizedMessage());
+//    }
+
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+      PackageManager packageManager = MainApplication.getInstance().getPackageManager();
+      try {
+        PackageInfo packageInfo = packageManager.getPackageInfo(MainApplication.getInstance().getPackageName(), 0);
+        versionCode = packageInfo.versionCode;
+      } catch (Exception e) {
+        LogUtil.showELog(TAG, "getVersionCode 1 e = " + e.getLocalizedMessage());
+      }
+    } else {
+      PackageManager packageManager = MainApplication.getInstance().getPackageManager();
+      try {
+        PackageInfo packageInfo = packageManager.getPackageInfo(MainApplication.getInstance().getPackageName(), 0);
+        versionCode = packageInfo.getLongVersionCode();
+      } catch (Exception e) {
+        LogUtil.showELog(TAG, "getVersionCode 2 e = " + e.getLocalizedMessage());
+      }
     }
+
     return versionCode;
   }
 

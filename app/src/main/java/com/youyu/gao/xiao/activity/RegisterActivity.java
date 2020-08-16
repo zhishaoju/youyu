@@ -2,8 +2,8 @@ package com.youyu.gao.xiao.activity;
 
 import static com.youyu.gao.xiao.utils.Contants.Net.BASE_URL;
 import static com.youyu.gao.xiao.utils.Contants.Net.CODE;
-import static com.youyu.gao.xiao.utils.Contants.USER_ID;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -18,7 +19,6 @@ import com.youyu.gao.xiao.R;
 import com.youyu.gao.xiao.net.NetInterface.RequestResponse;
 import com.youyu.gao.xiao.utils.Contants.NetStatus;
 import com.youyu.gao.xiao.utils.LogUtil;
-import com.youyu.gao.xiao.utils.SharedPrefsUtil;
 import com.youyu.gao.xiao.utils.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,11 +43,14 @@ public class RegisterActivity extends BaseActivity {
   @BindView(R.id.cb_protocol)
   CheckBox cbProtocol;
 
+  private Intent mIntent;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_register);
     ButterKnife.bind(this);
+    mIntent = getIntent();
     initListener();
   }
 
@@ -65,8 +68,11 @@ public class RegisterActivity extends BaseActivity {
           JSONObject jsonObject1 = new JSONObject(data);
           int code = Utils.jsonObjectIntGetValue(jsonObject1, "code");
           if (NetStatus.OK == code) {
-            JSONObject jsonObject = jsonObject1.getJSONObject("data");
-            SharedPrefsUtil.put(USER_ID, jsonObject.getString("id"));
+//            JSONObject jsonObject = jsonObject1.getJSONObject("data");
+//            SharedPrefsUtil.put(USER_ID, jsonObject.getString("id"));
+            Intent intent = new Intent(RegisterActivity.this, RegisterSetPassActivity.class);
+            intent.putExtra("mobile", etPhone.getText().toString());
+            startActivityForResult(intent, 100);
           }
         } catch (Exception e) {
           LogUtil.showELog(TAG, "success e : " + e.getLocalizedMessage());
@@ -76,6 +82,19 @@ public class RegisterActivity extends BaseActivity {
 //        startActivity(intent);
       }
     });
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    LogUtil.showDLog(TAG, "onActivityResult requestCode :" + requestCode);
+    LogUtil.showDLog(TAG, "onActivityResult resultCode :" + resultCode);
+    if (requestCode == 100) {
+      if (mIntent != null) {
+        setResult(Activity.RESULT_OK, mIntent);
+        finish();
+      }
+    }
   }
 
   @OnClick({R.id.bt_login, R.id.cb_protocol})
@@ -94,12 +113,6 @@ public class RegisterActivity extends BaseActivity {
           }
           String param = jsonObject.toString();
           post(url, param);
-
-          finish();
-
-          Intent intent = new Intent(RegisterActivity.this, RegisterSetPassActivity.class);
-          intent.putExtra("mobile", etPhone.getText().toString());
-          startActivity(intent);
         } else {
           Utils.show("请同意相关的协议~");
         }

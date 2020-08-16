@@ -77,16 +77,16 @@ public class MainActivity extends BaseActivity {
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    if (!this.isTaskRoot()) {
-      Intent intent = getIntent();
-      if (intent != null) {
-        String action = intent.getAction();
-        if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(action)) {
-          finish();
-          return;
-        }
-      }
-    }
+//    if (!this.isTaskRoot()) {
+//      Intent intent = getIntent();
+//      if (intent != null) {
+//        String action = intent.getAction();
+//        if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(action)) {
+//          finish();
+//          return;
+//        }
+//      }
+//    }
     initPermission();
     //无title
     requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -124,6 +124,20 @@ public class MainActivity extends BaseActivity {
           startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
         }
       });
+    }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    Intent intent1 = getIntent();
+    if (intent1 != null) {
+      Bundle bundle = intent1.getBundleExtra("bundle");
+      if (bundle != null) {
+        String from = bundle.getString("from");
+        LogUtil.showDLog(TAG, "from = " + from);
+        SharedPrefsUtil.put("from", from);
+      }
     }
   }
 

@@ -61,7 +61,7 @@
       android:visibility="visible" />
 
 
-    <com.youyu.gao.xiao.view.VideoPlayer
+    <com.youyu.gao.xiao.view.VideoPlayerList
       android:id="@+id/videoPlayer"
       android:layout_width="match_parent"
       android:layout_height="200dp"

@@ -179,16 +179,23 @@ public class ThirdFragment extends BaseFragment {
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == 100) {
+    LogUtil.showDLog(TAG, "onActivityResult requestCode = " + requestCode);
+    LogUtil.showDLog(TAG, "onActivityResult resultCode = " + resultCode);
+    if (requestCode == 1000) {
+      updateInfo();
     }
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    LogUtil.showELog(TAG, "onResume");
+    LogUtil.showDLog(TAG, "onResume");
     // 第一次进来的时候，会走到这里而不走onHiddenChanged
     // 请求网络展示界面
+    updateInfo();
+  }
+
+  private void updateInfo() {
     String phone = SharedPrefsUtil.get(USER_PHONE, "");
     if (!TextUtils.isEmpty(phone)) {
       userInfo(phone);
@@ -197,6 +204,7 @@ public class ThirdFragment extends BaseFragment {
       llMyView.setVisibility(View.GONE);
     }
   }
+
 
   @Override
   public void onPause() {
@@ -216,28 +224,7 @@ public class ThirdFragment extends BaseFragment {
         LogUtil.showELog(TAG, "success(String data) data = " + data);
 
         if (1 == mNetClickLogin) {
-          SharedPrefsUtil.put(USER_PHONE, etPhone.getText().toString());
-          SharedPrefsUtil.put(USER_PASSWORD, etPassword.getText().toString());
-          if (JsonUtils.isJsonObject(data)) {
-            try {
-              JSONObject jsonObject1 = new JSONObject(data);
-              int code = Utils.jsonObjectIntGetValue(jsonObject1, "code");
-              if (NetStatus.OK == code) {
-                JSONObject jsonObject = jsonObject1.getJSONObject("data");
-                SharedPrefsUtil.put(USER_ID, jsonObject.getString("id"));
-                if (NetStatus.OK == code) {
-                  showUserInfo(data);
-                  llLogin.setVisibility(View.GONE);
-                  llMyView.setVisibility(View.VISIBLE);
-                } else if (USER_NOT_EXIST == code) {
-                  llLogin.setVisibility(View.VISIBLE);
-                  llMyView.setVisibility(View.GONE);
-                }
-              }
-            } catch (JSONException e) {
-              LogUtil.showELog(TAG, "1 == mNetClickLogin e : " + e.getLocalizedMessage());
-            }
-          }
+          loginResult(data);
 
         } else if ((2 == mNetClickLogin)) {
           // 展示个人界面的结果
@@ -245,6 +232,31 @@ public class ThirdFragment extends BaseFragment {
         }
       }
     });
+  }
+
+  private void loginResult(String data) {
+    SharedPrefsUtil.put(USER_PHONE, etPhone.getText().toString());
+    SharedPrefsUtil.put(USER_PASSWORD, etPassword.getText().toString());
+    if (JsonUtils.isJsonObject(data)) {
+      try {
+        JSONObject jsonObject1 = new JSONObject(data);
+        int code = Utils.jsonObjectIntGetValue(jsonObject1, "code");
+        if (NetStatus.OK == code) {
+          JSONObject jsonObject = jsonObject1.getJSONObject("data");
+          SharedPrefsUtil.put(USER_ID, jsonObject.getString("id"));
+          if (NetStatus.OK == code) {
+            showUserInfo(data);
+            llLogin.setVisibility(View.GONE);
+            llMyView.setVisibility(View.VISIBLE);
+          } else if (USER_NOT_EXIST == code) {
+            llLogin.setVisibility(View.VISIBLE);
+            llMyView.setVisibility(View.GONE);
+          }
+        }
+      } catch (JSONException e) {
+        LogUtil.showELog(TAG, "1 == mNetClickLogin e : " + e.getLocalizedMessage());
+      }
+    }
   }
 
   private void showUserInfo(String data) {
@@ -336,7 +348,7 @@ public class ThirdFragment extends BaseFragment {
         LogUtil.showDLog(TAG, "bt_login()");
         break;
       case R.id.bt_register:
-        startActivity(new Intent(getActivity(), RegisterActivity.class));
+        startActivityForResult(new Intent(getActivity(), RegisterActivity.class), 1000);
         break;
       case R.id.fl_chat:
         break;
