@@ -158,30 +158,34 @@ public class SecondFragment extends BaseFragment {
       }
     });
 
-    pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
-      @Override
-      public void refresh() {
-        refreshCus();
-      }
-
-      @Override
-      public void loadMore() {
-        if (mTotal < mPageNumer * pageSize) {
-          Utils.show("没有更多数据啦");
-          pullToRefreshLayout.finishLoadMore();
-        } else {
-          mPageNumer += 1;
-          loadMoreCus(mPageNumer);
+    if (pullToRefreshLayout != null) {
+      pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
+        @Override
+        public void refresh() {
+          refreshCus();
         }
-      }
-    });
+
+        @Override
+        public void loadMore() {
+          if (mTotal < mPageNumer * pageSize) {
+            Utils.show("没有更多数据啦");
+            pullToRefreshLayout.finishLoadMore();
+          } else {
+            mPageNumer += 1;
+            loadMoreCus(mPageNumer);
+          }
+        }
+      });
+    }
 
     setNetLisenter(new RequestResponse() {
       @Override
       public void failure(Exception e) {
         LogUtil.showELog(TAG, "failure(Exception e) e:" + e.toString());
-        pullToRefreshLayout.finishRefresh();
-        pullToRefreshLayout.finishLoadMore();
+        if (pullToRefreshLayout != null) {
+          pullToRefreshLayout.finishRefresh();
+          pullToRefreshLayout.finishLoadMore();
+        }
       }
 
       @Override
@@ -228,15 +232,18 @@ public class SecondFragment extends BaseFragment {
             "parseData(String data) mActiveModelList.size：" + mActiveModelList.size());
         if (mRefresh == 1) {
           mActiveAdapter.updateData(mActiveModelList);
-          pullToRefreshLayout.finishRefresh();
+          if (pullToRefreshLayout != null) {
+            pullToRefreshLayout.finishRefresh();
+          }
         } else if (mRefresh == 2) {
           int size = mActiveAdapter.getSize();
 
           mActiveAdapter.appendData(mActiveModelList);
-          pullToRefreshLayout.finishLoadMore();
+          if (pullToRefreshLayout != null) {
+            pullToRefreshLayout.finishLoadMore();
+          }
 
           contentView.smoothScrollToPosition(size);
-
         }
       } else {
         pullToRefreshLayout.finishRefresh();

@@ -187,23 +187,25 @@ public class VideoDetailActivity extends BaseActivity {
         return false;
       }
     });
-    pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
-      @Override
-      public void refresh() {
-        refreshCus();
-      }
-
-      @Override
-      public void loadMore() {
-        if (mTotal < mPageNumer * pageSize) {
-          Utils.show("没有更多数据啦");
-          pullToRefreshLayout.finishLoadMore();
-        } else {
-          mPageNumer += 1;
-          loadMoreCus(mPageNumer);
+    if (pullToRefreshLayout != null) {
+      pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
+        @Override
+        public void refresh() {
+          refreshCus();
         }
-      }
-    });
+
+        @Override
+        public void loadMore() {
+          if (mTotal < mPageNumer * pageSize) {
+            Utils.show("没有更多数据啦");
+            pullToRefreshLayout.finishLoadMore();
+          } else {
+            mPageNumer += 1;
+            loadMoreCus(mPageNumer);
+          }
+        }
+      });
+    }
 
     setNetListener(new RequestResponse() {
       @Override
@@ -330,10 +332,14 @@ public class VideoDetailActivity extends BaseActivity {
 
         if (mRefresh == 1) {
           mCommentListAdapter.updateData(mData);
-          pullToRefreshLayout.finishRefresh();
+          if (pullToRefreshLayout != null) {
+            pullToRefreshLayout.finishRefresh();
+          }
         } else if (mRefresh == 2) {
           mCommentListAdapter.appendData(mData);
-          pullToRefreshLayout.finishLoadMore();
+          if (pullToRefreshLayout != null) {
+            pullToRefreshLayout.finishLoadMore();
+          }
         }
 
         tvVideoPinglun.setText("" + mTotal);

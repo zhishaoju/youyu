@@ -76,7 +76,9 @@ public class VideoPlayer extends RelativeLayout {
       mSurface = new Surface(surface);//连接对象（MediaPlayer和TextureView）
 //      mSurfaceHolder = mSurface.
       LogUtil.showDLog(TAG, "onSurfaceTextureAvailable");
-      play(info.playUrl);
+      if (info != null && info.playUrl != null) {
+        play(info.playUrl);
+      }
     }
 
     @Override

@@ -19,8 +19,8 @@ import com.google.gson.Gson;
 import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
 import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.youyu.gao.xiao.R;
-import com.youyu.gao.xiao.adapter.VideoPlayListAdatperList.OnClickListener;
 import com.youyu.gao.xiao.adapter.VideoPlayListAdatperList;
+import com.youyu.gao.xiao.adapter.VideoPlayListAdatperList.OnClickListener;
 import com.youyu.gao.xiao.bean.VideoPlayerItemInfo;
 import com.youyu.gao.xiao.cusListview.CusRecycleView;
 import com.youyu.gao.xiao.net.NetInterface.RequestResponse;
@@ -212,29 +212,33 @@ public class IndexFragment extends BaseFragment {
       }
     });
 
-    pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
-      @Override
-      public void refresh() {
-        refreshCus();
-      }
-
-      @Override
-      public void loadMore() {
-        if (mTotal < mPageNumer * pageSize) {
-          Utils.show("没有更多数据啦");
-          pullToRefreshLayout.finishLoadMore();
-        } else {
-          mPageNumer += 1;
-          loadMoreCus(mPageNumer);
+    if (pullToRefreshLayout != null) {
+      pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
+        @Override
+        public void refresh() {
+          refreshCus();
         }
-      }
-    });
+
+        @Override
+        public void loadMore() {
+          if (mTotal < mPageNumer * pageSize) {
+            Utils.show("没有更多数据啦");
+            pullToRefreshLayout.finishLoadMore();
+          } else {
+            mPageNumer += 1;
+            loadMoreCus(mPageNumer);
+          }
+        }
+      });
+    }
     setNetLisenter(new RequestResponse() {
       @Override
       public void failure(Exception e) {
         LogUtil.showELog(TAG, "failure(Exception e) e:" + e.toString());
-        pullToRefreshLayout.finishRefresh();
-        pullToRefreshLayout.finishLoadMore();
+        if (pullToRefreshLayout != null) {
+          pullToRefreshLayout.finishRefresh();
+          pullToRefreshLayout.finishLoadMore();
+        }
       }
 
       @Override
@@ -287,20 +291,23 @@ public class IndexFragment extends BaseFragment {
         }
         if (mRefresh == 1) {
           mIndexShowAdapter.updateData(mData);
-//          pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-          pullToRefreshLayout.finishRefresh();
+          if (pullToRefreshLayout != null) {
+            pullToRefreshLayout.finishRefresh();
+          }
         } else if (mRefresh == 2) {
           int size = mIndexShowAdapter.getSize();
 
           mIndexShowAdapter.appendData(mData);
-//          pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-          pullToRefreshLayout.finishLoadMore();
-
+          if (pullToRefreshLayout != null) {
+            pullToRefreshLayout.finishLoadMore();
+          }
           contentView.smoothScrollToPosition(size);
         }
       } else {
-        pullToRefreshLayout.finishRefresh();
-        pullToRefreshLayout.finishLoadMore();
+        if (pullToRefreshLayout != null) {
+          pullToRefreshLayout.finishRefresh();
+          pullToRefreshLayout.finishLoadMore();
+        }
       }
     } catch (Exception e) {
       LogUtil.showELog(TAG, "parseData(String data) catch (JSONException e)"

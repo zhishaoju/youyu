@@ -143,23 +143,25 @@ public class ActiveListActivity extends BaseActivity {
       }
     });
 
-    pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
-      @Override
-      public void refresh() {
-        refreshCus();
-      }
-
-      @Override
-      public void loadMore() {
-        if (mTotal < mPageNumer * pageSize) {
-          Utils.show("没有更多数据啦");
-          pullToRefreshLayout.finishLoadMore();
-        } else {
-          mPageNumer += 1;
-          loadMoreCus(mPageNumer);
+    if (pullToRefreshLayout != null) {
+      pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
+        @Override
+        public void refresh() {
+          refreshCus();
         }
-      }
-    });
+
+        @Override
+        public void loadMore() {
+          if (mTotal < mPageNumer * pageSize) {
+            Utils.show("没有更多数据啦");
+            pullToRefreshLayout.finishLoadMore();
+          } else {
+            mPageNumer += 1;
+            loadMoreCus(mPageNumer);
+          }
+        }
+      });
+    }
 
     setNetListener(new RequestResponse() {
       @Override
@@ -233,12 +235,14 @@ public class ActiveListActivity extends BaseActivity {
         }
         if (mRefresh == 1) {
           mActiveAdapter.setData(mData);
-          pullToRefreshLayout.finishRefresh();
-//          refreshView.refreshFinish(PullToRefreshLayout.SUCCEED);
+          if (pullToRefreshLayout != null) {
+            pullToRefreshLayout.finishRefresh();
+          }
         } else if (mRefresh == 2) {
           mActiveAdapter.appendData(mData);
-          pullToRefreshLayout.finishLoadMore();
-//          refreshView.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+          if (pullToRefreshLayout != null) {
+            pullToRefreshLayout.finishLoadMore();
+          }
         }
       }
     } catch (Exception e) {
