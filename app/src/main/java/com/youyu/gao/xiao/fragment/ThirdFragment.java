@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import com.youyu.gao.xiao.R;
 import com.youyu.gao.xiao.activity.ActiveListActivity;
 import com.youyu.gao.xiao.activity.CollectActivity;
+import com.youyu.gao.xiao.activity.FeedBackActivity;
 import com.youyu.gao.xiao.activity.InComeActivity;
 import com.youyu.gao.xiao.activity.PrivacyPolicyActivity;
 import com.youyu.gao.xiao.activity.RegisterActivity;
@@ -280,6 +281,7 @@ public class ThirdFragment extends BaseFragment {
 
           if (!TextUtils.isEmpty(userInfo.nickName)) {
             tvHeadName.setText(userInfo.nickName + "");
+            SharedPrefsUtil.put("userName", userInfo.nickName);
           }
 
           tvGuanzhuNum.setText(userInfo.postTotal + "");
@@ -300,7 +302,7 @@ public class ThirdFragment extends BaseFragment {
 
   @OnClick({R.id.ll_incoming_detail, R.id.ll_collect, R.id.ll_active,
       R.id.fl_pass_icon, R.id.tv_forget_password, R.id.bt_login, R.id.fl_chat, R.id.fl_qq,
-      R.id.bt_register, R.id.ll_trade_policy})
+      R.id.bt_register, R.id.ll_trade_policy, R.id.ll_suggest})
   public void onViewClicked(View view) {
     switch (view.getId()) {
       case R.id.ll_incoming_detail:
@@ -354,7 +356,9 @@ public class ThirdFragment extends BaseFragment {
         break;
       case R.id.fl_qq:
         break;
-
+      case R.id.ll_suggest:
+        startActivity(new Intent(getActivity(), FeedBackActivity.class));
+        break;
       default:
         break;
     }

@@ -23,7 +23,7 @@ public interface Contants {
     String RECORD_LIST = "/youyu/api/record/list";
     String RECORD_ADD = "/youyu/api/video/record/add";
     String VERSION_INFO = "/youyu/api/version/info";
-    String TASK_CONTINUETASK = "buyer/task/continueTask";
+    String FEEDBACK = "/youyu/api/feedback/add";
     String TASK_SAVESTEP3 = "buyer/task/saveStep3";
     String TASK_CHECKSHOPNAME = "buyer/task/checkShopName";
     String MONEY_SAVEBUYERVERIFY = "buyer/money/saveBuyerVerify";

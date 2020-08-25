@@ -315,53 +315,6 @@ public class IndexFragment extends BaseFragment {
       Utils.show("解析数据失败");
     }
 
-//    mPayTaskModels.clear();
-//    try {
-//      JSONObject jsonObject = new JSONObject(data);
-//      if (jsonObject == null) {
-//        return;
-//      }
-//      String url = Utils.jsonObjectStringGetValue(jsonObject, "url");
-//      LogUtil.showDLog(TAG, "parseData url = " + url);
-//      mViewPagerData.add(url);
-//      mIndexViewPagerAdapter.setData(mViewPagerData);
-//
-//      // 解析垫付任务
-//      JSONArray jsonArrayPayTask = jsonObject.getJSONArray("taskVoList");
-//      int sizePay = jsonArrayPayTask.length();
-//      for (int i = 0; i < sizePay; i++) {
-//        /**
-//         * public String picPath;
-//         *     public String taskType;
-//         *     public float capital;
-//         *     public float commission;
-//         *     public String type;
-//         *     public String taskId;
-//         */
-//        JSONObject jo = jsonArrayPayTask.getJSONObject(i);
-//        PayTaskModel payTaskModel = new PayTaskModel();
-//        payTaskModel.picPath = jo.getString("picPath");
-//        payTaskModel.taskType = jo.getString("taskType");
-//        payTaskModel.capital = jo.getString("capital");
-//        payTaskModel.commission = jo.getString("commission");
-////        payTaskModel.type = jo.getString("type");
-//        payTaskModel.taskId = jo.getInt("taskId");
-//        mPayTaskModels.add(payTaskModel);
-//      }
-//
-//      if (mRefresh == 1) {
-//        // 开始显示垫付任务
-//        mIndexAdvanceTaskAdapter.setData(mPayTaskModels);
-//        pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-//      } else if (mRefresh == 2) {
-//        mIndexAdvanceTaskAdapter.appendMoreData(mPayTaskModels);
-//        pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-//      }
-//    } catch (JSONException e) {
-//      LogUtil.showELog(TAG, "parseData(String data) catch (JSONException e)"
-//          + " 异常：" + e.toString());
-//      Utils.show("解析数据失败");
-//    }
   }
 
   @Override

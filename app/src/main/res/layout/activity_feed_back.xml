@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:background="@color/white"
+  android:orientation="vertical">
+
+  <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_title"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="@color/my_bg">
+
+    <FrameLayout
+      android:id="@+id/fl_back"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:paddingLeft="@dimen/margin_16"
+      android:paddingRight="@dimen/margin_16">
+
+      <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:src="@mipmap/back" />
+    </FrameLayout>
+
+    <TextView
+      android:id="@+id/tv_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:text="注册"
+      android:textColor="@android:color/black"
+      android:textSize="@dimen/font_18" />
+
+  </RelativeLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/margin_48"
+    android:layout_marginTop="@dimen/margin_16"
+    android:layout_marginLeft="@dimen/margin_16"
+    android:layout_marginRight="@dimen/margin_16"
+    android:orientation="horizontal">
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="姓名："
+      android:textColor="@color/black"
+      android:textSize="@dimen/font_16" />
+
+    <EditText
+      android:id="@+id/et_name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
+
+  </LinearLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/margin_48"
+    android:layout_marginLeft="@dimen/margin_16"
+    android:layout_marginTop="@dimen/margin_16"
+    android:layout_marginRight="@dimen/margin_16"
+    android:orientation="horizontal">
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="电话："
+      android:textColor="@color/black"
+      android:textSize="@dimen/font_16" />
+
+    <EditText
+      android:id="@+id/et_phone"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
+
+  </LinearLayout>
+
+  <EditText
+    android:id="@+id/et_help_feedback"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/margin_16"
+    android:layout_marginTop="@dimen/margin_16"
+    android:layout_marginRight="@dimen/margin_16"
+    android:background="@drawable/corner_stroke_bg"
+    android:gravity="top"
+    android:hint="请输入您的反馈意见(字数500以内)！"
+    android:lines="5"
+    android:padding="@dimen/margin_16"
+    android:text="" />
+
+  <TextView
+    android:id="@+id/tv_commit"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/margin_48"
+    android:layout_margin="@dimen/margin_16"
+    android:background="@drawable/corner_second_no_start_bg"
+    android:gravity="center"
+    android:text="提交"
+    android:textColor="@color/black"
+    android:textSize="@dimen/font_16" />
+
+</LinearLayout>
