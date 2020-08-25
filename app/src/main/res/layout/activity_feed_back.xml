@@ -39,20 +39,20 @@
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="@dimen/margin_48"
-    android:layout_marginTop="@dimen/margin_16"
     android:layout_marginLeft="@dimen/margin_16"
+    android:layout_marginTop="@dimen/margin_16"
     android:layout_marginRight="@dimen/margin_16"
     android:orientation="horizontal">
     <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="姓名："
+      android:text="昵 称："
       android:textColor="@color/black"
       android:textSize="@dimen/font_16" />
 
     <EditText
       android:id="@+id/et_name"
-      android:layout_width="wrap_content"
+      android:layout_width="220dp"
       android:layout_height="wrap_content" />
 
   </LinearLayout>
@@ -67,13 +67,34 @@
     <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="电话："
+      android:text="电 话："
       android:textColor="@color/black"
       android:textSize="@dimen/font_16" />
 
     <EditText
       android:id="@+id/et_phone"
+      android:layout_width="220dp"
+      android:layout_height="wrap_content" />
+
+  </LinearLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/margin_48"
+    android:layout_marginLeft="@dimen/margin_16"
+    android:layout_marginTop="@dimen/margin_16"
+    android:layout_marginRight="@dimen/margin_16"
+    android:orientation="horizontal">
+    <TextView
       android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="邮 件："
+      android:textColor="@color/black"
+      android:textSize="@dimen/font_16" />
+
+    <EditText
+      android:id="@+id/et_mail"
+      android:layout_width="220dp"
       android:layout_height="wrap_content" />
 
   </LinearLayout>

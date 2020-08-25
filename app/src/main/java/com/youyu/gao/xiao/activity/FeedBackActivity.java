@@ -39,6 +39,9 @@ public class FeedBackActivity extends BaseActivity {
   EditText etName;
   @BindView(R.id.et_phone)
   EditText etPhone;
+
+  @BindView(R.id.et_mail)
+  EditText etMail;
   private String TAG = "FeedBackActivity";
 
   @BindView(R.id.tv_title)
@@ -112,25 +115,33 @@ public class FeedBackActivity extends BaseActivity {
         break;
       case R.id.tv_commit:
         String userId = SharedPrefsUtil.get("userId", "");
-        String mobile = SharedPrefsUtil.get(USER_PHONE, "");
-        String userName = SharedPrefsUtil.get("userName", "");
+        String mobile = etPhone.getText().toString();
+        String userName = etName.getText().toString();
         String content = etHelpFeedback.getText().toString();
-        String url = BASE_URL + FEEDBACK;
-        if (!TextUtils.isEmpty(content)) {
-          String params = "";
-          try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("userId", userId);
-            jsonObject.put("userName", userName);
-            jsonObject.put("content", content);
-            jsonObject.put("mobile", mobile);
-            params = jsonObject.toString();
-          } catch (Exception e) {
-            LogUtil.showELog(TAG, "params e :" + e.getLocalizedMessage());
-          }
-          post(url, params);
+        String email = etMail.getText().toString();
+
+        if (TextUtils.isEmpty(mobile) || TextUtils.isEmpty(userName)) {
+          Utils.show("昵称或者电话为空~");
         } else {
-          Utils.show("内容不能为空！");
+          String url = BASE_URL + FEEDBACK;
+
+          if (!TextUtils.isEmpty(content)) {
+            String params = "";
+            try {
+              JSONObject jsonObject = new JSONObject();
+              jsonObject.put("userId", userId);
+              jsonObject.put("userName", userName);
+              jsonObject.put("content", content);
+              jsonObject.put("mobile", mobile);
+              jsonObject.put("email", email);
+              params = jsonObject.toString();
+            } catch (Exception e) {
+              LogUtil.showELog(TAG, "params e :" + e.getLocalizedMessage());
+            }
+            post(url, params);
+          } else {
+            Utils.show("内容不能为空！");
+          }
         }
         break;
     }
