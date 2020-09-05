@@ -217,4 +217,9 @@
 -keep public class kotlinx.coroutines.**{*;}
 -keep public class kotlin.sequences.**{*;}
 
+# 穿山甲
+-keep class com.bytedance.sdk.openadsdk.** { *; }
+-keep public interface com.bytedance.sdk.openadsdk.downloadnew.** {*;}
+-keep class com.pgl.sys.ces.* {*;}
+
 

@@ -5,7 +5,18 @@
 
   <uses-permission android:name="android.permission.INTERNET" />
 
-  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+  <uses-permission android:name="android.permission.GET_TASKS" />
+
+  <!--可选，穿山甲提供“获取地理位置权限”和“不给予地理位置权限，开发者传入地理位置参数”两种方式上报用户位置，两种方式均可不选，添加位置权限或参数将帮助投放定位广告-->
+  <!--请注意：无论通过何种方式提供给穿山甲用户地理位置，均需向用户声明地理位置权限将应用于穿山甲广告投放，穿山甲不强制获取地理位置信息-->
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+  <!-- 如果有视频相关的广告且使用textureView播放，请务必添加，否则黑屏 -->
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
   <uses-permission android:name="android.permission.READ_PHONE_STATE" />
   <uses-permission android:name="android.permission.INTERNET" />
@@ -15,20 +26,25 @@
     android:name="android.permission.READ_LOGS"
     tools:ignore="ProtectedPermissions" />
 
+  <!-- android:usesCleartextTraffic="true" 为了让Android9 支持http-->
   <application
     android:name=".applicatioin.MainApplication"
     android:allowBackup="true"
     android:icon="@mipmap/app_icon"
     android:label="@string/app_name"
     android:supportsRtl="true"
-    android:theme="@android:style/Theme.NoTitleBar">
-    <activity android:name=".MainActivity">
+    android:theme="@android:style/Theme.NoTitleBar"
+    android:usesCleartextTraffic="true">
+    <activity android:name=".SplashActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
 
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+    <activity
+      android:name=".MainActivity"
+      android:launchMode="singleTask" />
     <activity android:name=".activity.CollectActivity" />
     <activity
       android:name=".activity.RegisterActivity"
@@ -46,6 +62,16 @@
     <activity android:name=".activity.FeedBackActivity" />
 
     <service android:name=".service.PlayReqService" />
+    <!-- 适配 Android 7.0 以及 8.0 -->
+    <provider
+      android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
+      android:authorities="${applicationId}.TTFileProvider"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/file_paths" />
+    </provider>
   </application>
 
 </manifest>

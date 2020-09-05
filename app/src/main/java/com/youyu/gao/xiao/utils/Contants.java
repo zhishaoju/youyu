@@ -42,6 +42,7 @@ public interface Contants {
   }
 
   interface NetStatus {
+
     int OK = 0;         // 操作成功
     int USER_NOT_EXIST = 1; // 用户不存在
     int USER_EXIST = 2; // 用户已经存在
@@ -94,11 +95,16 @@ public interface Contants {
   String POST_ID = "postId";
 
   interface BroadcastConst {
+
     String RECORD_ACTION = "record_action";
     String RECORD_STATUS = "recordStatus";
   }
 
   int PAGE_SIZE = 20;
 
-  String  PACKAGE_NAME = "com.youyu.gao.xiao";
+  String PACKAGE_NAME = "com.youyu.gao.xiao";
+
+  String APP_ID = "5101765";
+  String APP_NAME = "APP测试媒体";
+  String AD_BANNER = "887376831";
 }
