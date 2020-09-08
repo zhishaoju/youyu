@@ -110,14 +110,14 @@ public class SplashActivity extends Activity {
       @MainThread
       public void onError(int code, String message) {
         Log.d(TAG, String.valueOf(message));
-        showToast(message);
+        // showToast(message);
         goToMainActivity();
       }
 
       @Override
       @MainThread
       public void onTimeout() {
-        showToast("开屏广告加载超时");
+        // showToast("开屏广告加载超时");
         goToMainActivity();
       }
 
@@ -145,19 +145,19 @@ public class SplashActivity extends Activity {
           @Override
           public void onAdClicked(View view, int type) {
             Log.d(TAG, "onAdClicked");
-            showToast("开屏广告点击");
+//            // showToast("开屏广告点击");
           }
 
           @Override
           public void onAdShow(View view, int type) {
             Log.d(TAG, "onAdShow");
-            showToast("开屏广告展示");
+//            // showToast("开屏广告展示");
           }
 
           @Override
           public void onAdSkip() {
             Log.d(TAG, "onAdSkip");
-            showToast("开屏广告跳过");
+//            // showToast("开屏广告跳过");
             goToMainActivity();
 
           }
@@ -165,7 +165,7 @@ public class SplashActivity extends Activity {
           @Override
           public void onAdTimeOver() {
             Log.d(TAG, "onAdTimeOver");
-            showToast("开屏广告倒计时结束");
+//            // showToast("开屏广告倒计时结束");
             goToMainActivity();
           }
         });
@@ -181,7 +181,7 @@ public class SplashActivity extends Activity {
             public void onDownloadActive(long totalBytes, long currBytes, String fileName,
                 String appName) {
               if (!hasShow) {
-                showToast("下载中...");
+//                // showToast("下载中...");
                 hasShow = true;
               }
             }
@@ -189,26 +189,26 @@ public class SplashActivity extends Activity {
             @Override
             public void onDownloadPaused(long totalBytes, long currBytes, String fileName,
                 String appName) {
-              showToast("下载暂停...");
+              // showToast("下载暂停...");
 
             }
 
             @Override
             public void onDownloadFailed(long totalBytes, long currBytes, String fileName,
                 String appName) {
-              showToast("下载失败...");
+              // showToast("下载失败...");
 
             }
 
             @Override
             public void onDownloadFinished(long totalBytes, String fileName, String appName) {
-              showToast("下载完成...");
+              // showToast("下载完成...");
 
             }
 
             @Override
             public void onInstalled(String fileName, String appName) {
-              showToast("安装完成...");
+              // showToast("安装完成...");
 
             }
           });

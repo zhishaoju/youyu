@@ -218,25 +218,34 @@
 -keep public class kotlin.sequences.**{*;}
 
 # 穿山甲
-#-dontwarn com.bun.supplier.**
-#-keep class com.bytedance.sdk.openadsdk.** { *; }
-#-keep public interface com.bytedance.sdk.openadsdk.downloadnew.** {*;}
-#-keep class com.pgl.sys.ces.* {*;}
-#-keep class com.bun.supplier.* {*;}
-#-keep class java.nio.* {*;}
-#-keep class com.bun.miitmdid.core.* {*;}
-#-keep class com.bun.miitmdid.core.MdidSdkHelper
-#-keep class android.os.SystemProperties
-#-keep class com.bun.miitmdid.core.JLibrary.* {*;}
-
-#保护内部类
 -keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
-
--keep class com.bytedance.sdk.openadsdk.** {*;}
+-dontwarn com.bytedance.sdk.openadsdk.**
+-dontwarn com.bytedance.sdk.openadsdk.downloadnew.**
+-dontwarn com.pgl.sys.ces.**
+-dontwarn com.bun.supplier.**
+-dontwarn java.nio.**
+-dontwarn com.bun.miitmdid.core.**
+-dontwarn com.bun.miitmdid.core.MdidSdkHelper.**
+-dontwarn android.os.**
+-dontwarn com.bun.miitmdid.core.JLibrary.**
+-keep class com.bytedance.sdk.openadsdk.** { *; }
 -keep public interface com.bytedance.sdk.openadsdk.downloadnew.** {*;}
 -keep class com.pgl.sys.ces.* {*;}
+-keep class com.bun.supplier.* {*;}
+-keep class java.nio.* {*;}
+-keep class com.bun.miitmdid.core.* {*;}
+-keep class com.bun.miitmdid.core.MdidSdkHelper.* {*;}
+-keep class android.os.SystemProperties.* {*;}
+-keep class com.bun.miitmdid.core.JLibrary.* {*;}
 
--dontwarn com.xx.bbb.**
--keep class com.xx.bbb.** { *;}
+#保护内部类
+#-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
+#
+#-keep class com.bytedance.sdk.openadsdk.** {*;}
+#-keep public interface com.bytedance.sdk.openadsdk.downloadnew.** {*;}
+#-keep class com.pgl.sys.ces.* {*;}
+#
+#-dontwarn com.xx.bbb.**
+#-keep class com.xx.bbb.** { *;}
 
 
