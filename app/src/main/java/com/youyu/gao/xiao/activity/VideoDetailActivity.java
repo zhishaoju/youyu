@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -32,11 +33,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.bumptech.glide.Glide;
+import com.bytedance.sdk.openadsdk.AdSlot;
+import com.bytedance.sdk.openadsdk.TTAdConstant;
+import com.bytedance.sdk.openadsdk.TTAdManager;
+import com.bytedance.sdk.openadsdk.TTAdNative;
+import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
+import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
 import com.google.gson.Gson;
 import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
 import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.youyu.gao.xiao.R;
 import com.youyu.gao.xiao.adapter.VideoDetailCommentListAdapter;
+import com.youyu.gao.xiao.applicatioin.TTAdManagerHolder;
 import com.youyu.gao.xiao.bean.CommentBean;
 import com.youyu.gao.xiao.bean.VideoPlayerItemInfo;
 import com.youyu.gao.xiao.cusListview.CusRecycleView;
@@ -127,6 +135,11 @@ public class VideoDetailActivity extends BaseActivity {
   private VideoDetailCommentListAdapter mCommentListAdapter;
   private LinearLayoutManager lm;
 
+  private TTAdNative mTTAdNative;
+  private TTRewardVideoAd mttRewardVideoAd;
+  private boolean mIsLoaded;
+  private boolean mHasShowDownloadActive = false;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -144,6 +157,9 @@ public class VideoDetailActivity extends BaseActivity {
     lm = new LinearLayoutManager(this);
     pinglunListView.setLayoutManager(lm);
     pinglunListView.setAdapter(mCommentListAdapter);
+
+    //step3:创建TTAdNative对象,用于调用广告请求接口
+    mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
   }
 
   @Override
@@ -496,6 +512,177 @@ public class VideoDetailActivity extends BaseActivity {
     }
     String param = jsonObject.toString();
     post(url, param);
+  }
+
+  private void loadAd(final String codeId, int orientation) {
+    //step4:创建广告请求参数AdSlot,具体参数含义参考文档
+    AdSlot adSlot;
+//    if (mIsExpress) {
+      //个性化模板广告需要传入期望广告view的宽、高，单位dp，
+      adSlot = new AdSlot.Builder()
+          .setCodeId(codeId)
+          .setSupportDeepLink(true)
+          .setRewardName("金币") //奖励的名称
+          .setRewardAmount(3)  //奖励的数量
+          //模板广告需要设置期望个性化模板广告的大小,单位dp,激励视频场景，只要设置的值大于0即可
+          .setExpressViewAcceptedSize(500, 500)
+          .setUserID("user123")//用户id,必传参数
+          .setMediaExtra("media_extra") //附加参数，可选
+          .setOrientation(
+              orientation) //必填参数，期望视频的播放方向：TTAdConstant.HORIZONTAL 或 TTAdConstant.VERTICAL
+          .build();
+//    } else {
+//      //模板广告需要设置期望个性化模板广告的大小,单位dp,代码位是否属于个性化模板广告，请在穿山甲平台查看
+//      adSlot = new AdSlot.Builder()
+//          .setCodeId(codeId)
+//          .setSupportDeepLink(true)
+//          .setRewardName("金币") //奖励的名称
+//          .setRewardAmount(3)  //奖励的数量
+//          .setUserID("user123")//用户id,必传参数
+//          .setMediaExtra("media_extra") //附加参数，可选
+//          .setOrientation(
+//              orientation) //必填参数，期望视频的播放方向：TTAdConstant.HORIZONTAL 或 TTAdConstant.VERTICAL
+//          .build();
+//    }
+    //step5:请求广告
+    mTTAdNative.loadRewardVideoAd(adSlot, new TTAdNative.RewardVideoAdListener() {
+      @Override
+      public void onError(int code, String message) {
+        LogUtil.showELog(TAG, "Callback --> onError: " + code + ", " + String.valueOf(message));
+        //TToast.show(RewardVideoActivity.this, message);
+      }
+
+      //视频广告加载后，视频资源缓存到本地的回调，在此回调后，播放本地视频，流畅不阻塞。
+      @Override
+      public void onRewardVideoCached() {
+        LogUtil.showELog(TAG, "Callback --> onRewardVideoCached");
+        mIsLoaded = true;
+        //TToast.show(RewardVideoActivity.this, "Callback --> rewardVideoAd video cached");
+
+        if (mttRewardVideoAd != null&&mIsLoaded) {
+          //step6:在获取到广告后展示,强烈建议在onRewardVideoCached回调后，展示广告，提升播放体验
+          //该方法直接展示广告
+//                    mttRewardVideoAd.showRewardVideoAd(RewardVideoActivity.this);
+
+          //展示广告，并传入广告展示的场景
+          mttRewardVideoAd.showRewardVideoAd(VideoDetailActivity.this,
+              TTAdConstant.RitScenes.CUSTOMIZE_SCENES, "scenes_test");
+          mttRewardVideoAd = null;
+        }
+      }
+
+      //视频广告的素材加载完毕，比如视频url等，在此回调后，可以播放在线视频，网络不好可能出现加载缓冲，影响体验。
+      @Override
+      public void onRewardVideoAdLoad(TTRewardVideoAd ad) {
+        LogUtil.showELog(TAG, "Callback --> onRewardVideoAdLoad");
+
+        //TToast.show(RewardVideoActivity.this, "rewardVideoAd loaded 广告类型：" + getAdType(ad.getRewardVideoAdType()));
+        mIsLoaded = false;
+        mttRewardVideoAd = ad;
+        mttRewardVideoAd
+            .setRewardAdInteractionListener(new TTRewardVideoAd.RewardAdInteractionListener() {
+
+              @Override
+              public void onAdShow() {
+                LogUtil.showELog(TAG, "Callback --> rewardVideoAd show");
+                //TToast.show(RewardVideoActivity.this, "rewardVideoAd show");
+              }
+
+              @Override
+              public void onAdVideoBarClick() {
+                LogUtil.showELog(TAG, "Callback --> rewardVideoAd bar click");
+                //TToast.show(RewardVideoActivity.this, "rewardVideoAd bar click");
+              }
+
+              @Override
+              public void onAdClose() {
+                LogUtil.showELog(TAG, "Callback --> rewardVideoAd close");
+                //TToast.show(RewardVideoActivity.this, "rewardVideoAd close");
+              }
+
+              //视频播放完成回调
+              @Override
+              public void onVideoComplete() {
+                LogUtil.showELog(TAG, "Callback --> rewardVideoAd complete");
+                //TToast.show(RewardVideoActivity.this, "rewardVideoAd complete");
+              }
+
+              @Override
+              public void onVideoError() {
+                LogUtil.showELog(TAG, "Callback --> rewardVideoAd error");
+                //TToast.show(RewardVideoActivity.this, "rewardVideoAd error");
+              }
+
+              //视频播放完成后，奖励验证回调，rewardVerify：是否有效，rewardAmount：奖励梳理，rewardName：奖励名称
+              @Override
+              public void onRewardVerify(boolean rewardVerify, int rewardAmount,
+                  String rewardName) {
+                String logString = "verify:" + rewardVerify + " amount:" + rewardAmount +
+                    " name:" + rewardName;
+                LogUtil.showELog(TAG, "Callback --> " + logString);
+                //TToast.show(RewardVideoActivity.this, logString);
+              }
+
+              @Override
+              public void onSkippedVideo() {
+                LogUtil.showELog(TAG, "Callback --> rewardVideoAd has onSkippedVideo");
+                //TToast.show(RewardVideoActivity.this, "rewardVideoAd has onSkippedVideo");
+              }
+            });
+        mttRewardVideoAd.setDownloadListener(new TTAppDownloadListener() {
+          @Override
+          public void onIdle() {
+            mHasShowDownloadActive = false;
+          }
+
+          @Override
+          public void onDownloadActive(long totalBytes, long currBytes, String fileName,
+              String appName) {
+            LogUtil.showDLog(TAG,
+                "onDownloadActive==totalBytes=" + totalBytes + ",currBytes=" + currBytes
+                    + ",fileName=" + fileName + ",appName=" + appName);
+
+            if (!mHasShowDownloadActive) {
+              mHasShowDownloadActive = true;
+              //TToast.show(RewardVideoActivity.this, "下载中，点击下载区域暂停", Toast.LENGTH_LONG);
+            }
+          }
+
+          @Override
+          public void onDownloadPaused(long totalBytes, long currBytes, String fileName,
+              String appName) {
+            LogUtil.showDLog(TAG,
+                "onDownloadPaused===totalBytes=" + totalBytes + ",currBytes=" + currBytes
+                    + ",fileName=" + fileName + ",appName=" + appName);
+            //TToast.show(RewardVideoActivity.this, "下载暂停，点击下载区域继续", Toast.LENGTH_LONG);
+          }
+
+          @Override
+          public void onDownloadFailed(long totalBytes, long currBytes, String fileName,
+              String appName) {
+            LogUtil.showDLog(TAG,
+                "onDownloadFailed==totalBytes=" + totalBytes + ",currBytes=" + currBytes
+                    + ",fileName=" + fileName + ",appName=" + appName);
+            //TToast.show(RewardVideoActivity.this, "下载失败，点击下载区域重新下载", Toast.LENGTH_LONG);
+          }
+
+          @Override
+          public void onDownloadFinished(long totalBytes, String fileName, String appName) {
+            LogUtil.showDLog(TAG,
+                "onDownloadFinished==totalBytes=" + totalBytes + ",fileName=" + fileName
+                    + ",appName=" + appName);
+            //TToast.show(RewardVideoActivity.this, "下载完成，点击下载区域重新下载", Toast.LENGTH_LONG);
+          }
+
+          @Override
+          public void onInstalled(String fileName, String appName) {
+            LogUtil
+                .showDLog(TAG, "onInstalled==" + ",fileName=" + fileName + ",appName=" + appName);
+            //TToast.show(RewardVideoActivity.this, "安装完成，点击下载区域打开", Toast.LENGTH_LONG);
+          }
+        });
+      }
+    });
   }
 
 }
