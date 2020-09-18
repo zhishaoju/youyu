@@ -432,7 +432,7 @@ public class VideoMediaController extends RelativeLayout {
           recordIntent.putExtra(RECORD_STATUS, 1);
           getContext().sendBroadcast(recordIntent);
           //继续播放
-          MediaHelper.play();
+//          MediaHelper.play();
           mHandler.sendEmptyMessageDelayed(MSG_HIDE_CONTROLLER, 2000);
           updatePlayTimeAndProgress();
           hasPause = false;
@@ -451,6 +451,7 @@ public class VideoMediaController extends RelativeLayout {
 //              adapter.setPlayPosition(position);
 
         }
+        MediaHelper.play();
         ivPlay.setImageResource(R.drawable.new_pause_video);
       }
     }

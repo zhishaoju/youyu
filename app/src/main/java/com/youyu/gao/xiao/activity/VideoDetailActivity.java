@@ -160,6 +160,9 @@ public class VideoDetailActivity extends BaseActivity {
 
     //step3:创建TTAdNative对象,用于调用广告请求接口
     mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
+
+
+    loadAd("945477236", TTAdConstant.VERTICAL);
   }
 
   @Override
@@ -267,7 +270,7 @@ public class VideoDetailActivity extends BaseActivity {
                 videoPlayer.setPlayData(mVideoPlayerItemInfo);
                 videoPlayer.initViewDisplay(mVideoPlayerItemInfo.duration);
 
-                videoPlayer.mediaController.clickPlay();
+//                videoPlayer.mediaController.clickPlay();
               }
               flag = 2;
               refreshCus();
@@ -568,6 +571,8 @@ public class VideoDetailActivity extends BaseActivity {
           mttRewardVideoAd.showRewardVideoAd(VideoDetailActivity.this,
               TTAdConstant.RitScenes.CUSTOMIZE_SCENES, "scenes_test");
           mttRewardVideoAd = null;
+        } else {
+          Utils.show("请先加载广告");
         }
       }
 
@@ -598,6 +603,7 @@ public class VideoDetailActivity extends BaseActivity {
               public void onAdClose() {
                 LogUtil.showELog(TAG, "Callback --> rewardVideoAd close");
                 //TToast.show(RewardVideoActivity.this, "rewardVideoAd close");
+                videoPlayer.mediaController.clickPlay();
               }
 
               //视频播放完成回调
