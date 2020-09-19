@@ -2,6 +2,12 @@ package com.youyu.gao.xiao.applicatioin;
 
 import android.Manifest.permission;
 import android.app.Application;
+import com.dueeeke.videoplayer.exo.ExoMediaPlayerFactory;
+import com.dueeeke.videoplayer.ijk.IjkPlayerFactory;
+import com.dueeeke.videoplayer.player.AndroidMediaPlayerFactory;
+import com.dueeeke.videoplayer.player.VideoViewConfig;
+import com.dueeeke.videoplayer.player.VideoViewManager;
+import com.qq.e.comm.managers.GDTADManager;
 import com.tencent.bugly.crashreport.CrashReport;
 
 /**
@@ -47,6 +53,17 @@ public class MainApplication extends Application {
 
     //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
     TTAdManagerHolder.init(this);
+
+    GDTADManager.getInstance().initWith(this, "1110952598");
+
+    VideoViewManager.setConfig(VideoViewConfig.newBuilder()
+        //使用使用IjkPlayer解码
+        .setPlayerFactory(IjkPlayerFactory.create())
+        //使用ExoPlayer解码
+        .setPlayerFactory(ExoMediaPlayerFactory.create())
+        //使用MediaPlayer解码
+        .setPlayerFactory(AndroidMediaPlayerFactory.create())
+        .build());
   }
 
 }

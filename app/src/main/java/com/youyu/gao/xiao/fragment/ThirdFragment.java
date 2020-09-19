@@ -37,6 +37,7 @@ import com.youyu.gao.xiao.activity.FeedBackActivity;
 import com.youyu.gao.xiao.activity.InComeActivity;
 import com.youyu.gao.xiao.activity.PrivacyPolicyActivity;
 import com.youyu.gao.xiao.activity.RegisterActivity;
+import com.youyu.gao.xiao.activity.TaskActivity;
 import com.youyu.gao.xiao.bean.UserInfo;
 import com.youyu.gao.xiao.net.NetInterface.RequestResponse;
 import com.youyu.gao.xiao.utils.Contants.NetStatus;
@@ -302,7 +303,7 @@ public class ThirdFragment extends BaseFragment {
 
   @OnClick({R.id.ll_incoming_detail, R.id.ll_collect, R.id.ll_active,
       R.id.fl_pass_icon, R.id.tv_forget_password, R.id.bt_login, R.id.fl_chat, R.id.fl_qq,
-      R.id.bt_register, R.id.ll_trade_policy, R.id.ll_suggest})
+      R.id.bt_register, R.id.ll_trade_policy, R.id.ll_suggest, R.id.ll_task})
   public void onViewClicked(View view) {
     switch (view.getId()) {
       case R.id.ll_incoming_detail:
@@ -358,6 +359,9 @@ public class ThirdFragment extends BaseFragment {
         break;
       case R.id.ll_suggest:
         startActivity(new Intent(getActivity(), FeedBackActivity.class));
+        break;
+      case R.id.ll_task:
+        startActivity(new Intent(getActivity(), TaskActivity.class));
         break;
       default:
         break;

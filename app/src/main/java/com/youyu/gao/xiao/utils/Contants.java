@@ -24,14 +24,7 @@ public interface Contants {
     String RECORD_ADD = "/youyu/api/video/record/add";
     String VERSION_INFO = "/youyu/api/version/info";
     String FEEDBACK = "/youyu/api/feedback/add";
-    String TASK_SAVESTEP3 = "buyer/task/saveStep3";
-    String TASK_CHECKSHOPNAME = "buyer/task/checkShopName";
-    String MONEY_SAVEBUYERVERIFY = "buyer/money/saveBuyerVerify";
-    String TASK_SAVESTEP4 = "buyer/task/saveStep4";
-    String TASK_SAVESTEP5 = "buyer/task/saveStep5";
-    String TASK_SAVESTEP7 = "buyer/task/saveStep7";
-    String INV = "buyer/inv";
-    String HELP = "buyer/help";
+    String NOTICE_ADS = "/youyu/api/notice/ads";
   }
 
   interface QiNiuKey {
@@ -94,6 +87,9 @@ public interface Contants {
   String USER_PASSWORD = "password";
   String POST_ID = "postId";
 
+  String CSJ = "csj";
+  String TX = "tx";
+
   interface BroadcastConst {
 
     String RECORD_ACTION = "record_action";
@@ -107,4 +103,16 @@ public interface Contants {
   String APP_ID = "5101765";
   String APP_NAME = "APP测试媒体";
   String AD_BANNER = "887376831";
+  String AD_CHUAN_SHA_JIA_REWARD_WAIT = "945477236";
+  String AD_CHUAN_SHA_JIA_REWARD_TASK = "945493144";
+
+  //开屏广告加载超时时间,建议大于3000,这里为了冷启动第一次加载到广告并且展示,示例设置了3000ms
+  int AD_TIME_OUT = 3000;
+
+  //
+  String AD_TENCENT_DISPLAY = "4031932348485139";
+  String AD_TENCENT_REWARD_WAIT = "5021733318699198";
+  String AD_TENCENT_REWARD_TASK = "7091335308493349";
+
+
 }

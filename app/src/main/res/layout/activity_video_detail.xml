@@ -16,11 +16,15 @@
       android:src="@mipmap/beautiful"
       android:visibility="visible" />
 
-    <com.youyu.gao.xiao.view.VideoPlayer
+    <!--<com.youyu.gao.xiao.view.VideoPlayer
       android:id="@+id/videoPlayer"
       android:layout_width="match_parent"
       android:layout_height="200dp"
-      android:visibility="visible" />
+      android:visibility="visible" />-->
+    <com.dueeeke.videoplayer.player.VideoView
+      android:id="@+id/videoPlayer"
+      android:layout_width="match_parent"
+      android:layout_height="200dp" />
     <FrameLayout
       android:id="@+id/fl_back"
       android:layout_width="40dp"
@@ -31,7 +35,6 @@
         android:layout_gravity="center"
         android:src="@mipmap/back" />
     </FrameLayout>
-
   </FrameLayout>
 
   <RelativeLayout

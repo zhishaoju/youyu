@@ -60,6 +60,7 @@ public class VideoPlayer extends RelativeLayout {
     ButterKnife.bind(this, view);
 
     initViewDisplay(0);
+    mPlayer = MediaHelper.getInstance();
     //把VideoPlayer对象传递给VideoMediaController
     mediaController.setVideoPlayer(this);
 
@@ -73,8 +74,8 @@ public class VideoPlayer extends RelativeLayout {
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
       // Log.i(TAG,"onSurfaceTextureAvailable");
-      mSurface = new Surface(surface);//连接对象（MediaPlayer和TextureView）
-//      mSurfaceHolder = mSurface.
+//      mSurface = new Surface(surface);//连接对象（MediaPlayer和TextureView）
+////      mSurfaceHolder = mSurface.
       LogUtil.showDLog(TAG, "onSurfaceTextureAvailable");
       if (info != null && info.playUrl != null) {
         play(info.playUrl);
@@ -83,37 +84,45 @@ public class VideoPlayer extends RelativeLayout {
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-      // Log.i(TAG,"onSurfaceTextureSizeChanged");
+      LogUtil.showDLog(TAG, "onSurfaceTextureSizeChanged");
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-      // Log.i(TAG,"onSurfaceTextureDestroyed");
-      return true;
+      LogUtil.showDLog(TAG, "onSurfaceTextureDestroyed");
+//      return true;
+      if (surface != null) {
+        surface.release();
+      }
+      return false;
     }
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-      // Log.i(TAG,"onSurfaceTextureUpdated");
+      LogUtil.showDLog(TAG, "onSurfaceTextureUpdated");
+      if (mSurface == null) {
+        mSurface = new Surface(surface);
+      }
+      mPlayer.setSurface(mSurface);
     }
   };
 
   //视频播放（视频的初始化）
-  private void play(String url) {
+  public void play(String url) {
     try {
-      mPlayer = MediaHelper.getInstance();
+      //异步准备
       mPlayer.reset();
       mPlayer.setDataSource(url);
-      //让MediaPlayer和TextureView进行视频画面的结合
-      mPlayer.setSurface(mSurface);
+      mPlayer.prepareAsync();
+
       //设置监听
       mPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
       mPlayer.setOnCompletionListener(onCompletionListener);
       mPlayer.setOnErrorListener(onErrorListener);
       mPlayer.setOnPreparedListener(onPreparedListener);
       mPlayer.setScreenOnWhilePlaying(true);//在视频播放的时候保持屏幕的高亮
-      //异步准备
-      mPlayer.prepareAsync();
+      //让MediaPlayer和TextureView进行视频画面的结合
+      mPlayer.setSurface(mSurface);
     } catch (Exception e) {
       e.printStackTrace();
     }
