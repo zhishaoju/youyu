@@ -11,7 +11,7 @@
     <ImageView
       android:id="@+id/iv_bg"
       android:layout_width="match_parent"
-      android:layout_height="200dp"
+      android:layout_height="230dp"
       android:scaleType="centerCrop"
       android:src="@mipmap/beautiful"
       android:visibility="visible" />
@@ -24,7 +24,7 @@
     <com.dueeeke.videoplayer.player.VideoView
       android:id="@+id/videoPlayer"
       android:layout_width="match_parent"
-      android:layout_height="200dp" />
+      android:layout_height="230dp" />
     <FrameLayout
       android:id="@+id/fl_back"
       android:layout_width="40dp"

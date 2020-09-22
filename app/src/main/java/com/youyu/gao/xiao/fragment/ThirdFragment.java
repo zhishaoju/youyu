@@ -38,6 +38,7 @@ import com.youyu.gao.xiao.activity.InComeActivity;
 import com.youyu.gao.xiao.activity.PrivacyPolicyActivity;
 import com.youyu.gao.xiao.activity.RegisterActivity;
 import com.youyu.gao.xiao.activity.TaskActivity;
+import com.youyu.gao.xiao.activity.UnifiedInterstitialFullScreenADActivity;
 import com.youyu.gao.xiao.bean.UserInfo;
 import com.youyu.gao.xiao.net.NetInterface.RequestResponse;
 import com.youyu.gao.xiao.utils.Contants.NetStatus;
@@ -361,7 +362,7 @@ public class ThirdFragment extends BaseFragment {
         startActivity(new Intent(getActivity(), FeedBackActivity.class));
         break;
       case R.id.ll_task:
-        startActivity(new Intent(getActivity(), TaskActivity.class));
+        startActivity(new Intent(getActivity(), UnifiedInterstitialFullScreenADActivity.class));
         break;
       default:
         break;

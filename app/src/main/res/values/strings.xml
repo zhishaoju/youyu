@@ -33,4 +33,8 @@
   <string name="action_settings">slogan</string>
   <string name="gdtslogan">GDTslogan</string>
   <string name="splash_loading">广告加载中...</string>
+
+  <string name="title_activity_unified_interstitial_ad">广点通：插屏广告2.0</string>
+  <string name="unified_interstitial_fullscreen_video" />
+
 </resources>

@@ -100,7 +100,7 @@ public class TaskActivity extends BaseActivity {
         String msg = "load ad success ! expireTime = " + new Date(System.currentTimeMillis() +
             rewardVideoAD.getExpireTimestamp() - SystemClock.elapsedRealtime());
         Toast.makeText(TaskActivity.this, msg, Toast.LENGTH_LONG).show();
-
+        LogUtil.showDLog(TAG, "onADLoad msg = " + msg);
         if (rewardVideoAD.getRewardAdType() == RewardVideoAD.REWARD_TYPE_VIDEO) {
           Log.d(TAG,
               "eCPMLevel = " + rewardVideoAD.getECPMLevel() + " ,video duration = " + rewardVideoAD
@@ -145,6 +145,7 @@ public class TaskActivity extends BaseActivity {
         LogUtil.showDLog(TAG, "onError");
         String msg = String.format(Locale.getDefault(), "onError, error code: %d, error msg: %s",
             adError.getErrorCode(), adError.getErrorMsg());
+        LogUtil.showDLog(TAG, "onError msg = " + msg);
         Toast.makeText(TaskActivity.this, msg, Toast.LENGTH_SHORT).show();
       }
 
@@ -161,6 +162,7 @@ public class TaskActivity extends BaseActivity {
       @Override
       public void onVideoComplete() {
         LogUtil.showDLog(TAG, "onVideoComplete");
+        loadAd(AD_CHUAN_SHA_JIA_REWARD_TASK, TTAdConstant.VERTICAL);
       }
     }, true);
     adLoaded = false;
@@ -216,8 +218,7 @@ public class TaskActivity extends BaseActivity {
         .setExpressViewAcceptedSize(500, 500)
         .setUserID("user123")//用户id,必传参数
         .setMediaExtra("media_extra") //附加参数，可选
-        .setOrientation(
-            orientation) //必填参数，期望视频的播放方向：TTAdConstant.HORIZONTAL 或 TTAdConstant.VERTICAL
+        .setOrientation(orientation) //必填参数，期望视频的播放方向：TTAdConstant.HORIZONTAL 或 TTAdConstant.VERTICAL
         .build();
 //    } else {
 //      //模板广告需要设置期望个性化模板广告的大小,单位dp,代码位是否属于个性化模板广告，请在穿山甲平台查看
@@ -297,6 +298,7 @@ public class TaskActivity extends BaseActivity {
               public void onVideoComplete() {
                 LogUtil.showELog(TAG, "Callback --> rewardVideoAd complete");
                 //TToast.show(RewardVideoActivity.this, "rewardVideoAd complete");
+                rewardVideoAD.loadAD();
               }
 
               @Override

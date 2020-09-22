@@ -137,6 +137,27 @@
         android:resource="@xml/gdt_file_path" />
     </provider>
 
+    <activity
+      android:name=".activity.UnifiedInterstitialFullScreenADActivity"
+      android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+      android:label="@string/title_activity_unified_interstitial_ad"
+      android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
+      <meta-data
+        android:name="id"
+        android:value="@string/unified_interstitial_fullscreen_video" />
+      <meta-data
+        android:name="content"
+        android:value="插屏全屏视频广告接入示例" />
+      <meta-data
+        android:name="action"
+        android:value="gdt.action.UNIFIED_INTERSTITIAL_FULLSCREEN_VIDEO_DEMO" />
+
+      <intent-filter>
+        <action android:name="gdt.action.UNIFIED_INTERSTITIAL_FULLSCREEN_VIDEO_DEMO" />
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+
 
   </application>
 
