@@ -25,6 +25,7 @@ public interface Contants {
     String VERSION_INFO = "/youyu/api/version/info";
     String FEEDBACK = "/youyu/api/feedback/add";
     String NOTICE_ADS = "/youyu/api/notice/ads";
+    String ADSRECORD_ADD = "/youyu/api/adsrecord/add";
   }
 
   interface QiNiuKey {
@@ -83,6 +84,7 @@ public interface Contants {
   int NET_REQUEST_TASK = 3;
 
   String USER_ID = "userId";
+  String CHANNEL_ID = "channelId";
   String USER_PHONE = "user_phone";
   String USER_PASSWORD = "password";
   String POST_ID = "postId";
@@ -105,6 +107,12 @@ public interface Contants {
   String AD_BANNER = "887376831";
   String AD_CHUAN_SHA_JIA_REWARD_WAIT = "945477236";
   String AD_CHUAN_SHA_JIA_REWARD_TASK = "945493144";
+  String AD_CHUAN_SHA_JIA_BANNER_TASK = "945511967";
+
+  String AD_CLICK_CSJ = "csj";
+  String AD_CLICK_TX = "tx";
+  String AD_CLICK_BD = "bd";
+
 
   //开屏广告加载超时时间,建议大于3000,这里为了冷启动第一次加载到广告并且展示,示例设置了3000ms
   int AD_TIME_OUT = 3000;
@@ -113,6 +121,8 @@ public interface Contants {
   String AD_TENCENT_DISPLAY = "4031932348485139";
   String AD_TENCENT_REWARD_WAIT = "5021733318699198";
   String AD_TENCENT_REWARD_TASK = "7091335308493349";
+  String AD_TENCENT_BANNER = "4001534416439635";
+  String AD_TENCENT_CHA_PING = "6051934421456124";
 
 
   public static final String BuglyAppID = "28d030a2bf";

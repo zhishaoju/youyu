@@ -48,6 +48,8 @@ import java.lang.reflect.Method;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.security.MessageDigest;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import org.json.JSONException;
@@ -68,6 +70,28 @@ public class Utils {
   private static final String DEVICES_FILE_NAME = ".DEVICES";
   private static final String UPLOAD_PIC_PATH =
       Environment.getExternalStorageDirectory() + "/upload";
+
+
+  public static String paramsConvertString(Map map) {
+    if (map == null) {
+      return "";
+    }
+    JSONObject jsonObject = new JSONObject();
+    // 这种遍历map的方式是效率最高的方式
+    Iterator entries = map.entrySet().iterator();
+    while (entries.hasNext()) {
+      Map.Entry entry = (Map.Entry) entries.next();
+      Object key = entry.getKey();
+      Object value = entry.getValue();
+
+      try {
+        jsonObject.put((String) key, value);
+      } catch (JSONException e) {
+        LogUtil.showELog(TAG, "paramsConvertString e :" + e.getLocalizedMessage());
+      }
+    }
+    return jsonObject.toString();
+  }
 
 
   public static float getScreenWidthDp(Context context) {

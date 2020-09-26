@@ -37,8 +37,7 @@ import com.youyu.gao.xiao.activity.FeedBackActivity;
 import com.youyu.gao.xiao.activity.InComeActivity;
 import com.youyu.gao.xiao.activity.PrivacyPolicyActivity;
 import com.youyu.gao.xiao.activity.RegisterActivity;
-import com.youyu.gao.xiao.activity.TaskActivity;
-import com.youyu.gao.xiao.activity.UnifiedInterstitialFullScreenADActivity;
+import com.youyu.gao.xiao.activity.RuleActivity;
 import com.youyu.gao.xiao.bean.UserInfo;
 import com.youyu.gao.xiao.net.NetInterface.RequestResponse;
 import com.youyu.gao.xiao.utils.Contants.NetStatus;
@@ -73,6 +72,8 @@ public class ThirdFragment extends BaseFragment {
   LinearLayout llCollect;
   @BindView(R.id.ll_active)
   LinearLayout llActive;
+  @BindView(R.id.ll_task)
+  LinearLayout llTask;
   //  @BindView(R.id.tv_login)
 //  TextView tvLogin;
   @BindView(R.id.ll_login)
@@ -105,6 +106,7 @@ public class ThirdFragment extends BaseFragment {
   private int mNetClickLogin;
 
   private Unbinder mUnbinder;
+  private boolean mRwzx = false;
 
 
   @Nullable
@@ -271,7 +273,12 @@ public class ThirdFragment extends BaseFragment {
         if (jo != null) {
           UserInfo userInfo = new Gson()
               .fromJson(jo.toString(), UserInfo.class);
-
+          mRwzx = userInfo.rwzx;
+          if (mRwzx) {
+            llTask.setVisibility(View.VISIBLE);
+          } else {
+            llTask.setVisibility(View.GONE);
+          }
           if (getActivity() != null && !TextUtils.isEmpty(userInfo.avatarUrl)) {
             Glide.with(getActivity())
                 .asBitmap()//只加载静态图片，如果是git图片则只加载第一帧。
@@ -336,19 +343,7 @@ public class ThirdFragment extends BaseFragment {
           Utils.show("手机号或者密码为空");
           break;
         }
-        mNetClickLogin = 1;
-        String url = BASE_URL + LOGIN;
-        JSONObject jsonObject = new JSONObject();
-        try {
-          jsonObject.put("mobile", etPhone.getText().toString());
-          jsonObject.put("imei", Utils.getIMEI());
-          jsonObject.put("channelId", fromPropertiesGetValue("channelId"));
-          jsonObject.put("password", etPassword.getText().toString());
-        } catch (JSONException e) {
-          LogUtil.showELog(TAG, "R.id.bt_login e :" + e.getLocalizedMessage());
-        }
-        String param = jsonObject.toString();
-        post(url, param);
+        login(phone, pass);
         LogUtil.showDLog(TAG, "bt_login()");
         break;
       case R.id.bt_register:
@@ -362,11 +357,27 @@ public class ThirdFragment extends BaseFragment {
         startActivity(new Intent(getActivity(), FeedBackActivity.class));
         break;
       case R.id.ll_task:
-        startActivity(new Intent(getActivity(), UnifiedInterstitialFullScreenADActivity.class));
+        startActivity(new Intent(getActivity(), RuleActivity.class));
         break;
       default:
         break;
     }
+  }
+
+  private void login(String phone, String pass) {
+    mNetClickLogin = 1;
+    String url = BASE_URL + LOGIN;
+    JSONObject jsonObject = new JSONObject();
+    try {
+      jsonObject.put("mobile", phone);
+      jsonObject.put("imei", Utils.getIMEI());
+      jsonObject.put("channelId", fromPropertiesGetValue("channelId"));
+      jsonObject.put("password", pass);
+    } catch (JSONException e) {
+      LogUtil.showELog(TAG, "R.id.bt_login e :" + e.getLocalizedMessage());
+    }
+    String param = jsonObject.toString();
+    post(url, param);
   }
 
   private void hidePassword() {

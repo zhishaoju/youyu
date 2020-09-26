@@ -8,6 +8,7 @@
   <include layout="@layout/include_title" />
 
   <TextView
+    android:id="@+id/tv_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/margin_16"
@@ -29,5 +30,16 @@
     android:text="确定"
     android:textColor="@color/black"
     android:textSize="@dimen/font_16" />
+
+  <FrameLayout
+    android:id="@+id/csj_express_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center" />
+
+  <FrameLayout
+    android:id="@+id/tx_bannerContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
 
 </LinearLayout>

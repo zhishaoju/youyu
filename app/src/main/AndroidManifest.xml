@@ -81,6 +81,7 @@
     <activity android:name=".activity.PrivacyPolicyActivity" />
     <activity android:name=".activity.FeedBackActivity" />
     <activity android:name=".activity.SplashTencentActivity" />
+    <activity android:name=".activity.RuleActivity" />
 
     <activity
       android:name=".activity.TaskActivity"

@@ -1,5 +1,10 @@
 package com.youyu.gao.xiao.activity;
 
+import static com.youyu.gao.xiao.utils.Contants.CHANNEL_ID;
+import static com.youyu.gao.xiao.utils.Contants.Net.ADSRECORD_ADD;
+import static com.youyu.gao.xiao.utils.Contants.Net.BASE_URL;
+import static com.youyu.gao.xiao.utils.Contants.USER_ID;
+
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -27,17 +32,23 @@ import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
 import com.youyu.gao.xiao.R;
 import com.youyu.gao.xiao.utils.Contants;
+import com.youyu.gao.xiao.utils.LogUtil;
+import com.youyu.gao.xiao.utils.SharedPrefsUtil;
+import com.youyu.gao.xiao.utils.Utils;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 这是demo工程的入口Activity，在这里会首次调用广点通的SDK。
  *
  * 在调用SDK之前，如果您的App的targetSDKVersion >= 23，那么建议动态申请相关权限。
  */
-public class SplashTencentActivity extends Activity implements SplashADListener,
+public class SplashTencentActivity extends BaseActivity implements SplashADListener,
     View.OnClickListener {
 
+  private final String TAG = "SplashTencentActivity";
   private SplashAD splashAD;
   private ViewGroup container;
   private TextView skipView;
@@ -212,6 +223,10 @@ public class SplashTencentActivity extends Activity implements SplashADListener,
   public void onADClicked() {
     Log.i("AD_DEMO", "SplashADClicked clickUrl: "
         + (splashAD.getExt() != null ? splashAD.getExt().get("clickUrl") : ""));
+    Map<String, String> map = new HashMap<>();
+    map.put("adsName", "0"); // 0:广点通 1:穿山甲 2:百度 3:adView
+    map.put("adsType", "0"); // 0:开屏广告 1:视频激励广告 2：图文广告
+    postAdsRecordAdd(map);
   }
 
   /**
@@ -357,5 +372,18 @@ public class SplashTencentActivity extends Activity implements SplashADListener,
         break;
       default:
     }
+  }
+
+  private void postAdsRecordAdd(Map params) {
+    LogUtil.showDLog(TAG, "postAdsRecordAdd");
+    if (params == null) {
+      return;
+    }
+    String url = BASE_URL + ADSRECORD_ADD;
+    params.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+    params.put("channel", SharedPrefsUtil.get(CHANNEL_ID, ""));
+    params.put("adsCode", "4");
+    params.put("activityType", "click");
+    post(url, Utils.paramsConvertString(params));
   }
 }

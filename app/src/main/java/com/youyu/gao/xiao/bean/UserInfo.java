@@ -16,5 +16,6 @@ public class UserInfo {
   public String id;
   public int agreeTotal;
   public int comTotal;
+  public boolean rwzx;
 
 }

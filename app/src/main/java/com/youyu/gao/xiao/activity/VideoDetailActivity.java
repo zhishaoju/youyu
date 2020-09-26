@@ -5,6 +5,8 @@ import static com.youyu.gao.xiao.utils.Contants.AD_CHUAN_SHA_JIA_REWARD_WAIT;
 import static com.youyu.gao.xiao.utils.Contants.AD_TENCENT_REWARD_WAIT;
 import static com.youyu.gao.xiao.utils.Contants.BroadcastConst.RECORD_ACTION;
 import static com.youyu.gao.xiao.utils.Contants.BroadcastConst.RECORD_STATUS;
+import static com.youyu.gao.xiao.utils.Contants.CHANNEL_ID;
+import static com.youyu.gao.xiao.utils.Contants.Net.ADSRECORD_ADD;
 import static com.youyu.gao.xiao.utils.Contants.Net.BASE_URL;
 import static com.youyu.gao.xiao.utils.Contants.Net.COLLECTION_ADD;
 import static com.youyu.gao.xiao.utils.Contants.Net.COMMENT_DETAIL;
@@ -20,7 +22,10 @@ import static com.youyu.gao.xiao.utils.Contants.USER_PHONE;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Message;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -51,8 +56,13 @@ import com.dueeeke.videoplayer.player.VideoView.OnStateChangeListener;
 import com.google.gson.Gson;
 import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
 import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
+import com.qq.e.ads.cfg.VideoOption;
+import com.qq.e.ads.interstitial2.UnifiedInterstitialAD;
+import com.qq.e.ads.interstitial2.UnifiedInterstitialADListener;
+import com.qq.e.ads.interstitial2.UnifiedInterstitialMediaListener;
 import com.qq.e.ads.rewardvideo.RewardVideoAD;
 import com.qq.e.ads.rewardvideo.RewardVideoADListener;
+import com.qq.e.comm.constants.AdPatternType;
 import com.qq.e.comm.util.AdError;
 import com.youyu.gao.xiao.R;
 import com.youyu.gao.xiao.adapter.VideoDetailCommentListAdapter;
@@ -69,7 +79,9 @@ import com.youyu.gao.xiao.utils.Utils;
 import com.youyu.gao.xiao.view.CircleImageView;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -136,7 +148,7 @@ public class VideoDetailActivity extends BaseActivity {
 
   private Intent mIntent;
 
-  //1：加载详情; 2:评论列表；3: 发表评论；4:收藏；5:点赞
+  //1：加载详情; 2:评论列表；3: 发表评论；4:收藏；5:点赞; 6:显示广告；7：点击记录
   private int flag = -1;
 
   private VideoPlayerItemInfo mVideoPlayerItemInfo;
@@ -165,6 +177,15 @@ public class VideoDetailActivity extends BaseActivity {
 
   // 腾讯激励广告结束
 
+  // 腾讯插屏广告开始
+  private UnifiedInterstitialAD iad;
+  private int csjTotal;
+  private int txTotal;
+
+  // 腾讯插屏广告结束
+  private String mClickAds;
+  private int netType; // 1:notices 2:add
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +198,7 @@ public class VideoDetailActivity extends BaseActivity {
     initListener();
     getComment();
   }
+
 
   private void initValue() {
     controller = new StandardVideoController(this);
@@ -300,6 +322,9 @@ public class VideoDetailActivity extends BaseActivity {
   protected void onDestroy() {
     super.onDestroy();
     videoPlayer.release();
+    if (iad != null) {
+      iad.destroy();
+    }
   }
 
   private void getComment() {
@@ -473,29 +498,46 @@ public class VideoDetailActivity extends BaseActivity {
         } else if (6 == flag) {
           LogUtil.showELog(TAG, "parseData(String data) 广告 6 == flag");
           try {
-            JSONObject jsonObject = new JSONObject(data);
-            int code = jsonObject.getInt("code");
-            if (code == 0) {
-              String d = jsonObject.getString("data");
-              AdsBean adsBean = new Gson().fromJson(d, AdsBean.class);
-              SharedPrefsUtil.put(Contants.CSJ, adsBean.adsConfig.csj);
-              SharedPrefsUtil.put(Contants.TX, adsBean.adsConfig.tx);
+            AdsBean adsBean = new Gson().fromJson(data, AdsBean.class);
+            if (adsBean.code == 0) {
+              SharedPrefsUtil.put(Contants.CSJ, adsBean.data.adsConfig.csj);
+              SharedPrefsUtil.put(Contants.TX, adsBean.data.adsConfig.tx);
 
-              if (adsBean.adsConfig.csj) {
+//              if (adsBean.data.adsConfig.csj) {
+//                //加载穿山甲激励广告
+//                loadAd(AD_CHUAN_SHA_JIA_REWARD_WAIT, TTAdConstant.VERTICAL);
+//              } else if (adsBean.data.adsConfig.tx) {
+//                // 2. 加载激励视频广告
+////                rewardVideoAD.loadAD(); // 这个素材太少所以没有使用
+//              }
+
+              csjTotal = Integer.valueOf(adsBean.data.adsConfig.csjTotal);
+              txTotal = Integer.valueOf(adsBean.data.adsConfig.txTotal);
+              mClickAds = adsBean.data.adsConfig.clickAds;
+
+              if (adsBean.data.adsConfig.csj) {
                 //加载穿山甲激励广告
                 loadAd(AD_CHUAN_SHA_JIA_REWARD_WAIT, TTAdConstant.VERTICAL);
-              } else if (adsBean.adsConfig.tx) {
-                // 2. 加载激励视频广告
-                rewardVideoAD.loadAD();
+              } else if (adsBean.data.adsConfig.tx) {
+//                 2. 加载激励视频广告
+//                rewardVideoAD.loadAD();
+                // 加载腾讯插屏广告
+                loadTxChaPingAD();
               }
             }
             refreshCus();
-          } catch (JSONException e) {
+          } catch (Exception e) {
             LogUtil.showELog(TAG, "initListener: e = " + e.getLocalizedMessage());
           }
         }
       }
     });
+  }
+
+  private void loadTxChaPingAD() {
+    iad = getIAD();
+    setVideoOption();
+    iad.loadAD();
   }
 
   private void parseData(String data) {
@@ -774,12 +816,22 @@ public class VideoDetailActivity extends BaseActivity {
               public void onAdShow() {
                 LogUtil.showELog(TAG, "Callback --> rewardVideoAd show");
                 //TToast.show(RewardVideoActivity.this, "rewardVideoAd show");
+                Message mGetSuccess = new Message();
+                mGetSuccess.obj = "点击这个广告有奖励";
+                mGetSuccess.what = 5;
+                mCusHandler.sendMessage(mGetSuccess);
               }
 
               @Override
               public void onAdVideoBarClick() {
                 LogUtil.showELog(TAG, "Callback --> rewardVideoAd bar click");
                 //TToast.show(RewardVideoActivity.this, "rewardVideoAd bar click");
+                if (Contants.AD_CLICK_CSJ.equals(mClickAds)) {
+                  Map<String, String> map = new HashMap<>();
+                  map.put("adsName", "1"); // 0:广点通 1:穿山甲 2:百度 3:adView
+                  map.put("adsType", "1"); // 0:开屏广告 1:视频激励广告 2：图文广告
+                  postAdsRecordAdd(map);
+                }
               }
 
               @Override
@@ -787,7 +839,6 @@ public class VideoDetailActivity extends BaseActivity {
                 LogUtil.showELog(TAG, "Callback --> rewardVideoAd close");
 
                 videoPlayer.start(); //开始播放，不调用则不自动播放
-
               }
 
               //视频播放完成回调
@@ -887,5 +938,196 @@ public class VideoDetailActivity extends BaseActivity {
     }
     post(url, jsonObject.toString());
   }
+
+  private void postAdsRecordAdd(Map params) {
+    flag = 6;
+    LogUtil.showDLog(TAG, "postAdsRecordAdd");
+    if (params == null) {
+      return;
+    }
+    String url = BASE_URL + ADSRECORD_ADD;
+    params.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+    params.put("channel", SharedPrefsUtil.get(CHANNEL_ID, ""));
+    params.put("adsCode", "4");
+    params.put("activityType", "click");
+    post(url, Utils.paramsConvertString(params));
+  }
+
+
+  // 加载腾讯插屏广告开始
+  private UnifiedInterstitialAD getIAD() {
+    if (this.iad != null) {
+      iad.close();
+      iad.destroy();
+      iad = null;
+    }
+    iad = new UnifiedInterstitialAD(this, Contants.AD_TENCENT_CHA_PING,
+        new UnifiedInterstitialADListener() {
+          @Override
+          public void onADClicked() {
+            LogUtil.showDLog(TAG,
+                "onADClicked : " + (iad.getExt() != null ? iad.getExt().get("clickUrl") : ""));
+            if (Contants.AD_CLICK_TX.equals(mClickAds)) {
+              Map<String, String> map = new HashMap<>();
+              map.put("adsName", "0"); // 0:广点通 1:穿山甲 2:百度 3:adView
+              map.put("adsType", "2"); // 0:开屏广告 1:视频激励广告 2：图文广告
+              postAdsRecordAdd(map);
+            }
+          }
+
+          @Override
+          public void onADClosed() {
+            LogUtil.showDLog(TAG, "onADClosed");
+
+            videoPlayer.start();
+          }
+
+          @Override
+          public void onADExposure() {
+            LogUtil.showDLog(TAG, "onADExposure");
+          }
+
+          @Override
+          public void onADLeftApplication() {
+            LogUtil.showDLog(TAG, "onADLeftApplication");
+          }
+
+          @Override
+          public void onADOpened() {
+            LogUtil.showDLog(TAG, "onADOpened");
+          }
+
+          @Override
+          public void onADReceive() {
+            // onADReceive之后才能调用getAdPatternType()
+            if (iad.getAdPatternType() == AdPatternType.NATIVE_VIDEO) {
+              iad.setMediaListener(new UnifiedInterstitialMediaListener() {
+
+                @Override
+                public void onVideoComplete() {
+                  LogUtil.showDLog(TAG, "onVideoComplete");
+                }
+
+                @Override
+                public void onVideoError(AdError adError) {
+                  LogUtil.showDLog(TAG,
+                      "onVideoError, code = " + adError.getErrorCode() + ", msg = " + adError
+                          .getErrorMsg());
+                }
+
+                @Override
+                public void onVideoInit() {
+                  LogUtil.showDLog(TAG, "onVideoInit");
+                }
+
+                @Override
+                public void onVideoLoading() {
+                  LogUtil.showDLog(TAG, "onVideoLoading");
+                }
+
+                @Override
+                public void onVideoPageClose() {
+                  LogUtil.showDLog(TAG, "onVideoPageClose");
+                }
+
+                @Override
+                public void onVideoPageOpen() {
+                  LogUtil.showDLog(TAG, "onVideoPageOpen");
+                }
+
+                @Override
+                public void onVideoPause() {
+                  LogUtil.showDLog(TAG, "onVideoPause");
+                }
+
+                @Override
+                public void onVideoReady(long l) {
+                  LogUtil.showDLog(TAG, "onVideoReady, duration = " + l);
+                }
+
+                @Override
+                public void onVideoStart() {
+                  LogUtil.showDLog(TAG, "onVideoStart");
+                }
+              });
+            }
+            showAD();
+            // onADReceive之后才可调用getECPM()
+            LogUtil.showDLog(TAG, "广告加载成功~");
+            LogUtil.showDLog(TAG, "eCPMLevel = " + iad.getECPMLevel());
+          }
+
+          @Override
+          public void onNoAD(AdError adError) {
+            String msg = String.format(Locale.getDefault(), "onNoAD, error code: %d, error msg: %s",
+                adError.getErrorCode(), adError.getErrorMsg());
+            LogUtil.showDLog(TAG, msg);
+          }
+
+          @Override
+          public void onVideoCached() {
+            LogUtil.showDLog(TAG, "onVideoCached");
+          }
+        });
+    return iad;
+  }
+
+  private void showAD() {
+    if (iad != null) {
+      Message mGetSuccess = new Message();
+      mGetSuccess.obj = "点击这个广告有奖励";
+      mGetSuccess.what = 5;
+      mCusHandler.sendMessage(mGetSuccess);
+      iad.show();
+    } else {
+      Toast.makeText(this, "请加载广告后再进行展示 ！ ", Toast.LENGTH_LONG).show();
+    }
+  }
+
+  private void setVideoOption() {
+    VideoOption.Builder builder = new VideoOption.Builder();
+    VideoOption option = builder.build();
+//    if(!btnNoOption.isChecked()){
+//      option = builder.setAutoPlayMuted(btnMute.isChecked())
+//          .setAutoPlayPolicy(networkSpinner.getSelectedItemPosition())
+//          .setDetailPageMuted(btnDetailMute.isChecked())
+//          .build();
+//    }
+//    iad.setVideoOption(option);
+//    iad.setMinVideoDuration(getMinVideoDuration());
+//    iad.setMaxVideoDuration(getMaxVideoDuration());
+
+    /**
+     * 如果广告位支持视频广告，强烈建议在调用loadData请求广告前调用setVideoPlayPolicy，有助于提高视频广告的eCPM值 <br/>
+     * 如果广告位仅支持图文广告，则无需调用
+     */
+
+    /**
+     * 设置本次拉取的视频广告，从用户角度看到的视频播放策略<p/>
+     *
+     * "用户角度"特指用户看到的情况，并非SDK是否自动播放，与自动播放策略AutoPlayPolicy的取值并非一一对应 <br/>
+     *
+     * 如自动播放策略为AutoPlayPolicy.WIFI，但此时用户网络为4G环境，在用户看来就是手工播放的
+     */
+    iad.setVideoPlayPolicy(getVideoPlayPolicy(option.getAutoPlayPolicy(), this));
+  }
+
+  public static int getVideoPlayPolicy(int autoPlayPolicy, Context context) {
+    if (autoPlayPolicy == VideoOption.AutoPlayPolicy.ALWAYS) {
+      return VideoOption.VideoPlayPolicy.AUTO;
+    } else if (autoPlayPolicy == VideoOption.AutoPlayPolicy.WIFI) {
+      ConnectivityManager cm = (ConnectivityManager) context
+          .getSystemService(Context.CONNECTIVITY_SERVICE);
+      NetworkInfo wifiNetworkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+      return wifiNetworkInfo != null && wifiNetworkInfo.isConnected()
+          ? VideoOption.VideoPlayPolicy.AUTO
+          : VideoOption.VideoPlayPolicy.MANUAL;
+    } else if (autoPlayPolicy == VideoOption.AutoPlayPolicy.NEVER) {
+      return VideoOption.VideoPlayPolicy.MANUAL;
+    }
+    return VideoOption.VideoPlayPolicy.UNKNOWN;
+  }
+  // 加载腾讯插屏广告结束
+
 
 }

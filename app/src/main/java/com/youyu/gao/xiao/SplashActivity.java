@@ -3,6 +3,8 @@ package com.youyu.gao.xiao;
 import static com.youyu.gao.xiao.utils.Contants.AD_BANNER;
 import static com.youyu.gao.xiao.utils.Contants.AD_TENCENT_DISPLAY;
 import static com.youyu.gao.xiao.utils.Contants.AD_TIME_OUT;
+import static com.youyu.gao.xiao.utils.Contants.CHANNEL_ID;
+import static com.youyu.gao.xiao.utils.Contants.Net.ADSRECORD_ADD;
 import static com.youyu.gao.xiao.utils.Contants.Net.BASE_URL;
 import static com.youyu.gao.xiao.utils.Contants.Net.NOTICE_ADS;
 import static com.youyu.gao.xiao.utils.Contants.USER_ID;
@@ -33,6 +35,8 @@ import com.youyu.gao.xiao.utils.Contants;
 import com.youyu.gao.xiao.utils.LogUtil;
 import com.youyu.gao.xiao.utils.SharedPrefsUtil;
 import com.youyu.gao.xiao.utils.Utils;
+import java.util.HashMap;
+import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -120,18 +124,17 @@ public class SplashActivity extends BaseActivity {
       @Override
       public void success(String data) {
         try {
-          JSONObject jsonObject = new JSONObject(data);
-          int code = jsonObject.getInt("code");
-          if (code == 0) {
-            String d = jsonObject.getString("data");
-            AdsBean adsBean = new Gson().fromJson(d, AdsBean.class);
-            SharedPrefsUtil.put(Contants.CSJ, adsBean.adsConfig.csj);
-            SharedPrefsUtil.put(Contants.TX, adsBean.adsConfig.tx);
+//          JSONObject jsonObject = new JSONObject(data);
+//          int code = jsonObject.getInt("code");
+          AdsBean adsBean = new Gson().fromJson(data, AdsBean.class);
+          if (adsBean.code == 0) {
+            SharedPrefsUtil.put(Contants.CSJ, adsBean.data.adsConfig.csj);
+            SharedPrefsUtil.put(Contants.TX, adsBean.data.adsConfig.tx);
 
-            if (Contants.CSJ.equals(adsBean.screen)) {
+            if (Contants.CSJ.equals(adsBean.data.screen)) {
               //加载穿山甲开屏广告
               loadSplashAd();
-            } else if (Contants.TX.equals(adsBean.screen)) {
+            } else if (Contants.TX.equals(adsBean.data.screen)) {
               //加载腾讯开屏广告开始
               SplashAD splashAD = new SplashAD(SplashActivity.this, AD_TENCENT_DISPLAY, null);
               LoadAdParams params = new LoadAdParams();
@@ -144,7 +147,7 @@ public class SplashActivity extends BaseActivity {
               startActivity(getSplashActivityIntent());
             }
           }
-        } catch (JSONException e) {
+        } catch (Exception e) {
           e.printStackTrace();
         }
       }
@@ -293,6 +296,10 @@ public class SplashActivity extends BaseActivity {
           public void onAdClicked(View view, int type) {
             Log.d(TAG, "onAdClicked");
 //            // showToast("开屏广告点击");
+            Map<String, String> map = new HashMap<>();
+            map.put("adsName", "1"); // 0:广点通 1:穿山甲 2:百度 3:adView
+            map.put("adsType", "0"); // 0:开屏广告 1:视频激励广告 2：图文广告
+            postAdsRecordAdd(map);
           }
 
           @Override
@@ -375,8 +382,18 @@ public class SplashActivity extends BaseActivity {
     this.finish();
   }
 
-  private void showToast(String msg) {
-    Utils.show(msg);
+
+  private void postAdsRecordAdd(Map params) {
+    LogUtil.showDLog(TAG, "postAdsRecordAdd");
+    if (params == null) {
+      return;
+    }
+    String url = BASE_URL + ADSRECORD_ADD;
+    params.put("userId", SharedPrefsUtil.get(USER_ID, ""));
+    params.put("channel", SharedPrefsUtil.get(CHANNEL_ID, ""));
+    params.put("adsCode", "4");
+    params.put("activityType", "click");
+    post(url, Utils.paramsConvertString(params));
   }
 
 }

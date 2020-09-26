@@ -254,6 +254,10 @@ public class BaseActivity extends FragmentActivity {
           LogUtil.showELog(TAG, "get e:" + e.toString());
         }
         break;
+      case 5:
+        String m5 = (String)msg.obj;
+        Utils.show(m5);
+          break;
       default:
         break;
     }
