@@ -1,45 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@color/white"
-  android:orientation="vertical">
-
-  <include layout="@layout/include_title" />
-
-  <TextView
-    android:id="@+id/tv_content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/margin_16"
-    android:layout_marginRight="@dimen/margin_16"
-    android:text="sss"
-    android:textColor="@color/black"
-    android:textSize="@dimen/font_16" />
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
-  <View
-    android:layout_width="1dp"
-    android:layout_height="0dp"
-    android:layout_weight="1" />
+    <include layout="@layout/include_title" />
 
-  <Button
-    android:id="@+id/bt_confirm"
-    style="@style/ButtonStyle"
-    android:layout_marginLeft="@dimen/margin_16"
-    android:layout_marginRight="@dimen/margin_16"
-    android:text="确定"
-    android:textColor="@color/black"
-    android:textSize="@dimen/font_16" />
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_28"
+        android:layout_marginRight="@dimen/margin_16"
+        android:background="@color/color_e5e5e5"
+        android:text="sss"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_16" />
 
-  <FrameLayout
-    android:id="@+id/csj_express_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center" />
+    <TextView
+        android:id="@+id/tv_click_reminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_20"
+        android:layout_marginRight="@dimen/margin_16"
+        android:background="@color/yellow2"
+        android:text="sss"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_16" />
 
-  <FrameLayout
-    android:id="@+id/tx_bannerContainer"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/bt_confirm"
+        style="@style/ButtonStyle"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginRight="@dimen/margin_16"
+        android:background="@color/yellow"
+        android:text="确定"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_16" />
+
+    <FrameLayout
+        android:id="@+id/csj_express_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <FrameLayout
+        android:id="@+id/tx_bannerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

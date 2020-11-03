@@ -14,9 +14,11 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.FilterWord;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
@@ -37,6 +39,7 @@ import com.youyu.gao.xiao.utils.Contants;
 import com.youyu.gao.xiao.utils.LogUtil;
 import com.youyu.gao.xiao.utils.SharedPrefsUtil;
 import com.youyu.gao.xiao.utils.Utils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +58,8 @@ public class RuleActivity extends BaseActivity {
   TextView tvTitle;
   @BindView(R.id.tv_content)
   TextView tvContent;
+  @BindView(R.id.tv_click_reminder)
+  TextView tvClickReminder;
   @BindView(R.id.rl_title)
   RelativeLayout rlTitle;
   @BindView(R.id.bt_confirm)
@@ -119,6 +124,7 @@ public class RuleActivity extends BaseActivity {
       public void success(String data) {
         AdsBean adsBean = new Gson().fromJson(data, AdsBean.class);
         tvContent.setText(adsBean.data.content + "");
+        tvClickReminder.setText(adsBean.data.adsConfig.clickAds + "");
       }
     });
   }
@@ -302,7 +308,7 @@ public class RuleActivity extends BaseActivity {
 
       @Override
       public void onDownloadActive(long totalBytes, long currBytes, String fileName,
-          String appName) {
+                                   String appName) {
         if (!mHasShowDownloadActive) {
           mHasShowDownloadActive = true;
           LogUtil.showDLog(TAG, "下载中，点击暂停");
@@ -311,13 +317,13 @@ public class RuleActivity extends BaseActivity {
 
       @Override
       public void onDownloadPaused(long totalBytes, long currBytes, String fileName,
-          String appName) {
+                                   String appName) {
         LogUtil.showDLog(TAG, "下载暂停，点击继续");
       }
 
       @Override
       public void onDownloadFailed(long totalBytes, long currBytes, String fileName,
-          String appName) {
+                                   String appName) {
         LogUtil.showDLog(TAG, "下载失败，点击重新下载");
       }
 
