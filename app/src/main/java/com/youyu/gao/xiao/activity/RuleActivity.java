@@ -14,11 +14,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.FilterWord;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
@@ -39,7 +37,6 @@ import com.youyu.gao.xiao.utils.Contants;
 import com.youyu.gao.xiao.utils.LogUtil;
 import com.youyu.gao.xiao.utils.SharedPrefsUtil;
 import com.youyu.gao.xiao.utils.Utils;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +74,9 @@ public class RuleActivity extends BaseActivity {
   private long startTime = 0;
   private boolean mHasShowDownloadActive = false;
   // 穿山甲广告结束
+
+  private int csjTotal;
+  private int txTotal;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +124,17 @@ public class RuleActivity extends BaseActivity {
       public void success(String data) {
         AdsBean adsBean = new Gson().fromJson(data, AdsBean.class);
         tvContent.setText(adsBean.data.content + "");
-        tvClickReminder.setText(adsBean.data.adsConfig.clickAds + "");
+
+        csjTotal = Integer.valueOf(adsBean.data.adsConfig.csjTotal);
+        txTotal = Integer.valueOf(adsBean.data.adsConfig.txTotal);
+
+        if (adsBean.data.adsConfig.clickAds.equals("csj") && adsBean.data.adsConfig.csj
+            && csjTotal >= 1) {
+          // 此时先加载的穿山甲
+          tvClickReminder.setText("点击第一个视频，有惊喜~");
+        } else {
+          tvClickReminder.setText("点击第二个视频，有惊喜~");
+        }
       }
     });
   }
@@ -308,7 +318,7 @@ public class RuleActivity extends BaseActivity {
 
       @Override
       public void onDownloadActive(long totalBytes, long currBytes, String fileName,
-                                   String appName) {
+          String appName) {
         if (!mHasShowDownloadActive) {
           mHasShowDownloadActive = true;
           LogUtil.showDLog(TAG, "下载中，点击暂停");
@@ -317,13 +327,13 @@ public class RuleActivity extends BaseActivity {
 
       @Override
       public void onDownloadPaused(long totalBytes, long currBytes, String fileName,
-                                   String appName) {
+          String appName) {
         LogUtil.showDLog(TAG, "下载暂停，点击继续");
       }
 
       @Override
       public void onDownloadFailed(long totalBytes, long currBytes, String fileName,
-                                   String appName) {
+          String appName) {
         LogUtil.showDLog(TAG, "下载失败，点击重新下载");
       }
 

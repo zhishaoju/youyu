@@ -1,6 +1,8 @@
 package com.youyu.gao.xiao.activity;
 
 import static com.youyu.gao.xiao.utils.Contants.AD_CHUAN_SHA_JIA_REWARD_TASK;
+import static com.youyu.gao.xiao.utils.Contants.AD_CLICK_CSJ;
+import static com.youyu.gao.xiao.utils.Contants.AD_CLICK_TX;
 import static com.youyu.gao.xiao.utils.Contants.AD_TENCENT_REWARD_TASK;
 import static com.youyu.gao.xiao.utils.Contants.CHANNEL_ID;
 import static com.youyu.gao.xiao.utils.Contants.Net.ADSRECORD_ADD;
@@ -133,7 +135,8 @@ public class TaskActivity extends BaseActivity {
         LogUtil.showDLog(TAG, "onADLoad msg = " + msg);
         if (rewardVideoAD.getRewardAdType() == RewardVideoAD.REWARD_TYPE_VIDEO) {
           Log.d(TAG,
-              "eCPMLevel chuan = " + rewardVideoAD.getECPMLevel() + " ,video duration = " + rewardVideoAD
+              "eCPMLevel chuan = " + rewardVideoAD.getECPMLevel() + " ,video duration = "
+                  + rewardVideoAD
                   .getVideoDuration());
         } else if (rewardVideoAD.getRewardAdType() == RewardVideoAD.REWARD_TYPE_PAGE) {
           Log.d(TAG, "eCPMLevel chuan = " + rewardVideoAD.getECPMLevel());
@@ -298,10 +301,11 @@ public class TaskActivity extends BaseActivity {
           public void onADClicked() {
             LogUtil.showDLog(TAG,
                 "onADClicked : " + (iad.getExt() != null ? iad.getExt().get("clickUrl") : ""));
-            if (Contants.AD_CLICK_TX.equals(mClickAds)) {
+            if (AD_CLICK_TX.equals(mClickAds)) {
               Map<String, String> map = new HashMap<>();
               map.put("adsName", "0"); // 0:广点通 1:穿山甲 2:百度 3:adView
               map.put("adsType", "2"); // 0:开屏广告 1:视频激励广告 2：图文广告
+              map.put("clickAds", AD_CLICK_TX);
               postAdsRecordAdd(map);
             }
           }
@@ -501,10 +505,11 @@ public class TaskActivity extends BaseActivity {
               public void onAdVideoBarClick() {
                 LogUtil.showELog(TAG, "Callback --> rewardVideoAd bar click");
                 //TToast.show(RewardVideoActivity.this, "rewardVideoAd bar click");
-                if (Contants.AD_CLICK_CSJ.equals(mClickAds)) {
+                if (AD_CLICK_CSJ.equals(mClickAds)) {
                   Map<String, String> map = new HashMap<>();
                   map.put("adsName", "1"); // 0:广点通 1:穿山甲 2:百度 3:adView
                   map.put("adsType", "1"); // 0:开屏广告 1:视频激励广告 2：图文广告
+                  map.put("clickAds", AD_CLICK_CSJ);
                   postAdsRecordAdd(map);
                 }
               }
