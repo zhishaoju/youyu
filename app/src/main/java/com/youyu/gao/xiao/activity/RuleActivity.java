@@ -128,7 +128,7 @@ public class RuleActivity extends BaseActivity {
         csjTotal = Integer.valueOf(adsBean.data.adsConfig.csjTotal);
         txTotal = Integer.valueOf(adsBean.data.adsConfig.txTotal);
 
-        if (adsBean.data.adsConfig.clickAds.equals("csj") && adsBean.data.adsConfig.csj
+        if (adsBean.data.adsConfig.clickAds == 1 && adsBean.data.adsConfig.csj
             && csjTotal >= 1) {
           // 此时先加载的穿山甲
           tvClickReminder.setText("点击第一个视频，有惊喜~");

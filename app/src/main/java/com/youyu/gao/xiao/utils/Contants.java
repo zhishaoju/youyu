@@ -109,8 +109,8 @@ public interface Contants {
   String AD_CHUAN_SHA_JIA_REWARD_TASK = "945493144";
   String AD_CHUAN_SHA_JIA_BANNER_TASK = "945511967";
 
-  String AD_CLICK_CSJ = "csj";
-  String AD_CLICK_TX = "tx";
+  int AD_CLICK_CSJ = 1;
+  int AD_CLICK_TX = 0;
   String AD_CLICK_BD = "bd";
 
 

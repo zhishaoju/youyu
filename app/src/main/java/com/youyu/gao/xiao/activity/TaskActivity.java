@@ -74,7 +74,7 @@ public class TaskActivity extends BaseActivity {
 
   private int csjTotal;
   private int txTotal;
-  private String mClickAds;
+  private int mClickAds;
 
   private int netType; // 1:notices 2:add
 
@@ -301,11 +301,11 @@ public class TaskActivity extends BaseActivity {
           public void onADClicked() {
             LogUtil.showDLog(TAG,
                 "onADClicked : " + (iad.getExt() != null ? iad.getExt().get("clickUrl") : ""));
-            if (AD_CLICK_TX.equals(mClickAds)) {
+            if (AD_CLICK_TX == mClickAds) {
               Map<String, String> map = new HashMap<>();
               map.put("adsName", "0"); // 0:广点通 1:穿山甲 2:百度 3:adView
               map.put("adsType", "2"); // 0:开屏广告 1:视频激励广告 2：图文广告
-              map.put("clickAds", AD_CLICK_TX);
+              map.put("clickAds", AD_CLICK_TX + "");
               postAdsRecordAdd(map);
             }
           }
@@ -505,11 +505,11 @@ public class TaskActivity extends BaseActivity {
               public void onAdVideoBarClick() {
                 LogUtil.showELog(TAG, "Callback --> rewardVideoAd bar click");
                 //TToast.show(RewardVideoActivity.this, "rewardVideoAd bar click");
-                if (AD_CLICK_CSJ.equals(mClickAds)) {
+                if (AD_CLICK_CSJ == mClickAds) {
                   Map<String, String> map = new HashMap<>();
                   map.put("adsName", "1"); // 0:广点通 1:穿山甲 2:百度 3:adView
                   map.put("adsType", "1"); // 0:开屏广告 1:视频激励广告 2：图文广告
-                  map.put("clickAds", AD_CLICK_CSJ);
+                  map.put("clickAds", AD_CLICK_CSJ + "");
                   postAdsRecordAdd(map);
                 }
               }

@@ -32,6 +32,6 @@ public class AdsBean extends BaseResponseBean{
     public boolean csj;
     public String csjTotal;
     public String txTotal;
-    public String clickAds;
+    public int clickAds;
   }
 }
