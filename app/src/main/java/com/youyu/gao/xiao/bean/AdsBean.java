@@ -24,6 +24,15 @@ public class AdsBean extends BaseResponseBean{
     public AdsConfig adsConfig;
     public String screen;
     public String content;
+
+    @Override
+    public String toString() {
+      return "Data{" +
+        "adsConfig=" + adsConfig +
+        ", screen='" + screen + '\'' +
+        ", content='" + content + '\'' +
+        '}';
+    }
   }
 
   public class AdsConfig {
@@ -32,6 +41,25 @@ public class AdsBean extends BaseResponseBean{
     public boolean csj;
     public String csjTotal;
     public String txTotal;
+    // 0:广点通 1:穿山甲 2:百度 3:adView
     public int clickAds;
+
+    @Override
+    public String toString() {
+      return "AdsConfig{" +
+        "tx=" + tx +
+        ", csj=" + csj +
+        ", csjTotal='" + csjTotal + '\'' +
+        ", txTotal='" + txTotal + '\'' +
+        ", clickAds=" + clickAds +
+        '}';
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "AdsBean{" +
+      "data=" + data +
+      '}';
   }
 }

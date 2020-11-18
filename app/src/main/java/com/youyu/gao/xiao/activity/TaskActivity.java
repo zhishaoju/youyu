@@ -282,7 +282,7 @@ public class TaskActivity extends BaseActivity {
 
         @Override
         public void onADOpened() {
-          LogUtil.showDLog(TAG, "onADOpened");
+          LogUtil.showDLog(TAG, "广点通 onADOpened");
         }
 
         @Override
@@ -293,68 +293,68 @@ public class TaskActivity extends BaseActivity {
 
               @Override
               public void onVideoComplete() {
-                LogUtil.showDLog(TAG, "onVideoComplete");
+                LogUtil.showDLog(TAG, "广点通 onVideoComplete");
               }
 
               @Override
               public void onVideoError(AdError adError) {
                 LogUtil.showDLog(TAG,
-                  "onVideoError, code = " + adError.getErrorCode() + ", msg = " + adError
+                  "广点通 onVideoError, code = " + adError.getErrorCode() + ", msg = " + adError
                     .getErrorMsg());
               }
 
               @Override
               public void onVideoInit() {
-                LogUtil.showDLog(TAG, "onVideoInit");
+                LogUtil.showDLog(TAG, "广点通 onVideoInit");
               }
 
               @Override
               public void onVideoLoading() {
-                LogUtil.showDLog(TAG, "onVideoLoading");
+                LogUtil.showDLog(TAG, "广点通 onVideoLoading");
               }
 
               @Override
               public void onVideoPageClose() {
-                LogUtil.showDLog(TAG, "onVideoPageClose");
+                LogUtil.showDLog(TAG, "广点通 onVideoPageClose");
               }
 
               @Override
               public void onVideoPageOpen() {
-                LogUtil.showDLog(TAG, "onVideoPageOpen");
+                LogUtil.showDLog(TAG, "广点通 onVideoPageOpen");
               }
 
               @Override
               public void onVideoPause() {
-                LogUtil.showDLog(TAG, "onVideoPause");
+                LogUtil.showDLog(TAG, "广点通 onVideoPause");
               }
 
               @Override
               public void onVideoReady(long l) {
-                LogUtil.showDLog(TAG, "onVideoReady, duration = " + l);
+                LogUtil.showDLog(TAG, "广点通 onVideoReady, duration = " + l);
               }
 
               @Override
               public void onVideoStart() {
-                LogUtil.showDLog(TAG, "onVideoStart");
+                LogUtil.showDLog(TAG, "广点通 onVideoStart");
               }
             });
           }
           showAD();
           // onADReceive之后才可调用getECPM()
-          LogUtil.showDLog(TAG, "广告加载成功~");
-          LogUtil.showDLog(TAG, "eCPMLevel tx = " + iad.getECPMLevel());
+          LogUtil.showDLog(TAG, "广点通广告加载成功~");
+          LogUtil.showDLog(TAG, "广点通 eCPMLevel tx = " + iad.getECPMLevel());
         }
 
         @Override
         public void onNoAD(AdError adError) {
-          String msg = String.format(Locale.getDefault(), "onNoAD, error code: %d, error msg: %s",
+          String msg = String.format(Locale.getDefault(), "广点通 onNoAD, error code: %d, error msg: %s",
             adError.getErrorCode(), adError.getErrorMsg());
           LogUtil.showDLog(TAG, msg);
         }
 
         @Override
         public void onVideoCached() {
-          LogUtil.showDLog(TAG, "onVideoCached");
+          LogUtil.showDLog(TAG, "广点通 onVideoCached");
         }
       });
     return iad;
@@ -362,8 +362,10 @@ public class TaskActivity extends BaseActivity {
 
   private void showAD() {
     if (iad != null) {
-      Utils.show("点击这个广告有奖励~");
-      LogUtil.showDLog(TAG, "点击tx有奖励");
+      if (adsBean.data.adsConfig.clickAds == 0) {
+        Utils.show("点击这个广告有奖励~");
+        LogUtil.showDLog(TAG, "点击tx有奖励");
+      }
       iad.show();
 
       mCountDownTimer.start();
@@ -484,6 +486,7 @@ public class TaskActivity extends BaseActivity {
               LogUtil.showELog(TAG, "Callback --> rewardVideoAd complete");
               //TToast.show(RewardVideoActivity.this, "rewardVideoAd complete");
 //                rewardVideoAD.loadAD();
+
               if (adsBean != null) {
                 if (adsBean.data.adsConfig.tx && txTotal >= 1) {
                   // 加载腾讯插屏广告
