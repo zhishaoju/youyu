@@ -16,7 +16,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
 import androidx.annotation.MainThread;
+
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdNative;
@@ -35,8 +37,10 @@ import com.youyu.gao.xiao.utils.Contants;
 import com.youyu.gao.xiao.utils.LogUtil;
 import com.youyu.gao.xiao.utils.SharedPrefsUtil;
 import com.youyu.gao.xiao.utils.Utils;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -128,13 +132,11 @@ public class SplashActivity extends BaseActivity {
 //          int code = jsonObject.getInt("code");
           AdsBean adsBean = new Gson().fromJson(data, AdsBean.class);
           if (adsBean.code == 0) {
-            SharedPrefsUtil.put(Contants.CSJ, adsBean.data.adsConfig.csj);
-            SharedPrefsUtil.put(Contants.TX, adsBean.data.adsConfig.tx);
-
-            if (Contants.CSJ.equals(adsBean.data.screen)) {
+            // 0:广点通 1:穿山甲 2:百度 3:adView
+            if (adsBean.data.screen == 1) {
               //加载穿山甲开屏广告
               loadSplashAd();
-            } else if (Contants.TX.equals(adsBean.data.screen)) {
+            } else if (adsBean.data.screen == 0) {
               //加载腾讯开屏广告开始
               SplashAD splashAD = new SplashAD(SplashActivity.this, AD_TENCENT_DISPLAY, null);
               LoadAdParams params = new LoadAdParams();
@@ -168,15 +170,15 @@ public class SplashActivity extends BaseActivity {
   /**
    * 拉取开屏广告，开屏广告的构造方法有3种，详细说明请参考开发者文档。
    *
-   * @param activity 展示广告的activity
-   * @param adContainer 展示广告的大容器
+   * @param activity      展示广告的activity
+   * @param adContainer   展示广告的大容器
    * @param skipContainer 自定义的跳过按钮：传入该view给SDK后，SDK会自动给它绑定点击跳过事件。SkipView的样式可以由开发者自由定制，其尺寸限制请参考activity_splash.xml或者接入文档中的说明。
-   * @param posId 广告位ID
-   * @param adListener 广告状态监听器
-   * @param fetchDelay 拉取广告的超时时长：取值范围[3000, 5000]，设为0表示使用广点通SDK默认的超时时长。
+   * @param posId         广告位ID
+   * @param adListener    广告状态监听器
+   * @param fetchDelay    拉取广告的超时时长：取值范围[3000, 5000]，设为0表示使用广点通SDK默认的超时时长。
    */
   private void fetchSplashAD(Activity activity, ViewGroup adContainer, View skipContainer,
-      String posId, SplashADListener adListener, int fetchDelay) {
+                             String posId, SplashADListener adListener, int fetchDelay) {
 //    fetchSplashADTime = System.currentTimeMillis();
 //    splashAD = new SplashAD(activity, skipContainer, posId, adListener, fetchDelay);
 //    splashAD.fetchAndShowIn(adContainer);
@@ -240,18 +242,18 @@ public class SplashActivity extends BaseActivity {
       float expressViewWidth = Utils.getScreenWidthDp(this);
       float expressViewHeight = Utils.getHeight(this);
       adSlot = new AdSlot.Builder()
-          .setCodeId(AD_BANNER)
-          .setSupportDeepLink(true)
-          .setImageAcceptedSize(1080, 1920)
-          //模板广告需要设置期望个性化模板广告的大小,单位dp,代码位是否属于个性化模板广告，请在穿山甲平台查看
-          .setExpressViewAcceptedSize(expressViewWidth, expressViewHeight)
-          .build();
+              .setCodeId(AD_BANNER)
+              .setSupportDeepLink(true)
+              .setImageAcceptedSize(1080, 1920)
+              //模板广告需要设置期望个性化模板广告的大小,单位dp,代码位是否属于个性化模板广告，请在穿山甲平台查看
+              .setExpressViewAcceptedSize(expressViewWidth, expressViewHeight)
+              .build();
     } else {
       adSlot = new AdSlot.Builder()
-          .setCodeId(AD_BANNER)
-          .setSupportDeepLink(true)
-          .setImageAcceptedSize(1080, 1920)
-          .build();
+              .setCodeId(AD_BANNER)
+              .setSupportDeepLink(true)
+              .setImageAcceptedSize(1080, 1920)
+              .build();
     }
 
     //step4:请求广告，调用开屏广告异步请求接口，对请求回调的广告作渲染处理
@@ -333,7 +335,7 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void onDownloadActive(long totalBytes, long currBytes, String fileName,
-                String appName) {
+                                         String appName) {
               if (!hasShow) {
 //                // showToast("下载中...");
                 hasShow = true;
@@ -342,14 +344,14 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void onDownloadPaused(long totalBytes, long currBytes, String fileName,
-                String appName) {
+                                         String appName) {
               // showToast("下载暂停...");
 
             }
 
             @Override
             public void onDownloadFailed(long totalBytes, long currBytes, String fileName,
-                String appName) {
+                                         String appName) {
               // showToast("下载失败...");
 
             }

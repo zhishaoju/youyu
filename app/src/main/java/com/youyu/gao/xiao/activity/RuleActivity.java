@@ -1,5 +1,6 @@
 package com.youyu.gao.xiao.activity;
 
+import static com.youyu.gao.xiao.utils.Contants.AD_KEY;
 import static com.youyu.gao.xiao.utils.Contants.Net.BASE_URL;
 import static com.youyu.gao.xiao.utils.Contants.Net.NOTICE_ADS;
 import static com.youyu.gao.xiao.utils.Contants.USER_ID;
@@ -14,9 +15,11 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.FilterWord;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
@@ -37,6 +40,7 @@ import com.youyu.gao.xiao.utils.Contants;
 import com.youyu.gao.xiao.utils.LogUtil;
 import com.youyu.gao.xiao.utils.SharedPrefsUtil;
 import com.youyu.gao.xiao.utils.Utils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +63,7 @@ public class RuleActivity extends BaseActivity {
   TextView tvClickReminder;
   @BindView(R.id.rl_title)
   RelativeLayout rlTitle;
-  @BindView(R.id.bt_confirm)
+  @BindView(R.id.bt_task1)
   Button btConfirm;
   @BindView(R.id.tx_bannerContainer)
   FrameLayout txBannerContainer;
@@ -74,9 +78,6 @@ public class RuleActivity extends BaseActivity {
   private long startTime = 0;
   private boolean mHasShowDownloadActive = false;
   // 穿山甲广告结束
-
-  private int csjTotal;
-  private int txTotal;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -125,27 +126,35 @@ public class RuleActivity extends BaseActivity {
         AdsBean adsBean = new Gson().fromJson(data, AdsBean.class);
         tvContent.setText(adsBean.data.content + "");
 
-        csjTotal = Integer.valueOf(adsBean.data.adsConfig.csjTotal);
-        txTotal = Integer.valueOf(adsBean.data.adsConfig.txTotal);
-
-        if (adsBean.data.adsConfig.clickAds == 1 && adsBean.data.adsConfig.csj
-            && csjTotal >= 1) {
+        if (adsBean.data.clickAds == adsBean.data.taskOne) {
           // 此时先加载的穿山甲
           tvClickReminder.setText("点击第一个视频，有惊喜~");
-        } else {
+        } else if (adsBean.data.clickAds == adsBean.data.taskTwo) {
           tvClickReminder.setText("点击第二个视频，有惊喜~");
+        } else if (adsBean.data.clickAds == adsBean.data.taskThree) {
+          tvClickReminder.setText("点击第三个视频，有惊喜~");
         }
       }
     });
   }
 
-  @OnClick({R.id.fl_back, R.id.bt_confirm})
+  @OnClick({R.id.fl_back, R.id.bt_task1})
   public void onViewClicked(View view) {
+    Intent i = new Intent(this, TaskActivity.class);
     switch (view.getId()) {
       case R.id.fl_back:
         finish();
         break;
-      case R.id.bt_confirm:
+      case R.id.bt_task1:
+        i.putExtra(AD_KEY, 1);
+        startActivity(new Intent(this, TaskActivity.class));
+        break;
+      case R.id.bt_task2:
+        i.putExtra(AD_KEY, 2);
+        startActivity(new Intent(this, TaskActivity.class));
+        break;
+      case R.id.bt_task3:
+        i.putExtra(AD_KEY, 3);
         startActivity(new Intent(this, TaskActivity.class));
         break;
     }
@@ -176,48 +185,48 @@ public class RuleActivity extends BaseActivity {
       bv.destroy();
     }
     this.bv = new UnifiedBannerView(this, Contants.AD_TENCENT_BANNER,
-        new UnifiedBannerADListener() {
+            new UnifiedBannerADListener() {
 
-          @Override
-          public void onADClicked() {
-            LogUtil.showDLog(TAG, "onADClicked");
-          }
+              @Override
+              public void onADClicked() {
+                LogUtil.showDLog(TAG, "onADClicked");
+              }
 
-          @Override
-          public void onADCloseOverlay() {
-            LogUtil.showDLog(TAG, "onADCloseOverlay");
-          }
+              @Override
+              public void onADCloseOverlay() {
+                LogUtil.showDLog(TAG, "onADCloseOverlay");
+              }
 
-          @Override
-          public void onADClosed() {
-            LogUtil.showDLog(TAG, "onADClosed");
-          }
+              @Override
+              public void onADClosed() {
+                LogUtil.showDLog(TAG, "onADClosed");
+              }
 
-          @Override
-          public void onADExposure() {
-            LogUtil.showDLog(TAG, "onADExposure");
-          }
+              @Override
+              public void onADExposure() {
+                LogUtil.showDLog(TAG, "onADExposure");
+              }
 
-          @Override
-          public void onADLeftApplication() {
-            LogUtil.showDLog(TAG, "onADLeftApplication");
-          }
+              @Override
+              public void onADLeftApplication() {
+                LogUtil.showDLog(TAG, "onADLeftApplication");
+              }
 
-          @Override
-          public void onADOpenOverlay() {
-            LogUtil.showDLog(TAG, "onADOpenOverlay");
-          }
+              @Override
+              public void onADOpenOverlay() {
+                LogUtil.showDLog(TAG, "onADOpenOverlay");
+              }
 
-          @Override
-          public void onADReceive() {
-            LogUtil.showDLog(TAG, "onADReceive");
-          }
+              @Override
+              public void onADReceive() {
+                LogUtil.showDLog(TAG, "onADReceive");
+              }
 
-          @Override
-          public void onNoAD(AdError adError) {
-            LogUtil.showDLog(TAG, "onNoAD");
-          }
-        });
+              @Override
+              public void onNoAD(AdError adError) {
+                LogUtil.showDLog(TAG, "onNoAD");
+              }
+            });
     this.bv.setRefresh(5);// 5s刷新一次
     // 不需要传递tags使用下面构造函数
     // this.bv = new UnifiedBannerView(this, Constants.APPID, posId, this);
@@ -251,12 +260,12 @@ public class RuleActivity extends BaseActivity {
     int h = Utils.px2dip(this, 400);
     //step4:创建广告请求参数AdSlot,具体参数含义参考文档
     AdSlot adSlot = new AdSlot.Builder()
-        .setCodeId(Contants.AD_CHUAN_SHA_JIA_BANNER_TASK) //广告位id
-        .setSupportDeepLink(true)
-        .setAdCount(3) //请求广告数量为1到3条
+            .setCodeId(Contants.AD_CHUAN_SHA_JIA_BANNER_TASK) //广告位id
+            .setSupportDeepLink(true)
+            .setAdCount(3) //请求广告数量为1到3条
 //        .setExpressViewAcceptedSize(expressViewWidth, expressViewHeight) //期望模板广告view的size,单位dp
-        .setExpressViewAcceptedSize(w, h)
-        .build();
+            .setExpressViewAcceptedSize(w, h)
+            .build();
     //step5:请求广告，对请求回调的广告作渲染处理
     mTTAdNative.loadBannerExpressAd(adSlot, new TTAdNative.NativeExpressAdListener() {
       @Override
@@ -318,7 +327,7 @@ public class RuleActivity extends BaseActivity {
 
       @Override
       public void onDownloadActive(long totalBytes, long currBytes, String fileName,
-          String appName) {
+                                   String appName) {
         if (!mHasShowDownloadActive) {
           mHasShowDownloadActive = true;
           LogUtil.showDLog(TAG, "下载中，点击暂停");
@@ -327,13 +336,13 @@ public class RuleActivity extends BaseActivity {
 
       @Override
       public void onDownloadPaused(long totalBytes, long currBytes, String fileName,
-          String appName) {
+                                   String appName) {
         LogUtil.showDLog(TAG, "下载暂停，点击继续");
       }
 
       @Override
       public void onDownloadFailed(long totalBytes, long currBytes, String fileName,
-          String appName) {
+                                   String appName) {
         LogUtil.showDLog(TAG, "下载失败，点击重新下载");
       }
 

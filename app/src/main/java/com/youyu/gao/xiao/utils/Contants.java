@@ -144,4 +144,8 @@ public interface Contants {
   public static final int VIDEO_DURATION_SETTING_MIN = 5;
   public static final int VIDEO_DURATION_SETTING_MAX = 60;
 
+
+  // 广告类型
+  String AD_KEY = "ad_key";
+
 }

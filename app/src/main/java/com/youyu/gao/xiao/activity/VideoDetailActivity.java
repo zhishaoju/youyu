@@ -179,12 +179,10 @@ public class VideoDetailActivity extends BaseActivity {
 
   // 腾讯插屏广告开始
   private UnifiedInterstitialAD iad;
-  private int csjTotal;
-  private int txTotal;
 
   // 腾讯插屏广告结束
-  private int mClickAds;
   private int netType; // 1:notices 2:add
+  private int mClickAds = -1;
 
 
   @Override
@@ -500,9 +498,6 @@ public class VideoDetailActivity extends BaseActivity {
           try {
             AdsBean adsBean = new Gson().fromJson(data, AdsBean.class);
             if (adsBean.code == 0) {
-              SharedPrefsUtil.put(Contants.CSJ, adsBean.data.adsConfig.csj);
-              SharedPrefsUtil.put(Contants.TX, adsBean.data.adsConfig.tx);
-
 //              if (adsBean.data.adsConfig.csj) {
 //                //加载穿山甲激励广告
 //                loadAd(AD_CHUAN_SHA_JIA_REWARD_WAIT, TTAdConstant.VERTICAL);
@@ -511,14 +506,11 @@ public class VideoDetailActivity extends BaseActivity {
 ////                rewardVideoAD.loadAD(); // 这个素材太少所以没有使用
 //              }
 
-              csjTotal = Integer.valueOf(adsBean.data.adsConfig.csjTotal);
-              txTotal = Integer.valueOf(adsBean.data.adsConfig.txTotal);
-              mClickAds = adsBean.data.adsConfig.clickAds;
-
-              if (adsBean.data.adsConfig.csj) {
+//              0:广点通 1:穿山甲 2:百度 3:adView
+              if (adsBean.data.videoDetail && adsBean.data.adType == 1) {
                 //加载穿山甲激励广告
                 loadAd(AD_CHUAN_SHA_JIA_REWARD_WAIT, TTAdConstant.VERTICAL);
-              } else if (adsBean.data.adsConfig.tx) {
+              } else if (adsBean.data.videoDetail && adsBean.data.adType == 0) {
 //                 2. 加载激励视频广告
 //                rewardVideoAD.loadAD();
                 // 加载腾讯插屏广告

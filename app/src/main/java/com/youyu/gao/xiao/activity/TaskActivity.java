@@ -79,8 +79,6 @@ public class TaskActivity extends BaseActivity {
   // 腾讯插屏广告开始
   private UnifiedInterstitialAD iad;
 
-  private int csjTotal;
-  private int txTotal;
   private int mClickAds;
 
   private int netType; // 1:notices 2:add
@@ -104,7 +102,6 @@ public class TaskActivity extends BaseActivity {
   }
 
   private void loadTxChaPingAD() {
-    txTotal--;
     iad = getIAD();
     setVideoOption();
     iad.loadAD();
@@ -155,10 +152,6 @@ public class TaskActivity extends BaseActivity {
           try {
             adsBean = new Gson().fromJson(data, AdsBean.class);
             if (adsBean.code == 0) {
-              SharedPrefsUtil.put(Contants.CSJ, adsBean.data.adsConfig.csj);
-              SharedPrefsUtil.put(Contants.TX, adsBean.data.adsConfig.tx);
-              csjTotal = Integer.valueOf(adsBean.data.adsConfig.csjTotal);
-              txTotal = Integer.valueOf(adsBean.data.adsConfig.txTotal);
               mClickAds = adsBean.data.adsConfig.clickAds;
 
               if (adsBean.data.adsConfig.csj && csjTotal >= 1) {

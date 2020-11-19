@@ -15,7 +15,7 @@
         android:layout_marginTop="@dimen/margin_28"
         android:layout_marginRight="@dimen/margin_16"
         android:background="@color/color_e5e5e5"
-        android:text="sss"
+        android:text="信息介绍"
         android:textColor="@color/black"
         android:textSize="@dimen/font_16" />
 
@@ -27,7 +27,7 @@
         android:layout_marginTop="@dimen/margin_20"
         android:layout_marginRight="@dimen/margin_16"
         android:background="@color/yellow2"
-        android:text="sss"
+        android:text="点击第几个视频有惊喜~"
         android:textColor="@color/black"
         android:textSize="@dimen/font_16" />
 
@@ -36,15 +36,46 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <Button
-        android:id="@+id/bt_confirm"
-        style="@style/ButtonStyle"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_16"
         android:layout_marginRight="@dimen/margin_16"
-        android:background="@color/yellow"
-        android:text="确定"
-        android:textColor="@color/black"
-        android:textSize="@dimen/font_16" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt_task1"
+            style="@style/ButtonStyle"
+            android:layout_width="0dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:background="@color/yellow"
+            android:text="任务1"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_16" />
+
+        <Button
+            android:id="@+id/bt_task2"
+            style="@style/ButtonStyle"
+            android:layout_width="0dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:background="@color/yellow"
+            android:text="任务2"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_16" />
+
+        <Button
+            android:id="@+id/bt_task3"
+            style="@style/ButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@color/yellow"
+            android:text="任务3"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_16" />
+    </LinearLayout>
+
 
     <FrameLayout
         android:id="@+id/csj_express_container"
