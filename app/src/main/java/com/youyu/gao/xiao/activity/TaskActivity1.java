@@ -215,33 +215,33 @@ public class TaskActivity1 extends BaseActivity {
 
       @Override
       public void success(String data) {
-        if (netType == 1) {
-          try {
-            AdsBean adsBean = new Gson().fromJson(data, AdsBean.class);
-            if (adsBean.code == 0) {
-              SharedPrefsUtil.put(Contants.CSJ, adsBean.data.adsConfig.csj);
-              SharedPrefsUtil.put(Contants.TX, adsBean.data.adsConfig.tx);
-              csjTotal = Integer.valueOf(adsBean.data.adsConfig.csjTotal);
-              txTotal = Integer.valueOf(adsBean.data.adsConfig.txTotal);
-              mClickAds = adsBean.data.adsConfig.clickAds;
-
-              if (adsBean.data.adsConfig.csj && csjTotal >= 1) {
-                //加载穿山甲激励广告
-                loadAd(AD_CHUAN_SHA_JIA_REWARD_TASK, TTAdConstant.VERTICAL);
-              }
-              if (adsBean.data.adsConfig.tx && txTotal >= 1) {
-                // 2. 加载激励视频广告
-//              rewardVideoAD.loadAD();
-                // 加载腾讯插屏广告
-                loadTxChaPingAD();
-              }
-            }
-          } catch (Exception e) {
-            LogUtil.showELog(TAG, "initListener: e = " + e.getLocalizedMessage());
-          }
-        } else if (netType == 2) {
-          LogUtil.showELog(TAG, "add record success");
-        }
+//        if (netType == 1) {
+//          try {
+//            AdsBean adsBean = new Gson().fromJson(data, AdsBean.class);
+//            if (adsBean.code == 0) {
+//              SharedPrefsUtil.put(Contants.CSJ, adsBean.data.adsConfig.csj);
+//              SharedPrefsUtil.put(Contants.TX, adsBean.data.adsConfig.tx);
+//              csjTotal = Integer.valueOf(adsBean.data.adsConfig.csjTotal);
+//              txTotal = Integer.valueOf(adsBean.data.adsConfig.txTotal);
+//              mClickAds = adsBean.data.adsConfig.clickAds;
+//
+//              if (adsBean.data.adsConfig.csj && csjTotal >= 1) {
+//                //加载穿山甲激励广告
+//                loadAd(AD_CHUAN_SHA_JIA_REWARD_TASK, TTAdConstant.VERTICAL);
+//              }
+//              if (adsBean.data.adsConfig.tx && txTotal >= 1) {
+//                // 2. 加载激励视频广告
+////              rewardVideoAD.loadAD();
+//                // 加载腾讯插屏广告
+//                loadTxChaPingAD();
+//              }
+//            }
+//          } catch (Exception e) {
+//            LogUtil.showELog(TAG, "initListener: e = " + e.getLocalizedMessage());
+//          }
+//        } else if (netType == 2) {
+//          LogUtil.showELog(TAG, "add record success");
+//        }
       }
 
     });

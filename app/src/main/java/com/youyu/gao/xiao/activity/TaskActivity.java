@@ -54,6 +54,8 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import kotlinx.coroutines.scheduling.Task;
+
 /**
  * @Author zhiyukai
  * @Date 2020.09.19 14:47
@@ -152,12 +154,12 @@ public class TaskActivity extends BaseActivity {
           try {
             adsBean = new Gson().fromJson(data, AdsBean.class);
             if (adsBean.code == 0) {
-              mClickAds = adsBean.data.adsConfig.clickAds;
+              mClickAds = adsBean.data.clickAds;
 
-              if (adsBean.data.adsConfig.csj && csjTotal >= 1) {
+              if (adsBean.data.taskOne == 1) {
                 //加载穿山甲激励广告
                 loadAd(AD_CHUAN_SHA_JIA_REWARD_TASK, TTAdConstant.VERTICAL);
-              } else if (adsBean.data.adsConfig.tx && txTotal >= 1) {
+              } else if (adsBean.data.taskTwo == 1) {
                 // 2. 加载激励视频广告
 //              rewardVideoAD.loadAD();
                 // 加载腾讯插屏广告
@@ -245,15 +247,15 @@ public class TaskActivity extends BaseActivity {
         public void onADClosed() {
           LogUtil.showDLog(TAG, "onADClosed");
 
-          if (adsBean.data.adsConfig.csj && csjTotal >= 1) {
-            //加载穿山甲激励广告
-            loadAd(AD_CHUAN_SHA_JIA_REWARD_TASK, TTAdConstant.VERTICAL);
-          } else if (adsBean.data.adsConfig.tx && txTotal >= 1) {
-            // 加载腾讯插屏广告
-            loadTxChaPingAD();
-          } else {
-
-          }
+//          if (adsBean.data.taskOne == 1) {
+//            //加载穿山甲激励广告
+//            loadAd(AD_CHUAN_SHA_JIA_REWARD_TASK, TTAdConstant.VERTICAL);
+//          } else if (adsBean.data.taskTwo == 2) {
+//            // 加载腾讯插屏广告
+//            loadTxChaPingAD();
+//          } else {
+//
+//          }
 
 //          if (txTotal < 1) {
 //            finish();
@@ -355,7 +357,7 @@ public class TaskActivity extends BaseActivity {
 
   private void showAD() {
     if (iad != null) {
-      if (adsBean.data.adsConfig.clickAds == 0) {
+      if (adsBean.data.clickAds == 0) {
         Utils.show("点击这个广告有奖励~");
         LogUtil.showDLog(TAG, "点击tx有奖励");
       }
@@ -370,7 +372,6 @@ public class TaskActivity extends BaseActivity {
 
 
   private void loadAd(final String codeId, int orientation) {
-    csjTotal--;
     //step4:创建广告请求参数AdSlot,具体参数含义参考文档
     AdSlot adSlot;
 //    if (mIsExpress) {
@@ -464,13 +465,14 @@ public class TaskActivity extends BaseActivity {
             @Override
             public void onAdClose() {
               LogUtil.showELog(TAG, "Callback --> rewardVideoAd close");
-              //TToast.show(RewardVideoActivity.this, "rewardVideoAd close");
+              TaskActivity.this.setResult(RESULT_OK);
+              TaskActivity.this.finish();
 //                videoPlayer.mediaController.clickPlay();
-              if (csjTotal < 1) {
-                TaskActivity.this.finish();
-              } else {
-                loadAd(AD_CHUAN_SHA_JIA_REWARD_TASK, TTAdConstant.VERTICAL);
-              }
+//              if (csjTotal < 1) {
+//                TaskActivity.this.finish();
+//              } else {
+//                loadAd(AD_CHUAN_SHA_JIA_REWARD_TASK, TTAdConstant.VERTICAL);
+//              }
             }
 
             //视频播放完成回调
@@ -481,15 +483,15 @@ public class TaskActivity extends BaseActivity {
 //                rewardVideoAD.loadAD();
 
               if (adsBean != null) {
-                if (adsBean.data.adsConfig.tx && txTotal >= 1) {
-                  // 加载腾讯插屏广告
-                  loadTxChaPingAD();
-                } else if (adsBean.data.adsConfig.csj && csjTotal >= 1) {
-                  //加载穿山甲激励广告
-                  loadAd(AD_CHUAN_SHA_JIA_REWARD_TASK, TTAdConstant.VERTICAL);
-                } else {
-
-                }
+//                if (adsBean.data.adsConfig.tx && txTotal >= 1) {
+//                  // 加载腾讯插屏广告
+//                  loadTxChaPingAD();
+//                } else if (adsBean.data.adsConfig.csj && csjTotal >= 1) {
+//                  //加载穿山甲激励广告
+//                  loadAd(AD_CHUAN_SHA_JIA_REWARD_TASK, TTAdConstant.VERTICAL);
+//                } else {
+//
+//                }
               }
             }
 

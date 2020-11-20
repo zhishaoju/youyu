@@ -16,6 +16,8 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -64,7 +66,11 @@ public class RuleActivity extends BaseActivity {
   @BindView(R.id.rl_title)
   RelativeLayout rlTitle;
   @BindView(R.id.bt_task1)
-  Button btConfirm;
+  Button btTask1;
+  @BindView(R.id.bt_task2)
+  Button btTask2;
+  @BindView(R.id.bt_task3)
+  Button btTask3;
   @BindView(R.id.tx_bannerContainer)
   FrameLayout txBannerContainer;
   @BindView(R.id.csj_express_container)
@@ -78,6 +84,10 @@ public class RuleActivity extends BaseActivity {
   private long startTime = 0;
   private boolean mHasShowDownloadActive = false;
   // 穿山甲广告结束
+
+  private final int mTask1RequestCode = 100;
+  private final int mTask2RequestCode = 200;
+  private final int mTask3RequestCode = 300;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +148,7 @@ public class RuleActivity extends BaseActivity {
     });
   }
 
-  @OnClick({R.id.fl_back, R.id.bt_task1})
+  @OnClick({R.id.fl_back, R.id.bt_task1, R.id.bt_task2, R.id.bt_task3})
   public void onViewClicked(View view) {
     Intent i = new Intent(this, TaskActivity.class);
     switch (view.getId()) {
@@ -147,16 +157,37 @@ public class RuleActivity extends BaseActivity {
         break;
       case R.id.bt_task1:
         i.putExtra(AD_KEY, 1);
-        startActivity(new Intent(this, TaskActivity.class));
+        startActivityForResult(i, mTask1RequestCode);
         break;
       case R.id.bt_task2:
         i.putExtra(AD_KEY, 2);
-        startActivity(new Intent(this, TaskActivity.class));
+        startActivityForResult(i, mTask2RequestCode);
         break;
       case R.id.bt_task3:
         i.putExtra(AD_KEY, 3);
-        startActivity(new Intent(this, TaskActivity.class));
+        startActivityForResult(i, mTask3RequestCode);
         break;
+    }
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    LogUtil.showDLog(TAG, "onActivityResult thread = " + Thread.currentThread());
+    LogUtil.showDLog(TAG, "onActivityResult requestCode = " + requestCode + ", resultCode = " + resultCode);
+    if (resultCode == RESULT_OK) {
+      switch (requestCode) {
+        case mTask1RequestCode:
+          // 任务一，已经完成
+          btTask1.setBackgroundColor(getResources().getColor(R.color.gray2));
+          btTask1.setEnabled(false);
+          btTask1.setText("完成");
+          break;
+        case mTask2RequestCode:
+          break;
+        case mTask3RequestCode:
+          break;
+      }
     }
   }
 
