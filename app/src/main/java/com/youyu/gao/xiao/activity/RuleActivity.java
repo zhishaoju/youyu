@@ -89,6 +89,8 @@ public class RuleActivity extends BaseActivity {
   private final int mTask2RequestCode = 200;
   private final int mTask3RequestCode = 300;
 
+  private AdsBean adsBean;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -133,7 +135,7 @@ public class RuleActivity extends BaseActivity {
 
       @Override
       public void success(String data) {
-        AdsBean adsBean = new Gson().fromJson(data, AdsBean.class);
+        adsBean = new Gson().fromJson(data, AdsBean.class);
         tvContent.setText(adsBean.data.content + "");
 
         if (adsBean.data.clickAds == adsBean.data.taskOne) {
@@ -156,15 +158,21 @@ public class RuleActivity extends BaseActivity {
         finish();
         break;
       case R.id.bt_task1:
-        i.putExtra(AD_KEY, 1);
+        if (adsBean != null) {
+          i.putExtra(AD_KEY, adsBean.data.taskOne);
+        }
         startActivityForResult(i, mTask1RequestCode);
         break;
       case R.id.bt_task2:
-        i.putExtra(AD_KEY, 2);
+        if (adsBean != null) {
+          i.putExtra(AD_KEY, adsBean.data.taskTwo);
+        }
         startActivityForResult(i, mTask2RequestCode);
         break;
       case R.id.bt_task3:
-        i.putExtra(AD_KEY, 3);
+        if (adsBean != null) {
+          i.putExtra(AD_KEY, adsBean.data.taskThree);
+        }
         startActivityForResult(i, mTask3RequestCode);
         break;
     }
@@ -184,8 +192,14 @@ public class RuleActivity extends BaseActivity {
           btTask1.setText("完成");
           break;
         case mTask2RequestCode:
+          btTask2.setBackgroundColor(getResources().getColor(R.color.gray2));
+          btTask2.setEnabled(false);
+          btTask2.setText("完成");
           break;
         case mTask3RequestCode:
+          btTask3.setBackgroundColor(getResources().getColor(R.color.gray2));
+          btTask3.setEnabled(false);
+          btTask3.setText("完成");
           break;
       }
     }

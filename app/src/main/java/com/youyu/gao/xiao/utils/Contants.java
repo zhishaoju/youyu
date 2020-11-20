@@ -89,9 +89,6 @@ public interface Contants {
   String USER_PASSWORD = "password";
   String POST_ID = "postId";
 
-  String CSJ = "csj";
-  String TX = "tx";
-
   interface BroadcastConst {
 
     String RECORD_ACTION = "record_action";
@@ -148,4 +145,9 @@ public interface Contants {
   // 广告类型
   String AD_KEY = "ad_key";
 
+  //  0:广点通 1:穿山甲 2:百度 3:adView
+  int TX = 0;
+  int CSJ = 1;
+  int BD = 2;
+  int ADVIEW = 3;
 }
