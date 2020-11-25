@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -7,38 +7,52 @@
 
     <include layout="@layout/include_title" />
 
-    <TextView
-        android:id="@+id/tv_content"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/fl1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/rl_title"
         android:layout_marginLeft="@dimen/margin_16"
         android:layout_marginTop="@dimen/margin_28"
         android:layout_marginRight="@dimen/margin_16"
-        android:background="@color/color_e5e5e5"
-        android:text="信息介绍"
-        android:textColor="@color/black"
-        android:textSize="@dimen/font_16" />
+        android:background="@drawable/corner_corner_6dp_bg"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_5">
 
-    <TextView
-        android:id="@+id/tv_click_reminder"
-        android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="&#8197;&#8197;&#8197;&#8197;&#8197;&#8197;小伙伴们，任务需要观看2个视频广告，并更加提示对广告进行点击，完成任务后即可获得20积分奖励，每位用户每天可获得2次奖励，超过次数将不再获得奖励，感谢每位小伙伴的支持哦！"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_16" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/fl2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/fl1"
         android:layout_marginLeft="@dimen/margin_16"
         android:layout_marginTop="@dimen/margin_20"
         android:layout_marginRight="@dimen/margin_16"
-        android:background="@color/yellow2"
-        android:text="点击第几个视频有惊喜~"
-        android:textColor="@color/black"
-        android:textSize="@dimen/font_16" />
+        android:background="@drawable/corner_corner_6dp_bg"
+        android:padding="@dimen/margin_5">
 
-    <View
-        android:layout_width="1dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        <TextView
+            android:id="@+id/tv_click_reminder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/yellow2"
+            android:text="&#8197;&#8197;&#8197;&#8197;&#8197;&#8197;亲爱的小伙伴，点击第一个视频有惊喜哦~"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_16" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/margin_16"
         android:layout_marginRight="@dimen/margin_16"
         android:orientation="horizontal">
@@ -47,7 +61,7 @@
             android:id="@+id/bt_task1"
             style="@style/ButtonStyle"
             android:layout_width="0dp"
-            android:layout_marginRight="3dp"
+            android:layout_marginRight="@dimen/margin_12"
             android:layout_weight="1"
             android:background="@color/yellow"
             android:text="任务1"
@@ -58,34 +72,25 @@
             android:id="@+id/bt_task2"
             style="@style/ButtonStyle"
             android:layout_width="0dp"
-            android:layout_marginRight="3dp"
             android:layout_weight="1"
             android:background="@color/yellow"
             android:text="任务2"
             android:textColor="@color/black"
             android:textSize="@dimen/font_16" />
 
-        <Button
-            android:id="@+id/bt_task3"
-            style="@style/ButtonStyle"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:background="@color/yellow"
-            android:text="任务3"
-            android:textColor="@color/black"
-            android:textSize="@dimen/font_16" />
     </LinearLayout>
-
 
     <FrameLayout
         android:id="@+id/csj_express_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/tx_bannerContainer"
         android:layout_gravity="center" />
 
     <FrameLayout
         android:id="@+id/tx_bannerContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
 
-</LinearLayout>
+</RelativeLayout>

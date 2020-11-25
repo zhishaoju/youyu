@@ -69,8 +69,6 @@ public class RuleActivity extends BaseActivity {
   Button btTask1;
   @BindView(R.id.bt_task2)
   Button btTask2;
-  @BindView(R.id.bt_task3)
-  Button btTask3;
   @BindView(R.id.tx_bannerContainer)
   FrameLayout txBannerContainer;
   @BindView(R.id.csj_express_container)
@@ -136,21 +134,21 @@ public class RuleActivity extends BaseActivity {
       @Override
       public void success(String data) {
         adsBean = new Gson().fromJson(data, AdsBean.class);
-        tvContent.setText(adsBean.data.content + "");
+        tvContent.setText("        "+adsBean.data.content + "");
 
         if (adsBean.data.clickAds == adsBean.data.taskOne) {
           // 此时先加载的穿山甲
-          tvClickReminder.setText("点击第一个视频，有惊喜~");
+          tvClickReminder.setText("        亲爱的小伙伴，点击第一个视频有惊喜哦~");
         } else if (adsBean.data.clickAds == adsBean.data.taskTwo) {
-          tvClickReminder.setText("点击第二个视频，有惊喜~");
+          tvClickReminder.setText("        亲爱的小伙伴，点击第二个视频有惊喜哦~");
         } else if (adsBean.data.clickAds == adsBean.data.taskThree) {
-          tvClickReminder.setText("点击第三个视频，有惊喜~");
+          tvClickReminder.setText("        亲爱的小伙伴，点击第三个视频有惊喜哦~");
         }
       }
     });
   }
 
-  @OnClick({R.id.fl_back, R.id.bt_task1, R.id.bt_task2, R.id.bt_task3})
+  @OnClick({R.id.fl_back, R.id.bt_task1, R.id.bt_task2})
   public void onViewClicked(View view) {
     Intent i = new Intent(this, TaskActivity.class);
     switch (view.getId()) {
@@ -169,12 +167,12 @@ public class RuleActivity extends BaseActivity {
         }
         startActivityForResult(i, mTask2RequestCode);
         break;
-      case R.id.bt_task3:
-        if (adsBean != null) {
-          i.putExtra(AD_KEY, adsBean.data.taskThree);
-        }
-        startActivityForResult(i, mTask3RequestCode);
-        break;
+//      case R.id.bt_task3:
+//        if (adsBean != null) {
+//          i.putExtra(AD_KEY, adsBean.data.taskThree);
+//        }
+//        startActivityForResult(i, mTask3RequestCode);
+//        break;
     }
   }
 
@@ -196,11 +194,11 @@ public class RuleActivity extends BaseActivity {
           btTask2.setEnabled(false);
           btTask2.setText("完成");
           break;
-        case mTask3RequestCode:
-          btTask3.setBackgroundColor(getResources().getColor(R.color.gray2));
-          btTask3.setEnabled(false);
-          btTask3.setText("完成");
-          break;
+//        case mTask3RequestCode:
+//          btTask3.setBackgroundColor(getResources().getColor(R.color.gray2));
+//          btTask3.setEnabled(false);
+//          btTask3.setText("完成");
+//          break;
       }
     }
   }
