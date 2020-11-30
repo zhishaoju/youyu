@@ -1,29 +1,11 @@
 package com.youyu.gao.xiao.activity;
 
-import static com.youyu.gao.xiao.utils.Contants.AD_CHUAN_SHA_JIA_REWARD_TASK;
-import static com.youyu.gao.xiao.utils.Contants.AD_CLICK_CSJ;
-import static com.youyu.gao.xiao.utils.Contants.AD_CLICK_TX;
-import static com.youyu.gao.xiao.utils.Contants.AD_KEY;
-import static com.youyu.gao.xiao.utils.Contants.AD_TENCENT_CHA_PING;
-import static com.youyu.gao.xiao.utils.Contants.AD_TENCENT_REWARD_TASK;
-import static com.youyu.gao.xiao.utils.Contants.CHANNEL_ID;
-import static com.youyu.gao.xiao.utils.Contants.CSJ;
-import static com.youyu.gao.xiao.utils.Contants.Net.ADSRECORD_ADD;
-import static com.youyu.gao.xiao.utils.Contants.Net.BASE_URL;
-import static com.youyu.gao.xiao.utils.Contants.Net.NOTICE_ADS;
-import static com.youyu.gao.xiao.utils.Contants.TX;
-import static com.youyu.gao.xiao.utils.Contants.USER_ID;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.SystemClock;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -31,34 +13,41 @@ import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
+import com.bytedance.sdk.openadsdk.TTFullScreenVideoAd;
 import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
 import com.google.gson.Gson;
 import com.qq.e.ads.cfg.VideoOption;
 import com.qq.e.ads.interstitial2.UnifiedInterstitialAD;
 import com.qq.e.ads.interstitial2.UnifiedInterstitialADListener;
 import com.qq.e.ads.interstitial2.UnifiedInterstitialMediaListener;
-import com.qq.e.ads.rewardvideo.RewardVideoAD;
-import com.qq.e.ads.rewardvideo.RewardVideoADListener;
 import com.qq.e.comm.constants.AdPatternType;
 import com.qq.e.comm.util.AdError;
 import com.youyu.gao.xiao.R;
 import com.youyu.gao.xiao.applicatioin.TTAdManagerHolder;
 import com.youyu.gao.xiao.bean.AdsBean;
 import com.youyu.gao.xiao.net.NetInterface.RequestResponse;
-import com.youyu.gao.xiao.utils.Contants;
 import com.youyu.gao.xiao.utils.LogUtil;
 import com.youyu.gao.xiao.utils.SharedPrefsUtil;
 import com.youyu.gao.xiao.utils.Utils;
 
-import java.util.Date;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import kotlinx.coroutines.scheduling.Task;
+import static com.youyu.gao.xiao.utils.Contants.AD_CHUAN_SHA_JIA_FULL_TASK;
+import static com.youyu.gao.xiao.utils.Contants.AD_CHUAN_SHA_JIA_REWARD_TASK;
+import static com.youyu.gao.xiao.utils.Contants.AD_CLICK_CSJ;
+import static com.youyu.gao.xiao.utils.Contants.AD_CLICK_TX;
+import static com.youyu.gao.xiao.utils.Contants.AD_TENCENT_CHA_PING;
+import static com.youyu.gao.xiao.utils.Contants.AD_TYPE_KEY;
+import static com.youyu.gao.xiao.utils.Contants.CHANNEL_ID;
+import static com.youyu.gao.xiao.utils.Contants.Net.ADSRECORD_ADD;
+import static com.youyu.gao.xiao.utils.Contants.Net.BASE_URL;
+import static com.youyu.gao.xiao.utils.Contants.Net.NOTICE_ADS;
+import static com.youyu.gao.xiao.utils.Contants.USER_ID;
 
 /**
  * @Author zhiyukai
@@ -85,7 +74,7 @@ public class TaskActivity extends BaseActivity {
   // 腾讯插屏广告开始
   private UnifiedInterstitialAD iad;
 
-  private int mClickAds;
+//  private int mClickAds;
 
   private int netType; // 1:notices 2:add
 
@@ -94,7 +83,14 @@ public class TaskActivity extends BaseActivity {
 //  private Long mTotalTime = 6 * 1000L;
 //  private Long mInterval = 1000L;
 
+  // csj full video start
+  private TTFullScreenVideoAd mttFullVideoAd;
+  // csj full video end
+
   private AdsBean adsBean;
+
+  String type = "";
+
 
   // 腾讯插屏广告结束
   @Override
@@ -102,19 +98,19 @@ public class TaskActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_task);
     initListener();
-    getAddType();
     initValue();
     Intent i = getIntent();
     if (i != null) {
       // 0:广点通 1:穿山甲 2:百度 3:adView
-      int adKey = i.getIntExtra(AD_KEY, -1);
-      if (TX == adKey) {
-        loadTxChaPingAD();
-      } else if (CSJ == adKey) {
-
-      }
+//      int adKey = i.getIntExtra(AD_KEY, -1);
+//      if (TX == adKey) {
+//        loadTxChaPingAD();
+//      } else if (CSJ == adKey) {
+//
+//      }
+      type = i.getStringExtra(AD_TYPE_KEY);
     }
-//    loadTxChaPingAD();
+    getAddType();
   }
 
   private void loadTxChaPingAD() {
@@ -159,7 +155,7 @@ public class TaskActivity extends BaseActivity {
     setNetListener(new RequestResponse() {
       @Override
       public void failure(Exception e) {
-
+        LogUtil.showDLog(TAG, "e = " + e.getLocalizedMessage());
       }
 
       @Override
@@ -168,16 +164,14 @@ public class TaskActivity extends BaseActivity {
           try {
             adsBean = new Gson().fromJson(data, AdsBean.class);
             if (adsBean.code == 0) {
-              mClickAds = adsBean.data.clickAds;
-
-              if (adsBean.data.taskOne == 1) {
+              // 根据规则界面来显示是否是全屏或者是奖励广告
+              if ("full".equals(type)) {
+                // 此时改成加载穿山甲全屏广告
+                loadAdFull(AD_CHUAN_SHA_JIA_FULL_TASK, TTAdConstant.VERTICAL);
+              }
+              if ("reward".equals(type)) {
                 //加载穿山甲激励广告
                 loadAd(AD_CHUAN_SHA_JIA_REWARD_TASK, TTAdConstant.VERTICAL);
-              } else if (adsBean.data.taskTwo == 1) {
-                // 2. 加载激励视频广告
-//              rewardVideoAD.loadAD();
-                // 加载腾讯插屏广告
-                loadTxChaPingAD();
               }
             }
           } catch (Exception e) {
@@ -187,7 +181,6 @@ public class TaskActivity extends BaseActivity {
           LogUtil.showELog(TAG, "add record success");
         }
       }
-
     });
   }
 
@@ -248,13 +241,13 @@ public class TaskActivity extends BaseActivity {
               public void onADClicked() {
                 LogUtil.showDLog(TAG,
                         "onADClicked : " + (iad.getExt() != null ? iad.getExt().get("clickUrl") : ""));
-                if (AD_CLICK_TX == mClickAds) {
+//                if (AD_CLICK_TX == mClickAds) {
                   Map<String, String> map = new HashMap<>();
                   map.put("adsName", "0"); // 0:广点通 1:穿山甲 2:百度 3:adView
-                  map.put("adsType", "2"); // 0:开屏广告 1:视频激励广告 2：图文广告
+                  map.put("adsType", "2"); //0：代表全屏；1：代表奖励
                   map.put("clickAds", AD_CLICK_TX + "");
                   postAdsRecordAdd(map);
-                }
+//                }
               }
 
               @Override
@@ -436,7 +429,7 @@ public class TaskActivity extends BaseActivity {
 //                    mttRewardVideoAd.showRewardVideoAd(RewardVideoActivity.this);
 
           //展示广告，并传入广告展示的场景
-          if (adsBean.data.clickAds == adsBean.data.adType) {
+          if (adsBean.data.clickAds == 1) {
             Utils.show("点击这个广告有奖励~");
             LogUtil.showDLog(TAG, "点击这个穿山甲广告有奖励");
           }
@@ -469,13 +462,14 @@ public class TaskActivity extends BaseActivity {
                   public void onAdVideoBarClick() {
                     LogUtil.showELog(TAG, "Callback --> rewardVideoAd bar click");
                     //TToast.show(RewardVideoActivity.this, "rewardVideoAd bar click");
-                    if (AD_CLICK_CSJ == mClickAds) {
+//                    if (AD_CLICK_CSJ == mClickAds) {
                       Map<String, String> map = new HashMap<>();
                       map.put("adsName", "1"); // 0:广点通 1:穿山甲 2:百度 3:adView
-                      map.put("adsType", "1"); // 0:开屏广告 1:视频激励广告 2：图文广告
-                      map.put("clickAds", AD_CLICK_CSJ + "");
+                      map.put("adsType", "1"); // 0：代表全屏；1：代表奖励
+                      map.put("clickAds", "1"); // clickAds的意义是：0：代表全屏；1：代表奖励
+                      map.put("activityType", "click");
                       postAdsRecordAdd(map);
-                    }
+//                    }
                   }
 
                   @Override
@@ -498,7 +492,16 @@ public class TaskActivity extends BaseActivity {
                     //TToast.show(RewardVideoActivity.this, "rewardVideoAd complete");
 //                rewardVideoAD.loadAD();
 
-                    if (adsBean != null) {
+//                    if (AD_CLICK_CSJ == mClickAds) {
+                      Map<String, String> map = new HashMap<>();
+                      map.put("adsName", "1"); // 0:广点通 1:穿山甲 2:百度 3:adView
+                      map.put("adsType", "1"); // 0：代表全屏；1：代表奖励
+                      map.put("clickAds", "1"); // clickAds的意义是：0：代表全屏；1：代表奖励
+                      map.put("activityType", "read");
+                      postAdsRecordAdd(map);
+//                    }
+
+//                    if (adsBean != null) {
 //                if (adsBean.data.adsConfig.tx && txTotal >= 1) {
 //                  // 加载腾讯插屏广告
 //                  loadTxChaPingAD();
@@ -508,7 +511,7 @@ public class TaskActivity extends BaseActivity {
 //                } else {
 //
 //                }
-                    }
+//                    }
                   }
 
                   @Override
@@ -589,6 +592,9 @@ public class TaskActivity extends BaseActivity {
     });
   }
 
+  /**
+   * 为了获取是否点击
+   */
   private void getAddType() {
     netType = 1;
     String url = BASE_URL + NOTICE_ADS;
@@ -621,8 +627,149 @@ public class TaskActivity extends BaseActivity {
     params.put("userId", SharedPrefsUtil.get(USER_ID, ""));
     params.put("channel", SharedPrefsUtil.get(CHANNEL_ID, ""));
     params.put("adsCode", "4");
-    params.put("activityType", "click");
     post(url, Utils.paramsConvertString(params));
+  }
+
+  //加载全屏广告
+  private void loadAdFull(String codeId, int orientation) {
+    //step4:创建广告请求参数AdSlot,具体参数含义参考文档
+    AdSlot adSlot;
+//    if (mIsExpress) {
+    adSlot = new AdSlot.Builder()
+            .setCodeId(codeId)
+            //模板广告需要设置期望个性化模板广告的大小,单位dp,全屏视频场景，只要设置的值大于0即可
+            .setExpressViewAcceptedSize(500, 500)
+            .build();
+//
+//    } else {
+//    adSlot = new AdSlot.Builder()
+//            .setCodeId(codeId)
+//            .build();
+//    }
+    //step5:请求广告
+    mTTAdNative.loadFullScreenVideoAd(adSlot, new TTAdNative.FullScreenVideoAdListener() {
+      @Override
+      public void onError(int code, String message) {
+        Log.e(TAG, "full Callback --> onError: " + code + ", " + String.valueOf(message));
+//        TToast.show(FullScreenVideoActivity.this, message);
+      }
+
+      @Override
+      public void onFullScreenVideoAdLoad(TTFullScreenVideoAd ad) {
+        Log.e(TAG, "full Callback --> onFullScreenVideoAdLoad");
+
+//        TToast.show(FullScreenVideoActivity.this, "FullVideoAd loaded  广告类型：" + getAdType(ad.getFullVideoAdType()));
+        mttFullVideoAd = ad;
+        mIsLoaded = false;
+        //展示广告，并传入广告展示的场景
+        mttFullVideoAd.setFullScreenVideoAdInteractionListener(new TTFullScreenVideoAd.FullScreenVideoAdInteractionListener() {
+
+          @Override
+          public void onAdShow() {
+            Log.d(TAG, "full Callback --> FullVideoAd show");
+//            TToast.show(FullScreenVideoActivity.this, "FullVideoAd show");
+          }
+
+          @Override
+          public void onAdVideoBarClick() {
+            Log.d(TAG, "full Callback --> FullVideoAd bar click");
+//            TToast.show(FullScreenVideoActivity.this, "FullVideoAd bar click");
+
+//            if (AD_CLICK_CSJ == mClickAds) {
+              Map<String, String> map = new HashMap<>();
+              map.put("adsName", "1"); // 0:广点通 1:穿山甲 2:百度 3:adView
+              map.put("adsType", "0"); // 0：代表全屏；1：代表奖励
+              map.put("clickAds", "0"); // clickAds的意义是：0：代表全屏；1：代表奖励
+              map.put("activityType", "click"); // clickAds的意义是：0：代表全屏；1：代表奖励
+              postAdsRecordAdd(map);
+//            }
+          }
+
+          @Override
+          public void onAdClose() {
+            Log.d(TAG, "full Callback --> FullVideoAd close");
+//            TToast.show(FullScreenVideoActivity.this, "FullVideoAd close");
+            TaskActivity.this.setResult(RESULT_OK);
+            TaskActivity.this.finish();
+          }
+
+          @Override
+          public void onVideoComplete() {
+            Log.d(TAG, "full Callback --> FullVideoAd complete");
+//            TToast.show(FullScreenVideoActivity.this, "FullVideoAd complete");
+//            if (AD_CLICK_CSJ == mClickAds) {
+              Map<String, String> map = new HashMap<>();
+              map.put("adsName", "1"); // 0:广点通 1:穿山甲 2:百度 3:adView
+              map.put("adsType", "1"); // 0：代表全屏；1：代表奖励
+              map.put("clickAds", "1"); // clickAds的意义是：0：代表全屏；1：代表奖励
+              map.put("activityType", "read"); // clickAds的意义是：0：代表全屏；1：代表奖励
+              postAdsRecordAdd(map);
+//            }
+          }
+
+          @Override
+          public void onSkippedVideo() {
+            Log.d(TAG, "full Callback --> FullVideoAd skipped");
+//            TToast.show(FullScreenVideoActivity.this, "FullVideoAd skipped");
+
+          }
+
+        });
+
+
+        ad.setDownloadListener(new TTAppDownloadListener() {
+          @Override
+          public void onIdle() {
+            mHasShowDownloadActive = false;
+          }
+
+          @Override
+          public void onDownloadActive(long totalBytes, long currBytes, String fileName, String appName) {
+            Log.d("DML", "full onDownloadActive==totalBytes=" + totalBytes + ",currBytes=" + currBytes + ",fileName=" + fileName + ",appName=" + appName);
+
+            if (!mHasShowDownloadActive) {
+              mHasShowDownloadActive = true;
+//              TToast.show(FullScreenVideoActivity.this, "下载中，点击下载区域暂停", Toast.LENGTH_LONG);
+            }
+          }
+
+          @Override
+          public void onDownloadPaused(long totalBytes, long currBytes, String fileName, String appName) {
+            Log.d("DML", "full onDownloadPaused===totalBytes=" + totalBytes + ",currBytes=" + currBytes + ",fileName=" + fileName + ",appName=" + appName);
+//            TToast.show(FullScreenVideoActivity.this, "下载暂停，点击下载区域继续", Toast.LENGTH_LONG);
+          }
+
+          @Override
+          public void onDownloadFailed(long totalBytes, long currBytes, String fileName, String appName) {
+            Log.d("DML", "full onDownloadFailed==totalBytes=" + totalBytes + ",currBytes=" + currBytes + ",fileName=" + fileName + ",appName=" + appName);
+//            TToast.show(FullScreenVideoActivity.this, "下载失败，点击下载区域重新下载", Toast.LENGTH_LONG);
+          }
+
+          @Override
+          public void onDownloadFinished(long totalBytes, String fileName, String appName) {
+            Log.d("DML", "full onDownloadFinished==totalBytes=" + totalBytes + ",fileName=" + fileName + ",appName=" + appName);
+//            TToast.show(FullScreenVideoActivity.this, "下载完成，点击下载区域重新下载", Toast.LENGTH_LONG);
+          }
+
+          @Override
+          public void onInstalled(String fileName, String appName) {
+            Log.d("DML", "full onInstalled==" + ",fileName=" + fileName + ",appName=" + appName);
+//            TToast.show(FullScreenVideoActivity.this, "安装完成，点击下载区域打开", Toast.LENGTH_LONG);
+          }
+        });
+
+
+        mttFullVideoAd.showFullScreenVideoAd(TaskActivity.this, TTAdConstant.RitScenes.GAME_GIFT_BONUS, null);
+        mttFullVideoAd = null;
+      }
+
+      @Override
+      public void onFullScreenVideoCached() {
+        Log.e(TAG, "full Callback --> onFullScreenVideoCached");
+        mIsLoaded = true;
+//        TToast.show(FullScreenVideoActivity.this, "FullVideoAd video cached");
+      }
+    });
   }
 
 }

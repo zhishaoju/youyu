@@ -11,7 +11,9 @@ public class AdsBean extends BaseResponseBean {
 
   public class Data {
     public int taskOne;
+    public String taskOneType;
     public int taskTwo;
+    public String taskTwoType;
     public int taskThree;
     public int clickAds;
     public int adType;

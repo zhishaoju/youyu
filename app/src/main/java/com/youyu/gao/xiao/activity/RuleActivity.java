@@ -1,6 +1,7 @@
 package com.youyu.gao.xiao.activity;
 
 import static com.youyu.gao.xiao.utils.Contants.AD_KEY;
+import static com.youyu.gao.xiao.utils.Contants.AD_TYPE_KEY;
 import static com.youyu.gao.xiao.utils.Contants.Net.BASE_URL;
 import static com.youyu.gao.xiao.utils.Contants.Net.NOTICE_ADS;
 import static com.youyu.gao.xiao.utils.Contants.USER_ID;
@@ -158,12 +159,14 @@ public class RuleActivity extends BaseActivity {
       case R.id.bt_task1:
         if (adsBean != null) {
           i.putExtra(AD_KEY, adsBean.data.taskOne);
+          i.putExtra(AD_TYPE_KEY, adsBean.data.taskOneType);
         }
         startActivityForResult(i, mTask1RequestCode);
         break;
       case R.id.bt_task2:
         if (adsBean != null) {
           i.putExtra(AD_KEY, adsBean.data.taskTwo);
+          i.putExtra(AD_TYPE_KEY, adsBean.data.taskTwoType);
         }
         startActivityForResult(i, mTask2RequestCode);
         break;

@@ -104,6 +104,7 @@ public interface Contants {
   String AD_BANNER = "887376831";
   String AD_CHUAN_SHA_JIA_REWARD_WAIT = "945477236";
   String AD_CHUAN_SHA_JIA_REWARD_TASK = "945493144";
+  String AD_CHUAN_SHA_JIA_FULL_TASK = "945642375";
   String AD_CHUAN_SHA_JIA_BANNER_TASK = "945511967";
 
   int AD_CLICK_CSJ = 1;
@@ -144,6 +145,7 @@ public interface Contants {
 
   // 广告类型
   String AD_KEY = "ad_key";
+  String AD_TYPE_KEY = "ad_type_key";
 
   //  0:广点通 1:穿山甲 2:百度 3:adView
   int TX = 0;
